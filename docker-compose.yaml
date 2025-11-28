@@ -1,0 +1,21 @@
+services:
+
+  # CONFIG SERVER
+  ms-config:
+    build: ./backend/ms-config
+    container_name: ms-config
+    ports:
+      - "8888:8888"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+      
+networks:
+  microservices-net:
+    driver: bridge
