@@ -34,6 +34,27 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+  
+  # GATEWAY SERVER
+  ms-gateway:
+    build: ./backend/ms-gateway
+    container_name: ms-gateway
+    ports:
+      - "8088:8088"
+    networks:
+      - microservices-net
+    depends_on:
+      ms-config:
+        condition: service_healthy
+      ms-discover:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8088/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
       
 networks:
   microservices-net:
