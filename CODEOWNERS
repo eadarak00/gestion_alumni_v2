@@ -1,0 +1,13 @@
+# Propriétaires du code par défaut
+# Ces utilisateurs sont notifiés lors des Pull Requests
+
+# Propriétaire global
+*       @eadarak00
+
+# Documentation
+*.md    @eadarak00
+
+# Configuration CI/CD et Docker
+Dockerfile       @eadarak00
+docker-compose.yml @eadarak00
+.github/         @eadarak00
