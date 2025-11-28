@@ -10,7 +10,26 @@ services:
       - microservices-net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+  
+  # DISCOVERY SERVER (Eureka)
+  ms-discover:
+    build: ./backend/ms-discover
+    container_name: ms-discover
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-net
+    depends_on:
+      ms-config:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8761/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
