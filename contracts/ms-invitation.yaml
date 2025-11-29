@@ -1,0 +1,190 @@
+openapi: 3.0.3
+info:
+  title: API ms-invitation
+  description: |
+    Microservice de gestion des invitations, du parrainage et des statistiques.
+    Il permet :
+    - l'envoi d'invitations par lien
+    - le suivi (tracking) de leur statut
+    - la création de relations de parrainage
+    - la génération de statistiques
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8083/api
+    description: Serveur ms-invitation
+
+tags:
+  - name: Invitations
+    description: Gestion des invitations par lien
+  - name: Parrainage
+    description: Gestion des relations de parrainage
+  - name: Statistiques
+    description: Analyse des invitations
+
+paths:
+
+  /invitations:
+    post:
+      tags:
+        - Invitations
+      summary: Envoyer une invitation
+      description: Crée une invitation et génère un lien unique pour l'invité.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvitationRequest'
+            example:
+              emailInvite: "invite@example.com"
+      responses:
+        '201':
+          description: Invitation créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invitation'
+
+  /invitations/{code}:
+    get:
+      tags:
+        - Invitations
+      summary: Consulter une invitation via son code
+      description: Permet de vérifier l'état d'une invitation.
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invitation trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invitation'
+        '404':
+          description: Invitation non trouvée
+
+  /invitations/{code}/accepter:
+    put:
+      tags:
+        - Invitations
+      summary: Accepter une invitation
+      description: Valide une invitation et crée un lien de parrainage.
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invitation acceptée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parrainage'
+        '400':
+          description: Invitation invalide ou expirée
+
+  /parrainages:
+    get:
+      tags:
+        - Parrainage
+      summary: Lister les parrainages
+      description: Retourne toutes les relations de parrainage.
+      responses:
+        '200':
+          description: Liste des parrainages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Parrainage'
+
+  /statistiques/invitations:
+    get:
+      tags:
+        - Statistiques
+      summary: Statistiques globales des invitations
+      description: Donne les statistiques sur les invitations.
+      responses:
+        '200':
+          description: Statistiques calculées
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatistiquesInvitation'
+
+components:
+  schemas:
+
+    InvitationRequest:
+      type: object
+      properties:
+        emailInvite:
+          type: string
+          example: invite@example.com
+
+    Invitation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        emailInvite:
+          type: string
+          example: invite@example.com
+        code:
+          type: string
+          example: INV-9X83KD
+        urlInvitation:
+          type: string
+          example: https://plateforme.com/invitation/INV-9X83KD
+        statut:
+          type: string
+          enum: [ENVOYEE, ACCEPTEE, EXPIREE]
+          example: ENVOYEE
+        dateEnvoi:
+          type: string
+          format: date-time
+          example: 2025-05-10T14:30:00
+
+    Parrainage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 22
+        parrainId:
+          type: integer
+          example: 5
+        filleulId:
+          type: integer
+          example: 18
+        dateCreation:
+          type: string
+          format: date-time
+          example: 2025-05-11T09:00:00
+
+    StatistiquesInvitation:
+      type: object
+      properties:
+        totalEnvoyees:
+          type: integer
+          example: 100
+        totalAcceptees:
+          type: integer
+          example: 40
+        totalExpirees:
+          type: integer
+          example: 10
+        tauxConversion:
+          type: number
+          format: float
+          example: 40.0
