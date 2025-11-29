@@ -1,0 +1,9 @@
+uasz/alumni/spi/model/InvitationRequest.class
+uasz/alumni/spi/api/InvitationsApi.class
+uasz/alumni/spi/model/StatistiquesInvitation.class
+uasz/alumni/spi/api/StatistiquesApi.class
+uasz/alumni/spi/model/Parrainage.class
+uasz/alumni/spi/api/ParrainagesApi.class
+uasz/alumni/spi/model/Invitation$StatutEnum.class
+uasz/alumni/spi/model/Invitation.class
+uasz/alumni/spi/api/ApiUtil.class
