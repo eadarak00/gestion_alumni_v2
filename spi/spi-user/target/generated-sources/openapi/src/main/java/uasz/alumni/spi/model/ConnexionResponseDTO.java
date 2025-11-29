@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "ConnexionResponseDTO", description = "Réponse de connexion avec les tokens JWT et les informations utilisateur")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-28T23:40:28.904143835Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-29T08:40:07.510076584Z[Africa/Dakar]")
 public class ConnexionResponseDTO {
 
   private String token;
