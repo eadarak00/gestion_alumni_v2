@@ -1,3 +1,30 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: ms-user
+  config:
+    import: "configserver:http://ms-config:8888"
+  # Configuration Email (ajoutée ici sous la même clé spring)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME:djibyf573@gmail.com}
+    password: "${EMAIL_PASSWORD:sgfq yjzs ioev tkbk}"
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+# Configuration personnalisée pour l'application
+app:
+  email:
+    from: ${EMAIL_FROM:noreply@alumni.uasz.sn}
+    code-expiration-minutes: 15
