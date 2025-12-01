@@ -5,7 +5,7 @@
  */
 package uasz.alumni.spi.api;
 
-import uasz.alumni.spi.model.Parrainage;
+import uasz.alumni.spi.model.ReponseValidationInvitation;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,37 +32,42 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-29T11:47:11.992595600Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-01T15:22:28.712871555Z[Africa/Dakar]")
 @Validated
-@Tag(name = "Parrainage", description = "Gestion des relations de parrainage")
-public interface ParrainagesApi {
+@Tag(name = "Validation", description = "Vérification et acceptation des invitations")
+public interface ValidationApi {
 
     /**
-     * GET /parrainages : Lister les parrainages
-     * Retourne toutes les relations de parrainage.
+     * GET /validation : Vérifier la validité d&#39;une invitation
+     * Vérifie si une invitation est valide et non expirée. 
      *
-     * @return Liste des parrainages (status code 200)
+     * @param jeton  (required)
+     * @return Invitation valide (status code 200)
+     *         or Jeton introuvable (status code 404)
+     *         or Invitation expirée (status code 410)
      */
     @Operation(
-        operationId = "parrainagesGet",
-        summary = "Lister les parrainages",
-        description = "Retourne toutes les relations de parrainage.",
-        tags = { "Parrainage" },
+        operationId = "validationGet",
+        summary = "Vérifier la validité d'une invitation",
+        description = "Vérifie si une invitation est valide et non expirée. ",
+        tags = { "Validation" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Liste des parrainages", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Parrainage.class)))
-            })
+            @ApiResponse(responseCode = "200", description = "Invitation valide", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ReponseValidationInvitation.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Jeton introuvable"),
+            @ApiResponse(responseCode = "410", description = "Invitation expirée")
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/parrainages",
+        value = "/validation",
         produces = { "application/json" }
     )
     @ResponseStatus(HttpStatus.OK)
     
-    List<Parrainage> parrainagesGet(
-        
+    ReponseValidationInvitation validationGet(
+        @NotNull @Parameter(name = "jeton", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "jeton", required = true) String jeton
     );
 
 }

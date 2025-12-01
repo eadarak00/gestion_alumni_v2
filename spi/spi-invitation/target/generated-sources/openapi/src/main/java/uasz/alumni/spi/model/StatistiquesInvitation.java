@@ -4,6 +4,10 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import uasz.alumni.spi.model.StatistiquesInvitationTopEnvoyeursInner;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -18,10 +22,10 @@ import jakarta.annotation.Generated;
  * StatistiquesInvitation
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-29T11:47:11.992595600Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-01T15:22:28.712871555Z[Africa/Dakar]")
 public class StatistiquesInvitation {
 
-  private Integer totalEnvoyees;
+  private Integer totalInvitations;
 
   private Integer totalAcceptees;
 
@@ -29,24 +33,27 @@ public class StatistiquesInvitation {
 
   private Float tauxConversion;
 
-  public StatistiquesInvitation totalEnvoyees(Integer totalEnvoyees) {
-    this.totalEnvoyees = totalEnvoyees;
+  @Valid
+  private List<@Valid StatistiquesInvitationTopEnvoyeursInner> topEnvoyeurs;
+
+  public StatistiquesInvitation totalInvitations(Integer totalInvitations) {
+    this.totalInvitations = totalInvitations;
     return this;
   }
 
   /**
-   * Get totalEnvoyees
-   * @return totalEnvoyees
+   * Get totalInvitations
+   * @return totalInvitations
   */
   
-  @Schema(name = "totalEnvoyees", example = "100", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("totalEnvoyees")
-  public Integer getTotalEnvoyees() {
-    return totalEnvoyees;
+  @Schema(name = "totalInvitations", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("totalInvitations")
+  public Integer getTotalInvitations() {
+    return totalInvitations;
   }
 
-  public void setTotalEnvoyees(Integer totalEnvoyees) {
-    this.totalEnvoyees = totalEnvoyees;
+  public void setTotalInvitations(Integer totalInvitations) {
+    this.totalInvitations = totalInvitations;
   }
 
   public StatistiquesInvitation totalAcceptees(Integer totalAcceptees) {
@@ -59,7 +66,7 @@ public class StatistiquesInvitation {
    * @return totalAcceptees
   */
   
-  @Schema(name = "totalAcceptees", example = "40", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "totalAcceptees", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("totalAcceptees")
   public Integer getTotalAcceptees() {
     return totalAcceptees;
@@ -79,7 +86,7 @@ public class StatistiquesInvitation {
    * @return totalExpirees
   */
   
-  @Schema(name = "totalExpirees", example = "10", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "totalExpirees", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("totalExpirees")
   public Integer getTotalExpirees() {
     return totalExpirees;
@@ -95,11 +102,11 @@ public class StatistiquesInvitation {
   }
 
   /**
-   * Get tauxConversion
+   * Pourcentage d'invitations acceptées
    * @return tauxConversion
   */
   
-  @Schema(name = "tauxConversion", example = "40.0", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "tauxConversion", description = "Pourcentage d'invitations acceptées", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("tauxConversion")
   public Float getTauxConversion() {
     return tauxConversion;
@@ -107,6 +114,34 @@ public class StatistiquesInvitation {
 
   public void setTauxConversion(Float tauxConversion) {
     this.tauxConversion = tauxConversion;
+  }
+
+  public StatistiquesInvitation topEnvoyeurs(List<@Valid StatistiquesInvitationTopEnvoyeursInner> topEnvoyeurs) {
+    this.topEnvoyeurs = topEnvoyeurs;
+    return this;
+  }
+
+  public StatistiquesInvitation addTopEnvoyeursItem(StatistiquesInvitationTopEnvoyeursInner topEnvoyeursItem) {
+    if (this.topEnvoyeurs == null) {
+      this.topEnvoyeurs = new ArrayList<>();
+    }
+    this.topEnvoyeurs.add(topEnvoyeursItem);
+    return this;
+  }
+
+  /**
+   * Get topEnvoyeurs
+   * @return topEnvoyeurs
+  */
+  @Valid 
+  @Schema(name = "topEnvoyeurs", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("topEnvoyeurs")
+  public List<@Valid StatistiquesInvitationTopEnvoyeursInner> getTopEnvoyeurs() {
+    return topEnvoyeurs;
+  }
+
+  public void setTopEnvoyeurs(List<@Valid StatistiquesInvitationTopEnvoyeursInner> topEnvoyeurs) {
+    this.topEnvoyeurs = topEnvoyeurs;
   }
 
   @Override
@@ -118,25 +153,27 @@ public class StatistiquesInvitation {
       return false;
     }
     StatistiquesInvitation statistiquesInvitation = (StatistiquesInvitation) o;
-    return Objects.equals(this.totalEnvoyees, statistiquesInvitation.totalEnvoyees) &&
+    return Objects.equals(this.totalInvitations, statistiquesInvitation.totalInvitations) &&
         Objects.equals(this.totalAcceptees, statistiquesInvitation.totalAcceptees) &&
         Objects.equals(this.totalExpirees, statistiquesInvitation.totalExpirees) &&
-        Objects.equals(this.tauxConversion, statistiquesInvitation.tauxConversion);
+        Objects.equals(this.tauxConversion, statistiquesInvitation.tauxConversion) &&
+        Objects.equals(this.topEnvoyeurs, statistiquesInvitation.topEnvoyeurs);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(totalEnvoyees, totalAcceptees, totalExpirees, tauxConversion);
+    return Objects.hash(totalInvitations, totalAcceptees, totalExpirees, tauxConversion, topEnvoyeurs);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class StatistiquesInvitation {\n");
-    sb.append("    totalEnvoyees: ").append(toIndentedString(totalEnvoyees)).append("\n");
+    sb.append("    totalInvitations: ").append(toIndentedString(totalInvitations)).append("\n");
     sb.append("    totalAcceptees: ").append(toIndentedString(totalAcceptees)).append("\n");
     sb.append("    totalExpirees: ").append(toIndentedString(totalExpirees)).append("\n");
     sb.append("    tauxConversion: ").append(toIndentedString(tauxConversion)).append("\n");
+    sb.append("    topEnvoyeurs: ").append(toIndentedString(topEnvoyeurs)).append("\n");
     sb.append("}");
     return sb.toString();
   }

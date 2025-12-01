@@ -5,9 +5,8 @@
  */
 package uasz.alumni.spi.api;
 
+import uasz.alumni.spi.model.DemandeCreationInvitation;
 import uasz.alumni.spi.model.Invitation;
-import uasz.alumni.spi.model.InvitationRequest;
-import uasz.alumni.spi.model.Parrainage;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,91 +33,89 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-29T11:47:11.992595600Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-01T15:22:28.712871555Z[Africa/Dakar]")
 @Validated
-@Tag(name = "Invitations", description = "Gestion des invitations par lien")
+@Tag(name = "Invitations", description = "Création et gestion des invitations")
 public interface InvitationsApi {
 
     /**
-     * PUT /invitations/{code}/accepter : Accepter une invitation
-     * Valide une invitation et crée un lien de parrainage.
+     * GET /invitations/envoyeur/{idEnvoyeur} : Invitations créées par un utilisateur
      *
-     * @param code  (required)
-     * @return Invitation acceptée (status code 200)
-     *         or Invitation invalide ou expirée (status code 400)
+     * @param idEnvoyeur  (required)
+     * @return Liste des invitations (status code 200)
      */
     @Operation(
-        operationId = "invitationsCodeAccepterPut",
-        summary = "Accepter une invitation",
-        description = "Valide une invitation et crée un lien de parrainage.",
+        operationId = "invitationsEnvoyeurIdEnvoyeurGet",
+        summary = "Invitations créées par un utilisateur",
         tags = { "Invitations" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Invitation acceptée", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Parrainage.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Invitation invalide ou expirée")
+            @ApiResponse(responseCode = "200", description = "Liste des invitations", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Invitation.class)))
+            })
         }
     )
     @RequestMapping(
-        method = RequestMethod.PUT,
-        value = "/invitations/{code}/accepter",
+        method = RequestMethod.GET,
+        value = "/invitations/envoyeur/{idEnvoyeur}",
         produces = { "application/json" }
     )
     @ResponseStatus(HttpStatus.OK)
     
-    Parrainage invitationsCodeAccepterPut(
-        @Parameter(name = "code", description = "", required = true, in = ParameterIn.PATH) @PathVariable("code") String code
+    List<Invitation> invitationsEnvoyeurIdEnvoyeurGet(
+        @Parameter(name = "idEnvoyeur", description = "", required = true, in = ParameterIn.PATH) @PathVariable("idEnvoyeur") String idEnvoyeur
     );
 
 
     /**
-     * GET /invitations/{code} : Consulter une invitation via son code
-     * Permet de vérifier l&#39;état d&#39;une invitation.
+     * GET /invitations/{idInvitation} : Obtenir les détails d&#39;une invitation
      *
-     * @param code  (required)
+     * @param idInvitation  (required)
      * @return Invitation trouvée (status code 200)
-     *         or Invitation non trouvée (status code 404)
+     *         or Invitation introuvable (status code 404)
      */
     @Operation(
-        operationId = "invitationsCodeGet",
-        summary = "Consulter une invitation via son code",
-        description = "Permet de vérifier l'état d'une invitation.",
+        operationId = "invitationsIdInvitationGet",
+        summary = "Obtenir les détails d'une invitation",
         tags = { "Invitations" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Invitation trouvée", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Invitation.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Invitation non trouvée")
+            @ApiResponse(responseCode = "404", description = "Invitation introuvable")
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/invitations/{code}",
+        value = "/invitations/{idInvitation}",
         produces = { "application/json" }
     )
     @ResponseStatus(HttpStatus.OK)
     
-    Invitation invitationsCodeGet(
-        @Parameter(name = "code", description = "", required = true, in = ParameterIn.PATH) @PathVariable("code") String code
+    Invitation invitationsIdInvitationGet(
+        @Parameter(name = "idInvitation", description = "", required = true, in = ParameterIn.PATH) @PathVariable("idInvitation") String idInvitation
     );
 
 
     /**
-     * POST /invitations : Envoyer une invitation
-     * Crée une invitation et génère un lien unique pour l&#39;invité.
+     * POST /invitations : Créer une invitation
+     * Crée une invitation pour un futur alumni. Retourne le lien d&#39;invitation à partager. 
      *
-     * @param invitationRequest  (required)
+     * @param demandeCreationInvitation  (required)
      * @return Invitation créée (status code 201)
+     *         or Données invalides (status code 400)
+     *         or Invitation déjà existante (status code 409)
      */
     @Operation(
         operationId = "invitationsPost",
-        summary = "Envoyer une invitation",
-        description = "Crée une invitation et génère un lien unique pour l'invité.",
+        summary = "Créer une invitation",
+        description = "Crée une invitation pour un futur alumni. Retourne le lien d'invitation à partager. ",
         tags = { "Invitations" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Invitation créée", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Invitation.class))
-            })
+            }),
+            @ApiResponse(responseCode = "400", description = "Données invalides"),
+            @ApiResponse(responseCode = "409", description = "Invitation déjà existante")
         }
     )
     @RequestMapping(
@@ -130,7 +127,7 @@ public interface InvitationsApi {
     @ResponseStatus(HttpStatus.CREATED)
     
     Invitation invitationsPost(
-        @Parameter(name = "InvitationRequest", description = "", required = true) @Valid @RequestBody InvitationRequest invitationRequest
+        @Parameter(name = "DemandeCreationInvitation", description = "", required = true) @Valid @RequestBody DemandeCreationInvitation demandeCreationInvitation
     );
 
 }

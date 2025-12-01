@@ -1,43 +1,45 @@
-openapi: 3.0.3
+openapi: 3.0.1
 info:
-  title: API ms-invitation
-  description: |
-    Microservice de gestion des invitations, du parrainage et des statistiques.
-    Il permet :
-    - l'envoi d'invitations par lien
-    - le suivi (tracking) de leur statut
-    - la création de relations de parrainage
-    - la génération de statistiques
+  title: Microservice Invitation - Contrat API
   version: 1.0.0
+  description: >
+    Microservice permettant aux Étudiants, Alumni et Administrateurs
+    de créer des invitations pour de futurs Alumni.
+    Toutes les invitations se font uniquement via un lien de partage.
+    Le service gère le suivi, le parrainage et les statistiques.
 
 servers:
-  - url: http://localhost:8083/api
-    description: Serveur ms-invitation
+  - url: http://localhost:8083/api/v1
 
 tags:
   - name: Invitations
-    description: Gestion des invitations par lien
-  - name: Parrainage
-    description: Gestion des relations de parrainage
+    description: Création et gestion des invitations
+  - name: Validation
+    description: Vérification et acceptation des invitations
+  - name: Suivi
+    description: Traçabilité des invitations
   - name: Statistiques
-    description: Analyse des invitations
+    description: Statistiques globales et individuelles
 
 paths:
 
+  # -------------------------------------------------------
+  # INVITATIONS - Ressource principale
+  # -------------------------------------------------------
+
   /invitations:
     post:
-      tags:
-        - Invitations
-      summary: Envoyer une invitation
-      description: Crée une invitation et génère un lien unique pour l'invité.
+      summary: Créer une invitation
+      tags: [Invitations]
+      description: >
+        Crée une invitation pour un futur alumni.
+        Retourne le lien d'invitation à partager.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InvitationRequest'
-            example:
-              emailInvite: "invite@example.com"
+              $ref: '#/components/schemas/DemandeCreationInvitation'
       responses:
         '201':
           description: Invitation créée
@@ -45,15 +47,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Invitation'
+        '400':
+          description: Données invalides
+        '409':
+          description: Invitation déjà existante
 
-  /invitations/{code}:
+  /invitations/{idInvitation}:
     get:
-      tags:
-        - Invitations
-      summary: Consulter une invitation via son code
-      description: Permet de vérifier l'état d'une invitation.
+      summary: Obtenir les détails d'une invitation
+      tags: [Invitations]
       parameters:
-        - name: code
+        - name: idInvitation
           in: path
           required: true
           schema:
@@ -66,69 +70,139 @@ paths:
               schema:
                 $ref: '#/components/schemas/Invitation'
         '404':
-          description: Invitation non trouvée
+          description: Invitation introuvable
 
-  /invitations/{code}/accepter:
-    put:
-      tags:
-        - Invitations
-      summary: Accepter une invitation
-      description: Valide une invitation et crée un lien de parrainage.
+  /invitations/envoyeur/{idEnvoyeur}:
+    get:
+      summary: Invitations créées par un utilisateur
+      tags: [Invitations]
       parameters:
-        - name: code
+        - name: idEnvoyeur
           in: path
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: Invitation acceptée
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Parrainage'
-        '400':
-          description: Invitation invalide ou expirée
-
-  /parrainages:
-    get:
-      tags:
-        - Parrainage
-      summary: Lister les parrainages
-      description: Retourne toutes les relations de parrainage.
-      responses:
-        '200':
-          description: Liste des parrainages
+          description: Liste des invitations
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Parrainage'
+                  $ref: '#/components/schemas/Invitation'
 
-  /statistiques/invitations:
+
+  # -------------------------------------------------------
+  # VALIDATION DES INVITATIONS
+  # -------------------------------------------------------
+
+  /validation:
     get:
-      tags:
-        - Statistiques
-      summary: Statistiques globales des invitations
-      description: Donne les statistiques sur les invitations.
+      summary: Vérifier la validité d'une invitation
+      tags: [Validation]
+      parameters:
+        - name: jeton
+          in: query
+          required: true
+          schema:
+            type: string
+      description: >
+        Vérifie si une invitation est valide et non expirée.
       responses:
         '200':
-          description: Statistiques calculées
+          description: Invitation valide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReponseValidationInvitation'
+        '404':
+          description: Jeton introuvable
+        '410':
+          description: Invitation expirée
+
+
+  # -------------------------------------------------------
+  # SUIVI DES INVITATIONS
+  # -------------------------------------------------------
+
+  /suivi/{jeton}:
+    get:
+      summary: Suivre l'état d'une invitation
+      tags: [Suivi]
+      parameters:
+        - name: jeton
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Informations de suivi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuiviInvitation'
+        '404':
+          description: Jeton introuvable
+
+
+  # -------------------------------------------------------
+  # STATISTIQUES
+  # -------------------------------------------------------
+
+  /statistiques/global:
+    get:
+      summary: Statistiques globales
+      tags: [Statistiques]
+      responses:
+        '200':
+          description: Statistiques globales de toutes les invitations
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/StatistiquesInvitation'
 
+  /statistiques/envoyeur/{idEnvoyeur}:
+    get:
+      summary: Statistiques d’un créateur d’invitations
+      tags: [Statistiques]
+      parameters:
+        - name: idEnvoyeur
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Statistiques des invitations créées par cet utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatistiquesInvitation'
+
+
+# -------------------------------------------------------
+# SCHEMAS
+# -------------------------------------------------------
+
 components:
+
   schemas:
 
-    InvitationRequest:
+    DemandeCreationInvitation:
       type: object
+      required: [idEnvoyeur, roleEnvoyeur]
       properties:
-        emailInvite:
+        idEnvoyeur:
           type: string
-          example: invite@example.com
+        roleEnvoyeur:
+          type: string
+          enum: [ETUDIANT, ALUMNI, ADMIN]
+        messagePersonnel:
+          type: string
+          nullable: true
+          example: "Je t’invite à rejoindre notre réseau Alumni."
 
     Invitation:
       type: object
@@ -136,55 +210,81 @@ components:
         id:
           type: integer
           format: int64
-          example: 1
-        emailInvite:
+        idEnvoyeur:
           type: string
-          example: invite@example.com
-        code:
+        roleEnvoyeur:
           type: string
-          example: INV-9X83KD
+        jeton:
+          type: string
         urlInvitation:
           type: string
-          example: https://plateforme.com/invitation/INV-9X83KD
-        statut:
+          example: "https://alumni.com/invitation/valider?jeton=ABC123"
+        etat:
           type: string
-          enum: [ENVOYEE, ACCEPTEE, EXPIREE]
-          example: ENVOYEE
-        dateEnvoi:
-          type: string
-          format: date-time
-          example: 2025-05-10T14:30:00
-
-    Parrainage:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 22
-        parrainId:
-          type: integer
-          example: 5
-        filleulId:
-          type: integer
-          example: 18
+          enum:
+            - EN_ATTENTE_PARTAGE
+            - OUVERTE
+            - INSCRIPTION_INITIEE
+            - ACCEPTEE
+            - EXPIREE
         dateCreation:
           type: string
           format: date-time
-          example: 2025-05-11T09:00:00
+        dateExpiration:
+          type: string
+          format: date-time
+        dateAcceptation:
+          type: string
+          format: date-time
+          nullable: true
+
+    ReponseValidationInvitation:
+      type: object
+      properties:
+        valide:
+          type: boolean
+        message:
+          type: string
+
+    SuiviInvitation:
+      type: object
+      properties:
+        etat:
+          type: string
+          enum:
+            - EN_ATTENTE_PARTAGE
+            - OUVERTE
+            - INSCRIPTION_INITIEE
+            - ACCEPTEE
+            - EXPIREE
+        dateOuverture:
+          type: string
+          format: date-time
+          nullable: true
+        dateAcceptation:
+          type: string
+          format: date-time
+          nullable: true
 
     StatistiquesInvitation:
       type: object
       properties:
-        totalEnvoyees:
+        totalInvitations:
           type: integer
-          example: 100
         totalAcceptees:
           type: integer
-          example: 40
         totalExpirees:
           type: integer
-          example: 10
         tauxConversion:
           type: number
           format: float
-          example: 40.0
+          description: Pourcentage d'invitations acceptées
+        topEnvoyeurs:
+          type: array
+          items:
+            type: object
+            properties:
+              idEnvoyeur:
+                type: string
+              nombreInvitations:
+                type: integer
