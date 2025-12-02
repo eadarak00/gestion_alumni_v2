@@ -15,9 +15,6 @@ public record AlumniRequestDTO(
     @NotBlank(message = "L'email est obligatoire")
     String email,
 
-    /**
-     * Username optionnel, pourra être généré automatiquement si absent
-     */
     String username,
 
     @NotBlank(message = "Le mot de passe est obligatoire")

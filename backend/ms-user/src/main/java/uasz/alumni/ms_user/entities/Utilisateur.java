@@ -53,7 +53,7 @@ public class Utilisateur extends BaseEntity {
     )
     private String telephone;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String username;
 
     @Column(nullable = false)
