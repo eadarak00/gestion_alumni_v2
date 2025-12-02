@@ -36,7 +36,7 @@ public class MsUserApplication implements CommandLineRunner {
         } catch (Exception ex) {
             log.error("Erreur lors de l'initialisation des données", ex);
             // Relancer si l'application ne peut pas fonctionner sans ces données
-            // throw ex;
+            throw ex;
         }
 
         log.info("Application MS-User prête.");
