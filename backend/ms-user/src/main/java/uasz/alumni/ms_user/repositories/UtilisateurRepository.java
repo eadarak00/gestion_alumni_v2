@@ -3,8 +3,6 @@ package uasz.alumni.ms_user.repositories;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +13,6 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> 
 
     // Liste des utilisateurs actifs
     List<Utilisateur> findByDeletedFalse();
-    Page<Utilisateur> findByDeletedFalse(Pageable pageable);
 
     // Recherche simple
     Optional<Utilisateur> findByEmail(String email);
