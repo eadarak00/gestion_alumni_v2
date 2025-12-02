@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T00:16:59.136481070Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:08:55.841877373Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Suivi", description = "Traçabilité des invitations")
 public interface SuiviApi {
