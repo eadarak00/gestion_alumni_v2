@@ -1,0 +1,14 @@
+uasz/alumni/spi/api/ValidationApi.class
+uasz/alumni/spi/model/StatistiquesInvitation.class
+uasz/alumni/spi/model/Invitation$EtatEnum.class
+uasz/alumni/spi/api/StatistiquesApi.class
+uasz/alumni/spi/api/SuiviApi.class
+uasz/alumni/spi/model/StatistiquesInvitationTopEnvoyeursInner.class
+uasz/alumni/spi/model/Invitation.class
+uasz/alumni/spi/api/InvitationsApi.class
+uasz/alumni/spi/model/SuiviInvitation.class
+uasz/alumni/spi/model/DemandeCreationInvitation$RoleEnvoyeurEnum.class
+uasz/alumni/spi/model/SuiviInvitation$EtatEnum.class
+uasz/alumni/spi/model/DemandeCreationInvitation.class
+uasz/alumni/spi/model/ReponseValidationInvitation.class
+uasz/alumni/spi/api/ApiUtil.class

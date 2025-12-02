@@ -1,0 +1,290 @@
+openapi: 3.0.1
+info:
+  title: Microservice Invitation - Contrat API
+  version: 1.0.0
+  description: >
+    Microservice permettant aux Étudiants, Alumni et Administrateurs
+    de créer des invitations pour de futurs Alumni.
+    Toutes les invitations se font uniquement via un lien de partage.
+    Le service gère le suivi, le parrainage et les statistiques.
+
+servers:
+  - url: http://localhost:8083/api/v1
+
+tags:
+  - name: Invitations
+    description: Création et gestion des invitations
+  - name: Validation
+    description: Vérification et acceptation des invitations
+  - name: Suivi
+    description: Traçabilité des invitations
+  - name: Statistiques
+    description: Statistiques globales et individuelles
+
+paths:
+
+  # -------------------------------------------------------
+  # INVITATIONS - Ressource principale
+  # -------------------------------------------------------
+
+  /invitations:
+    post:
+      summary: Créer une invitation
+      tags: [Invitations]
+      description: >
+        Crée une invitation pour un futur alumni.
+        Retourne le lien d'invitation à partager.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DemandeCreationInvitation'
+      responses:
+        '201':
+          description: Invitation créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invitation'
+        '400':
+          description: Données invalides
+        '409':
+          description: Invitation déjà existante
+
+  /invitations/{idInvitation}:
+    get:
+      summary: Obtenir les détails d'une invitation
+      tags: [Invitations]
+      parameters:
+        - name: idInvitation
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invitation trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invitation'
+        '404':
+          description: Invitation introuvable
+
+  /invitations/envoyeur/{idEnvoyeur}:
+    get:
+      summary: Invitations créées par un utilisateur
+      tags: [Invitations]
+      parameters:
+        - name: idEnvoyeur
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste des invitations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Invitation'
+
+
+  # -------------------------------------------------------
+  # VALIDATION DES INVITATIONS
+  # -------------------------------------------------------
+
+  /validation:
+    get:
+      summary: Vérifier la validité d'une invitation
+      tags: [Validation]
+      parameters:
+        - name: jeton
+          in: query
+          required: true
+          schema:
+            type: string
+      description: >
+        Vérifie si une invitation est valide et non expirée.
+      responses:
+        '200':
+          description: Invitation valide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReponseValidationInvitation'
+        '404':
+          description: Jeton introuvable
+        '410':
+          description: Invitation expirée
+
+
+  # -------------------------------------------------------
+  # SUIVI DES INVITATIONS
+  # -------------------------------------------------------
+
+  /suivi/{jeton}:
+    get:
+      summary: Suivre l'état d'une invitation
+      tags: [Suivi]
+      parameters:
+        - name: jeton
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Informations de suivi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuiviInvitation'
+        '404':
+          description: Jeton introuvable
+
+
+  # -------------------------------------------------------
+  # STATISTIQUES
+  # -------------------------------------------------------
+
+  /statistiques/global:
+    get:
+      summary: Statistiques globales
+      tags: [Statistiques]
+      responses:
+        '200':
+          description: Statistiques globales de toutes les invitations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatistiquesInvitation'
+
+  /statistiques/envoyeur/{idEnvoyeur}:
+    get:
+      summary: Statistiques d’un créateur d’invitations
+      tags: [Statistiques]
+      parameters:
+        - name: idEnvoyeur
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Statistiques des invitations créées par cet utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatistiquesInvitation'
+
+
+# -------------------------------------------------------
+# SCHEMAS
+# -------------------------------------------------------
+
+components:
+
+  schemas:
+
+    DemandeCreationInvitation:
+      type: object
+      required: [idEnvoyeur, roleEnvoyeur]
+      properties:
+        idEnvoyeur:
+          type: string
+        roleEnvoyeur:
+          type: string
+          enum: [ETUDIANT, ALUMNI, ADMIN]
+        messagePersonnel:
+          type: string
+          nullable: true
+          example: "Je t’invite à rejoindre notre réseau Alumni."
+
+    Invitation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        idEnvoyeur:
+          type: string
+        roleEnvoyeur:
+          type: string
+        jeton:
+          type: string
+        urlInvitation:
+          type: string
+          example: "https://alumni.com/invitation/valider?jeton=ABC123"
+        etat:
+          type: string
+          enum:
+            - EN_ATTENTE_PARTAGE
+            - OUVERTE
+            - INSCRIPTION_INITIEE
+            - ACCEPTEE
+            - EXPIREE
+        dateCreation:
+          type: string
+          format: date-time
+        dateExpiration:
+          type: string
+          format: date-time
+        dateAcceptation:
+          type: string
+          format: date-time
+          nullable: true
+
+    ReponseValidationInvitation:
+      type: object
+      properties:
+        valide:
+          type: boolean
+        message:
+          type: string
+
+    SuiviInvitation:
+      type: object
+      properties:
+        etat:
+          type: string
+          enum:
+            - EN_ATTENTE_PARTAGE
+            - OUVERTE
+            - INSCRIPTION_INITIEE
+            - ACCEPTEE
+            - EXPIREE
+        dateOuverture:
+          type: string
+          format: date-time
+          nullable: true
+        dateAcceptation:
+          type: string
+          format: date-time
+          nullable: true
+
+    StatistiquesInvitation:
+      type: object
+      properties:
+        totalInvitations:
+          type: integer
+        totalAcceptees:
+          type: integer
+        totalExpirees:
+          type: integer
+        tauxConversion:
+          type: number
+          format: float
+          description: Pourcentage d'invitations acceptées
+        topEnvoyeurs:
+          type: array
+          items:
+            type: object
+            properties:
+              idEnvoyeur:
+                type: string
+              nombreInvitations:
+                type: integer

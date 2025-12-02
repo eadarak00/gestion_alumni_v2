@@ -1,0 +1,159 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>uasz.alumni.spi</groupId>
+    <artifactId>spi-invitation</artifactId>
+    <version>1.0.0</version>
+    <name>spi-invitation</name>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <openapi.generator.version>7.3.0</openapi.generator.version>
+        <swagger-annotations.version>2.2.20</swagger-annotations.version>
+    </properties>
+    
+    <dependencies>
+        <!-- Swagger Annotations -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations.version}</version>
+        </dependency>
+
+        <!-- Gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+        <!-- Gson Fire -->
+        <dependency>
+            <groupId>io.gsonfire</groupId>
+            <artifactId>gson-fire</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+
+        <!-- Jakarta Annotation -->
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+
+        <!-- FindBugs JSR305 -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+        <!-- OkHttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+
+        <!-- Jackson Databind (required by generated JSON.java) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.16.1</version>
+        </dependency>
+
+        <!-- Spring Web (pour les annotations @RequestMapping, ResponseEntity, etc.) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.2.0</version>
+        </dependency>
+
+        <!-- Spring Context (pour l'annotation @Validated) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.2.0</version>
+        </dependency>
+
+        <!-- Jakarta Servlet API -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Jakarta Validation API -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+        <!-- Jackson Nullable (pour JsonNullable) -->
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi.generator.version}</version>
+
+                <executions>
+                    <execution>
+                        <id>generate-spi</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+
+                        <configuration>
+                            <!-- Ton contrat -->
+                            <inputSpec>${project.basedir}/../../contracts/ms-invitation.yaml</inputSpec>
+
+                            <!-- Utiliser le générateur Spring -->
+                            <generatorName>spring</generatorName>
+
+                            <apiPackage>uasz.alumni.spi.api</apiPackage>
+                            <modelPackage>uasz.alumni.spi.model</modelPackage>
+                            <invokerPackage>uasz.alumni.spi.invoker</invokerPackage>
+
+                            <configOptions>
+                                <!-- Générer uniquement les interfaces -->
+                                <interfaceOnly>true</interfaceOnly>
+                                <!-- Ne pas wrapper dans ResponseEntity (retourne List<Student>) -->
+                                <useResponseEntity>false</useResponseEntity>
+                                <!-- Ne pas générer de code spécifique Spring Boot -->
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <!-- Utiliser Jakarta EE -->
+                                <useJakartaEe>true</useJakartaEe>
+                                <!-- Bibliothèque de dates Java 8 -->
+                                <dateLibrary>java8</dateLibrary>
+                                <!-- Ne pas générer d'annotations Spring -->
+                                <useTags>false</useTags>
+                            </configOptions>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
