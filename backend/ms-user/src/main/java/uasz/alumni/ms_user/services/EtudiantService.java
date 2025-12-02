@@ -1,6 +1,5 @@
 package uasz.alumni.ms_user.services;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -25,7 +24,7 @@ public class EtudiantService {
     private final EtudiantRepository etudiantRepository;
     private final RoleRepository roleRepository;
     private final EtudiantMapper etudiantMapper;
-    private final PasswordEncoder passwordEncoder;
+    // private final PasswordEncoder passwordEncoder;
     // private final codeValidationService codeValidationService;
 
     public EtudiantResponseDTO inscrireEtudiant(EtudiantRequestDTO dto) {
@@ -76,7 +75,7 @@ public class EtudiantService {
         etudiant.setRole(roleEtudiant);
 
         // Encodage du mot de passe
-        etudiant.setMotDePasse(passwordEncoder.encode(etudiant.getMotDePasse()));
+        // etudiant.setMotDePasse(passwordEncoder.encode(etudiant.getMotDePasse()));
 
         return etudiant;
     }
