@@ -39,7 +39,7 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_deleted", nullable = false)
-    private Boolean deleted = false;
+    private boolean deleted;
 
     private LocalDateTime deletedAt;
 
@@ -48,10 +48,8 @@ public abstract class BaseEntity {
      */
     @PrePersist
     protected void onCreate() {
-        // PROPRE : on laisse Hibernate gérer createdAt avec @CreationTimestamp
-        if (deleted == null) {
-            deleted = false;
-        }
+        // Rien à faire ici : createdAt est géré automatiquement
+        this.deleted = false;
     }
 
     /**
@@ -59,15 +57,15 @@ public abstract class BaseEntity {
      */
     @PreUpdate
     protected void onUpdate() {
-        // updatedAt est géré automatiquement par @UpdateTimestamp, pas besoin de set()
+        // updatedAt est géré automatiquement
 
-        // Ajout date lors d'une suppression logique
-        if (Boolean.TRUE.equals(deleted) && deletedAt == null) {
+        // Ajout de la date si suppression logique
+        if (deleted && deletedAt == null) {
             deletedAt = LocalDateTime.now();
         }
 
-        // Nettoyage date lors d'une restauration
-        if (Boolean.FALSE.equals(deleted) && deletedAt != null) {
+        // Nettoyage si restauré
+        if (!deleted && deletedAt != null) {
             deletedAt = null;
         }
     }
@@ -81,17 +79,11 @@ public abstract class BaseEntity {
     }
 
     /**
-     * Restauration d'une entité soft-deleted
+     * Restauration
      */
     public void restore() {
         this.deleted = false;
         this.deletedAt = null;
     }
 
-    /**
-     * Vérifie si l'entité est supprimée logiquement
-     */
-    public boolean isDeleted() {
-        return Boolean.TRUE.equals(this.deleted);
-    }
 }

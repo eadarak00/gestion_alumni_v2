@@ -218,7 +218,7 @@ services:
       PMA_HOST: ms-cv-db
       PMA_PORT: 3306
     ports:
-      - "9090:80"
+      - "9092:80"
     networks:
       - microservices-net
     depends_on:

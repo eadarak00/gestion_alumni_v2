@@ -27,7 +27,7 @@ public class ApplicationInitializer {
         } catch (Exception ex) {
             log.error("Erreur lors de l'initialisation des données de l'application", ex);
             // Selon la criticité, tu peux aussi relancer l'exception pour stopper l'application
-            // throw ex;
+            throw ex;
         }
     }
 }
