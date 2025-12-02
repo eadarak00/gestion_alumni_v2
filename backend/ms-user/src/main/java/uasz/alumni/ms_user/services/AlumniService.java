@@ -1,5 +1,6 @@
 package uasz.alumni.ms_user.services;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.micrometer.common.lang.NonNull;
@@ -23,7 +24,7 @@ public class AlumniService {
     private final AlumniRepository alumniRepository;
     private final RoleRepository roleRepository;
     private final AlumniMapper alumniMapper;
-    // private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final CodeValidationService codeValidationService;
 
     /**
@@ -46,7 +47,7 @@ public class AlumniService {
         Alumni alumni = alumniMapper.toEntity(dto);
         alumni.setRole(roleAlumni);
         alumni.setActif(false); // par défaut à l'inscription
-        // alumni.setMotDePasse(passwordEncoder.encode(alumni.getMotDePasse()));
+        alumni.setMotDePasse(passwordEncoder.encode(alumni.getMotDePasse()));
 
         // Sauvegarde et envoi du code de validation
         Alumni saved = alumniRepository.save(alumni);
