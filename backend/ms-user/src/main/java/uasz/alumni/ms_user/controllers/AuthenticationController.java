@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import uasz.alumni.ms_user.dtos.AlumniRequestDTO;
+import uasz.alumni.ms_user.dtos.AlumniResponseDTO;
 import uasz.alumni.ms_user.dtos.EtudiantRequestDTO;
 import uasz.alumni.ms_user.dtos.EtudiantResponseDTO;
+import uasz.alumni.ms_user.services.AlumniService;
 import uasz.alumni.ms_user.services.EtudiantService;
 
 @RestController
@@ -21,7 +24,7 @@ import uasz.alumni.ms_user.services.EtudiantService;
 public class AuthenticationController {
 
     private final EtudiantService etudiantService;
-    // private final AlumniService alumniService;
+    private final AlumniService alumniService;
 
 
     @PostMapping("/inscription-etudiant")
@@ -32,13 +35,13 @@ public class AuthenticationController {
                 .body(etudiantService.inscrireEtudiant(dto));
     }
 
-    // @PostMapping("/inscription-alumni")
-    // public ResponseEntity<AlumniResponseDTO> inscrireEtudiant(
-    //         @Valid @RequestBody AlumniRequestDTO dto) {
-    //     return ResponseEntity
-    //             .status(HttpStatus.CREATED)
-    //             .body(alumniService.inscrireAlumni(dto));
-    // }
+    @PostMapping("/inscription-alumni")
+    public ResponseEntity<AlumniResponseDTO> inscrireEtudiant(
+            @Valid @RequestBody AlumniRequestDTO dto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(alumniService.inscrireAlumni(dto));
+    }
     
 
 
