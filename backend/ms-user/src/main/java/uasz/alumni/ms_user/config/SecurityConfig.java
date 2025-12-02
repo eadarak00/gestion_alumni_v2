@@ -50,6 +50,7 @@ public class SecurityConfig {
                                 "/uploads/**",
                                 "/ms-user/**",
                                 "/ms-cv/**",
+                                "/ms-invitation/**",
                                 "/swagger-ui.html",
                                 "/webjars/**",
                                 "/swagger-resources/**"
