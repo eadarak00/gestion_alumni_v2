@@ -1,3 +1,8 @@
+server:
+  port: 8082
+
 spring:
   application:
     name: ms-cv
+  config:
+    import: "configserver:http://ms-config:8888"
