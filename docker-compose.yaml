@@ -100,6 +100,83 @@ services:
       timeout: 5s
       retries: 10
       start_period: 40s
+
+  # MS-INVITATION Database
+  ms-invitation-db:
+    <<: *service-defaults
+    image: mariadb:11
+    container_name: ms-invitation-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_invitation
+      MYSQL_USER: inviteUser
+      MYSQL_PASSWORD: passer123
+    ports:
+      - "3310:3306"
+    volumes:
+      - ms-invitation-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 30s
+      retries: 20
+      start_period: 60s
+    command: 
+      - --wait-timeout=28800
+      - --interactive-timeout=28800
+
+  # MS-INVITATION API
+  ms-invitation:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: backend/ms-invitation/Dockerfile
+    container_name: ms-invitation
+    ports:
+      - "8083:8083"
+    depends_on:
+      ms-config:
+        condition: service_healthy
+      ms-discover:
+        condition: service_healthy
+      ms-invitation-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  # phpMyAdmin for MS-USER
+  phpmyadmin-user:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-user
+    environment:
+      PMA_HOST: ms-user-db
+      PMA_PORT: 3306
+    ports:
+      - "9091:80"
+    networks:
+      - microservices-net
+    depends_on:
+      - ms-user-db
+    restart: unless-stopped
+
+  # phpMyAdmin for MS-INVITATION
+  phpmyadmin-invitation:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-invitation
+    environment:
+      PMA_HOST: ms-invitation-db
+      PMA_PORT: 3306
+    ports:
+      - "9093:80"
+    networks:
+      - microservices-net
+    depends_on:
+      - ms-invitation-db
+    restart: unless-stopped
   
 networks:
   microservices-net:
@@ -107,3 +184,4 @@ networks:
 
 volumes:
   ms-user-db-data:
+  ms-invitation-db-data:

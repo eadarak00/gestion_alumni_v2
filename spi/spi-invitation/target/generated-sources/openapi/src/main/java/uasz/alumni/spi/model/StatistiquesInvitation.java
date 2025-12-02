@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
  * StatistiquesInvitation
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-01T15:22:28.712871555Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T00:16:59.136481070Z[Africa/Dakar]")
 public class StatistiquesInvitation {
 
   private Integer totalInvitations;

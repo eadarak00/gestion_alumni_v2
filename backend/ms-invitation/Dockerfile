@@ -7,15 +7,15 @@ WORKDIR /app
 # 1. Copier les contrats (nécessaire pour le SPI)
 COPY contracts /app/contracts
 
-# 2. Copier et builder le SPI User
-COPY spi/spi-user /app/spi/spi-invitation
+# 2. Copier et builder le SPI Invitation
+COPY spi/spi-invitation /app/spi/spi-invitation
 WORKDIR /app/spi/spi-invitation
 RUN mvn clean install -DskipTests
 
-# 3. Builder le microservice User
+# 3. Builder le microservice Invitation
 WORKDIR /app/backend/ms-invitation
 
-# Optimisation du cache des dépendances pour ms-user
+# Optimisation du cache des dépendances pour ms-invitation
 COPY backend/ms-invitation/pom.xml .
 RUN mvn dependency:go-offline -B
 
@@ -31,7 +31,7 @@ WORKDIR /app
 COPY --from=build /app/backend/ms-invitation/target/*.jar app.jar
 
 # Exposer le port
-EXPOSE 808e
+EXPOSE 8083
 
 # Lancer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
