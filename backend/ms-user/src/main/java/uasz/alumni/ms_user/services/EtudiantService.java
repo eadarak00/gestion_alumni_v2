@@ -25,7 +25,7 @@ public class EtudiantService {
     private final RoleRepository roleRepository;
     private final EtudiantMapper etudiantMapper;
     // private final PasswordEncoder passwordEncoder;
-    // private final codeValidationService codeValidationService;
+    private final CodeValidationService codeValidationService;
 
     public EtudiantResponseDTO inscrireEtudiant(EtudiantRequestDTO dto) {
 
@@ -43,7 +43,7 @@ public class EtudiantService {
         Etudiant saved = etudiantRepository.save(etudiant);
 
         // Envoi code validation
-        // codeValidationService.creerEtEnvoyerCode(saved.getEmail());
+        codeValidationService.creerEtEnvoyerCode(saved.getEmail());
 
         log.info("Nouvel étudiant inscrit : {} ({})", saved.getNom(), saved.getEmail());
 
@@ -80,13 +80,4 @@ public class EtudiantService {
         return etudiant;
     }
 
-    // private String generateUsername(EtudiantRequestDTO dto) {
-    //     String base = dto.nom().toLowerCase() + "." + dto.prenom().toLowerCase();
-    //     String username = base;
-    //     int counter = 1;
-    //     while (etudiantRepository.findByUsername(username).isPresent()) {
-    //         username = base + counter++;
-    //     }
-    //     return username;
-    // }
 }

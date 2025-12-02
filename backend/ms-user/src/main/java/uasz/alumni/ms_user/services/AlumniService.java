@@ -24,7 +24,7 @@ public class AlumniService {
     private final RoleRepository roleRepository;
     private final AlumniMapper alumniMapper;
     // private final PasswordEncoder passwordEncoder;
-    // private final CodeValidationService codeValidationService;
+    private final CodeValidationService codeValidationService;
 
     /**
      * Inscription d'un alumni
@@ -50,7 +50,7 @@ public class AlumniService {
 
         // Sauvegarde et envoi du code de validation
         Alumni saved = alumniRepository.save(alumni);
-        // codeValidationService.creerEtEnvoyerCode(saved.getEmail());
+        codeValidationService.creerEtEnvoyerCode(saved.getEmail());
 
         // Conversion en DTO immuable record
         return alumniMapper.toResponse(saved);
