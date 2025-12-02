@@ -7,7 +7,7 @@ public record UtilisateurResponseDTO(
         String email,
         String telephone,
         String username,
-        Boolean actif,
+        boolean actif,
         boolean deleted,
         String role
 ) {}
