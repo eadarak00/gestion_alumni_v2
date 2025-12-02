@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * IndexResponseDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-11-29T08:40:07.510076584Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
 public class IndexResponseDTO {
 
   private String jobId;

@@ -101,6 +101,53 @@ services:
       retries: 10
       start_period: 40s
 
+   # MS-CV Database
+  ms-cv-db:
+    <<: *service-defaults
+    image: mariadb:11
+    container_name: ms-cv-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_cv
+      MYSQL_USER: cvuser
+      MYSQL_PASSWORD: passer123
+    ports:
+      - "3309:3306"
+    volumes:
+      - ms-cv-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 30s
+      retries: 20
+      start_period: 60s
+    command: 
+      - --wait-timeout=28800
+      - --interactive-timeout=28800
+
+  # MS-CV API
+  ms-cv:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: backend/ms-cv/Dockerfile
+    container_name: ms-cv
+    ports:
+      - "8082:8082"
+    depends_on:
+      ms-config:
+        condition: service_healthy
+      ms-discover:
+        condition: service_healthy
+      ms-cv-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
   # MS-INVITATION Database
   ms-invitation-db:
     <<: *service-defaults
@@ -162,6 +209,21 @@ services:
     depends_on:
       - ms-user-db
     restart: unless-stopped
+  
+   # phpMyAdmin for MS-CV
+  phpmyadmin-cv:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-cv
+    environment:
+      PMA_HOST: ms-cv-db
+      PMA_PORT: 3306
+    ports:
+      - "9090:80"
+    networks:
+      - microservices-net
+    depends_on:
+      - ms-cv-db
+    restart: unless-stopped
 
   # phpMyAdmin for MS-INVITATION
   phpmyadmin-invitation:
@@ -184,4 +246,5 @@ networks:
 
 volumes:
   ms-user-db-data:
+  ms-cv-db-data:
   ms-invitation-db-data:
