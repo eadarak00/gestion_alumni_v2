@@ -19,7 +19,7 @@ public class UtilisateurMapper {
                 utilisateur.getTelephone(),
                 utilisateur.getUsername(),
                 utilisateur.isActif(),
-                Boolean.TRUE.equals(utilisateur.getDeleted()),
+                utilisateur.isDeleted(),
                 utilisateur.getRole() != null ? utilisateur.getRole().getLibelle() : null
         );
     }

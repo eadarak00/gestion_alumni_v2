@@ -43,7 +43,7 @@ public class RoleMapper {
         return new RoleResponseDTO(
                 role.getId(),
                 role.getLibelle(),
-                Boolean.TRUE.equals(role.getDeleted())
+                role.isDeleted()
         );
     }
 }
