@@ -1,4 +1,4 @@
-package uasz.alumni.ms_user.config;
+package uasz.alumni.ms_user.security;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
