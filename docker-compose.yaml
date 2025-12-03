@@ -240,7 +240,11 @@ services:
       - ms-invitation-db
     restart: unless-stopped
 
+<<<<<<< HEAD
    # FRONTEND REACT + VITE 
+=======
+# FRONTEND REACT + VITE 
+>>>>>>> 27c0bed (correction des fichiers de configurations (1))
   frontend:
     build: ./frontend
     container_name: frontend
@@ -257,7 +261,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 27c0bed (correction des fichiers de configurations (1))
 networks:
   microservices-net:
     driver: bridge

@@ -1,25 +1,23 @@
 import axiosInstance from '../../../services/axios';
 import config from '../../../config/config';
 
-/**
- * Inscription d'un nouvel étudiant
- */
+/* =======================
+   PARTIE 1 : INSCRIPTION
+   ======================= */
 export const inscrireEtudiant = async (etudiantData) => {
   try {
     console.log('🚀 [API] Appel inscription avec:', etudiantData);
     
     const response = await axiosInstance.post(
-      config.endpoints.auth.inscription,
-      etudiantData
+      config.endpoints.INSCRIPTION.ETUDIANT,
     );
 
     console.log('✅ [API] Réponse inscription SUCCESS:', response.data);
 
-    // IMPORTANT: Toujours retourner { success: true }
     return {
       success: true,
       data: response.data,
-      message: response.data.message || 'Inscription réussie'
+      message: response.data.message || config.messages.inscription.success
     };
   } catch (error) {
     console.error('❌ [API] Erreur inscription:', {
@@ -30,22 +28,22 @@ export const inscrireEtudiant = async (etudiantData) => {
     
     return {
       success: false,
-      message: error.response?.data?.message || config.messages?.inscription?.error || 'Erreur lors de l\'inscription',
+      message: error.response?.data?.message || config.messages.inscription.error,
       errors: error.response?.data?.errors || {}
     };
   }
 };
 
-/**
- * Valider le code de validation reçu par email
- */
+/* ================================
+   PARTIE 2 : VALIDATION DU CODE
+   ================================ */
 export const validerCode = async (email, code) => {
   try {
     console.log('🚀 Appel API validation code:', { email, code });
 
     const response = await axiosInstance.post(
-      config.endpoints.validation.valider,
-      { email, code }  // données dans le body
+      config.endpoints.VALIDATION.VALIDER, // ← Endpoint validation code
+      { email, code }
     );
 
     console.log('✅ Réponse API validation:', response.data);
@@ -53,26 +51,29 @@ export const validerCode = async (email, code) => {
     return {
       success: true,
       data: response.data,
-      message: response.data.message || 'Code validé avec succès'
+      message: response.data.message || config.messages.validation.compteValide
     };
   } catch (error) {
     console.error('❌ Erreur API validation:', error.response?.data || error.message);
 
     return {
       success: false,
-      message: error.response?.data?.message || config.messages.validation.codeInvalide || 'Code invalide ou expiré',
+      message: error.response?.data?.message || config.messages.validation.codeInvalide,
       errors: error.response?.data?.errors || {}
     };
   }
 };
 
+/* ================================
+   PARTIE 3 : RENVOI DU CODE
+   ================================ */
 export const renvoyerCode = async (email) => {
   try {
     console.log('🚀 Appel API renvoi code:', { email });
 
     const response = await axiosInstance.post(
-      config.endpoints.validation.renvoyer,
-      { email } // données dans le body
+      config.endpoints.VALIDATION.RENVOYER, 
+      { email }
     );
 
     console.log('✅ Réponse API renvoi code:', response.data);
@@ -80,7 +81,7 @@ export const renvoyerCode = async (email) => {
     return {
       success: true,
       data: response.data,
-      message: response.data.message || 'Nouveau code envoyé'
+      message: response.data.message || config.messages.validation.codeEnvoye
     };
   } catch (error) {
     console.error('❌ Erreur API renvoi code:', error.response?.data || error.message);
