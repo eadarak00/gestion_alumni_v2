@@ -28,3 +28,9 @@ app:
   email:
     from: ${EMAIL_FROM:noreply@alumni.uasz.sn}
     code-expiration-minutes: 15
+    
+jwt:
+  secret: "eL8Jf0uI1H1YBcvSMBjDyF4EK7TMLDNK4sC7uQslY6t8tP0vqEoL8g6avsznxYjYRXKChP5BcbM4g38c+QFhAw=="
+  access-exp-seconds: 900          # 15 min
+  refresh-exp-days: 30
+
