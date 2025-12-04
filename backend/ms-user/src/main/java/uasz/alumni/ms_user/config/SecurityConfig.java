@@ -39,7 +39,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/api/v1/roles/**", "/api/v1/validation/**",
+                        .requestMatchers("/api/v1/auth/**", "/api/v1/validation/**",
                                 "/swagger-ui/**", "/ms-user/**",
                                 "/ms-cv/**", "/ms-invitation/**")
                         .permitAll()

@@ -1,46 +1,39 @@
 package uasz.alumni.ms_user.controllers;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import lombok.extern.slf4j.Slf4j;
-import uasz.alumni.ms_user.dtos.CodeValidationCheckDTO;
-import uasz.alumni.ms_user.dtos.CodeValidationRequestDTO;
 import uasz.alumni.ms_user.services.CodeValidationService;
-
+import uasz.alumni.spi.api.ValidationApi;
+import uasz.alumni.spi.model.CodeValidationCheckDTO;
+import uasz.alumni.spi.model.CodeValidationRequestDTO;
 
 @RestController
-@RequestMapping("/api/v1/validation")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
-public class CodeValidationController {
+public class CodeValidationController implements ValidationApi {
 
     private final CodeValidationService codeValidationService;
 
-    /**
-     * Génère et envoie un code de validation à un utilisateur
-     */
-    @PostMapping("/envoyer")
-    public ResponseEntity<Void> envoyerCode(@Valid @RequestBody CodeValidationRequestDTO dto) {
-        log.info("Demande de génération de code pour {}", dto.email());
+    @Override
+    public ResponseEntity<Void> envoyerCode(@Valid CodeValidationRequestDTO dto) {
+        log.info("Demande de génération de code pour {}", dto.getEmail());
 
-        codeValidationService.creerEtEnvoyerCode(dto.email());
+        codeValidationService.creerEtEnvoyerCode(dto.getEmail());
 
-        return ResponseEntity.status(201).build(); // 201 CREATED
+        return ResponseEntity.status(201).build();
     }
 
-    /**
-     * Valide un code fourni par l'utilisateur
-     */
-    @PostMapping("/verifier")
-    public ResponseEntity<String> verifierCode(@Valid @RequestBody CodeValidationCheckDTO dto) {
-        log.info("Validation du code pour {}", dto.email());
+    @Override
+    public ResponseEntity<String> verifierCode(@Valid CodeValidationCheckDTO dto) {
+        log.info("Validation du code pour {}", dto.getEmail());
 
-        boolean valide = codeValidationService.validerCode(dto.email(), dto.code());
+        boolean valide = codeValidationService.validerCode(dto.getEmail(), dto.getCode());
 
         if (!valide) {
             return ResponseEntity.badRequest().body("Code invalide ou expiré");
