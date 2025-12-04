@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -16,51 +15,13 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Données du rôle à créer
+ * RoleRequestDTO
  */
 
-@Schema(name = "RoleRequestDTO", description = "Données du rôle à créer")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T20:19:48.415438204Z[Africa/Dakar]")
 public class RoleRequestDTO {
 
-  /**
-   * Libellé unique du rôle. Doit contenir uniquement des lettres majuscules et des underscores.
-   */
-  public enum LibelleEnum {
-    ADMIN("ADMIN"),
-    
-    ALUMNI("ALUMNI"),
-    
-    ETUDIANT("ETUDIANT");
-
-    private String value;
-
-    LibelleEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static LibelleEnum fromValue(String value) {
-      for (LibelleEnum b : LibelleEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private LibelleEnum libelle;
+  private String libelle;
 
   public RoleRequestDTO() {
     super();
@@ -69,27 +30,27 @@ public class RoleRequestDTO {
   /**
    * Constructor with only required parameters
    */
-  public RoleRequestDTO(LibelleEnum libelle) {
+  public RoleRequestDTO(String libelle) {
     this.libelle = libelle;
   }
 
-  public RoleRequestDTO libelle(LibelleEnum libelle) {
+  public RoleRequestDTO libelle(String libelle) {
     this.libelle = libelle;
     return this;
   }
 
   /**
-   * Libellé unique du rôle. Doit contenir uniquement des lettres majuscules et des underscores.
+   * Libellé du rôle (majuscules et underscores uniquement)
    * @return libelle
   */
   @NotNull @Pattern(regexp = "^[A-Z_]+$") @Size(min = 2, max = 50) 
-  @Schema(name = "libelle", example = "ADMIN", description = "Libellé unique du rôle. Doit contenir uniquement des lettres majuscules et des underscores.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "libelle", example = "ADMIN", description = "Libellé du rôle (majuscules et underscores uniquement)", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("libelle")
-  public LibelleEnum getLibelle() {
+  public String getLibelle() {
     return libelle;
   }
 
-  public void setLibelle(LibelleEnum libelle) {
+  public void setLibelle(String libelle) {
     this.libelle = libelle;
   }
 

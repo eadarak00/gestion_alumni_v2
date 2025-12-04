@@ -4,74 +4,52 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import uasz.alumni.ms_user.dtos.RoleRequestDTO;
-import uasz.alumni.ms_user.dtos.RoleResponseDTO;
+
 import uasz.alumni.ms_user.services.RoleService;
+import uasz.alumni.spi.api.RolesApi;
+import uasz.alumni.spi.model.RoleRequestDTO;
+import uasz.alumni.spi.model.RoleResponseDTO;
 
 @RestController
-@RequestMapping("/api/v1/roles")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
-@Validated
-public class RoleController {
+public class RoleController implements RolesApi {
 
     private final RoleService roleService;
 
-    /**
-     * Récupère tous les rôles
-     */
-    @GetMapping
-    public ResponseEntity<List<RoleResponseDTO>> getAllRoles() {
-        return ResponseEntity.ok(roleService.getAllRolesDto());
-    }
-
-    /**
-     * Récupère un rôle par ID
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<RoleResponseDTO> getRoleById(@PathVariable Long id) {
-        RoleResponseDTO dto = roleService.getRoleDtoById(id);
-        return ResponseEntity.ok(dto);
-    }
-
-    /**
-     * Crée un nouveau rôle
-     */
-    @PostMapping
+    @Override
     public ResponseEntity<RoleResponseDTO> createRole(
-            @Valid @RequestBody RoleRequestDTO dto) {
+            @Valid RoleRequestDTO dto) {
         RoleResponseDTO saved = roleService.createRole(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    /**
-     * Met à jour un rôle existant
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<RoleResponseDTO> updateRole(
-            @PathVariable Long id,
-            @Valid @RequestBody RoleRequestDTO dto) {
-        RoleResponseDTO updated = roleService.updateRole(id, dto);
-        return ResponseEntity.ok(updated);
+    @Override
+    public ResponseEntity<List<RoleResponseDTO>> getAllRoles() {
+        return ResponseEntity.ok(roleService.getAllRolesDto());
     }
 
-    /**
-     * Suppression logique (soft delete)
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDeleteRole(@PathVariable Long id) {
+    @Override
+    public ResponseEntity<RoleResponseDTO> getRoleById(Long id) {
+        RoleResponseDTO dto = roleService.getRoleDtoById(id);
+        return ResponseEntity.ok(dto);
+    }
+
+    @Override
+    public ResponseEntity<Void> softDeleteRole(Long id) {
         roleService.softDeleteRole(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<RoleResponseDTO> updateRole(Long id,
+            @Valid RoleRequestDTO dto) {
+        RoleResponseDTO updated = roleService.updateRole(id, dto);
+        return ResponseEntity.ok(updated);
     }
 }

@@ -15,37 +15,36 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Requête de rafraîchissement du token JWT
+ * RefreshRequest
  */
 
-@Schema(name = "RefreshTokenRequestDTO", description = "Requête de rafraîchissement du token JWT")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
-public class RefreshTokenRequestDTO {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T20:19:48.415438204Z[Africa/Dakar]")
+public class RefreshRequest {
 
   private String refreshToken;
 
-  public RefreshTokenRequestDTO() {
+  public RefreshRequest() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public RefreshTokenRequestDTO(String refreshToken) {
+  public RefreshRequest(String refreshToken) {
     this.refreshToken = refreshToken;
   }
 
-  public RefreshTokenRequestDTO refreshToken(String refreshToken) {
+  public RefreshRequest refreshToken(String refreshToken) {
     this.refreshToken = refreshToken;
     return this;
   }
 
   /**
-   * Token de rafraîchissement obtenu lors de la connexion
+   * Token de rafraîchissement
    * @return refreshToken
   */
   @NotNull 
-  @Schema(name = "refreshToken", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", description = "Token de rafraîchissement obtenu lors de la connexion", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "refreshToken", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", description = "Token de rafraîchissement", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("refreshToken")
   public String getRefreshToken() {
     return refreshToken;
@@ -63,8 +62,8 @@ public class RefreshTokenRequestDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RefreshTokenRequestDTO refreshTokenRequestDTO = (RefreshTokenRequestDTO) o;
-    return Objects.equals(this.refreshToken, refreshTokenRequestDTO.refreshToken);
+    RefreshRequest refreshRequest = (RefreshRequest) o;
+    return Objects.equals(this.refreshToken, refreshRequest.refreshToken);
   }
 
   @Override
@@ -75,7 +74,7 @@ public class RefreshTokenRequestDTO {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RefreshTokenRequestDTO {\n");
+    sb.append("class RefreshRequest {\n");
     sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
     sb.append("}");
     return sb.toString();

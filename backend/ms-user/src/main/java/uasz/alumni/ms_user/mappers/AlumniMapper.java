@@ -2,8 +2,8 @@ package uasz.alumni.ms_user.mappers;
 
 import org.springframework.stereotype.Component;
 
-import uasz.alumni.ms_user.dtos.AlumniRequestDTO;
-import uasz.alumni.ms_user.dtos.AlumniResponseDTO;
+import uasz.alumni.spi.model.AlumniRequestDTO;
+import uasz.alumni.spi.model.AlumniResponseDTO;
 import uasz.alumni.ms_user.entities.Alumni;
 
 @Component
@@ -14,14 +14,14 @@ public class AlumniMapper {
      */
     public Alumni toEntity(AlumniRequestDTO dto) {
         Alumni alumni = new Alumni();
-        alumni.setNom(dto.nom());
-        alumni.setPrenom(dto.prenom());
-        alumni.setEmail(dto.email());
-        alumni.setUsername(dto.username());
-        alumni.setMotDePasse(dto.motDePasse());
-        alumni.setTelephone(dto.telephone());
-        alumni.setProfession(dto.profession());
-        alumni.setEntreprise(dto.entreprise());
+        alumni.setNom(dto.getNom());
+        alumni.setPrenom(dto.getPrenom());
+        alumni.setEmail(dto.getEmail());
+        alumni.setUsername(dto.getUsername());
+        alumni.setMotDePasse(dto.getMotDePasse());
+        alumni.setTelephone(dto.getTelephone());
+        alumni.setProfession(dto.getProfession());
+        alumni.setEntreprise(dto.getEntreprise());
         return alumni;
     }
 
@@ -29,18 +29,18 @@ public class AlumniMapper {
      * Convertit une entité Alumni en DTO record immuable
      */
     public AlumniResponseDTO toResponse(Alumni alumni) {
-        return new AlumniResponseDTO(
-                alumni.getId(),
-                alumni.getNom(),
-                alumni.getPrenom(),
-                alumni.getEmail(),
-                alumni.getUsername(),
-                alumni.getTelephone(),
-                alumni.getProfession(),
-                alumni.getEntreprise(),
-                alumni.isActif(),
-                alumni.getRole() != null ? alumni.getRole().getLibelle() : null,
-                alumni.isDeleted()
-        );
+        AlumniResponseDTO response = new AlumniResponseDTO();
+        response.setId(alumni.getId());
+        response.setNom(alumni.getNom());
+        response.setPrenom(alumni.getPrenom());
+        response.setEmail(alumni.getEmail());
+        response.setUsername(alumni.getUsername());
+        response.setTelephone(alumni.getTelephone());
+        response.setProfession(alumni.getProfession());
+        response.setEntreprise(alumni.getEntreprise());
+        response.setActif(alumni.isActif());
+        response.setRole(alumni.getRole() != null ? alumni.getRole().getLibelle() : null);
+        response.setDeleted(alumni.isDeleted());
+        return response;
     }
 }

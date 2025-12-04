@@ -4,9 +4,9 @@ import java.util.Locale;
 
 import org.springframework.stereotype.Component;
 
-import uasz.alumni.ms_user.dtos.RoleRequestDTO;
-import uasz.alumni.ms_user.dtos.RoleResponseDTO;
 import uasz.alumni.ms_user.entities.Role;
+import uasz.alumni.spi.model.RoleRequestDTO;
+import uasz.alumni.spi.model.RoleResponseDTO;
 
 @Component
 public class RoleMapper {
@@ -25,7 +25,7 @@ public class RoleMapper {
      */
     public Role toEntity(RoleRequestDTO dto) {
         return Role.builder()
-                .libelle(normalizeLibelle(dto.libelle()))
+                .libelle(normalizeLibelle(dto.getLibelle()))
                 .build();
     }
 
@@ -33,17 +33,17 @@ public class RoleMapper {
      * Mise à jour d'une entité existante à partir du DTO
      */
     public void updateEntity(Role role, RoleRequestDTO dto) {
-        role.setLibelle(normalizeLibelle(dto.libelle()));
+        role.setLibelle(normalizeLibelle(dto.getLibelle()));
     }
 
     /**
      * Convertit Entity → Response DTO
      */
     public RoleResponseDTO toResponse(Role role) {
-        return new RoleResponseDTO(
-                role.getId(),
-                role.getLibelle(),
-                role.isDeleted()
-        );
+        RoleResponseDTO response = new RoleResponseDTO();
+        response.setId(role.getId());
+        response.setLibelle(role.getLibelle());
+        response.setDeleted(role.isDeleted());
+        return response;
     }
 }

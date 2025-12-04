@@ -11,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 
 import uasz.alumni.ms_user.common.exceptions.ResourceAlreadyExistsException;
 import uasz.alumni.ms_user.common.exceptions.ResourceNotFoundException;
-import uasz.alumni.ms_user.dtos.RoleRequestDTO;
-import uasz.alumni.ms_user.dtos.RoleResponseDTO;
 import uasz.alumni.ms_user.entities.Role;
 import uasz.alumni.ms_user.mappers.RoleMapper;
 import uasz.alumni.ms_user.repositories.RoleRepository;
+import uasz.alumni.spi.model.RoleRequestDTO;
+import uasz.alumni.spi.model.RoleResponseDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class RoleService {
      * Crée un rôle
      */
     public RoleResponseDTO createRole(@NonNull RoleRequestDTO dto) {
-        String normalizedLibelle = dto.libelle().trim().toUpperCase(Locale.ROOT);
+        String normalizedLibelle = dto.getLibelle().trim().toUpperCase(Locale.ROOT);
 
         if (roleRepository.existsByLibelle(normalizedLibelle)) {
             throw new ResourceAlreadyExistsException(
@@ -49,9 +49,9 @@ public class RoleService {
     public RoleResponseDTO updateRole(@NonNull Long id, @NonNull RoleRequestDTO dto) {
         Role role = this.getRoleById(id);
 
-        String normalizedLibelle = dto.libelle().trim().toUpperCase(Locale.ROOT);
+        String normalizedLibelle = dto.getLibelle().trim().toUpperCase(Locale.ROOT);
         if (!role.getLibelle().equals(normalizedLibelle) &&
-            roleRepository.existsByLibelle(normalizedLibelle)) {
+                roleRepository.existsByLibelle(normalizedLibelle)) {
             throw new ResourceAlreadyExistsException(
                     "Un rôle avec le libellé '" + normalizedLibelle + "' existe déjà");
         }
@@ -73,7 +73,7 @@ public class RoleService {
                         "Role avec ID " + id + " introuvable"));
     }
 
-    /** 
+    /**
      * Récupère un rôle par ID (DTO)
      */
     @Transactional(readOnly = true)

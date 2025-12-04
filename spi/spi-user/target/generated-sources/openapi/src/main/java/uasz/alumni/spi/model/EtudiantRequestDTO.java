@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -19,7 +18,7 @@ import jakarta.annotation.Generated;
  * EtudiantRequestDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T20:19:48.415438204Z[Africa/Dakar]")
 public class EtudiantRequestDTO {
 
   private String nom;
@@ -36,44 +35,7 @@ public class EtudiantRequestDTO {
 
   private String numeroCarteEtudiant;
 
-  /**
-   * Gets or Sets niveau
-   */
-  public enum NiveauEnum {
-    LICENCE("LICENCE"),
-    
-    MASTER("MASTER"),
-    
-    DOCTORAT("DOCTORAT");
-
-    private String value;
-
-    NiveauEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static NiveauEnum fromValue(String value) {
-      for (NiveauEnum b : NiveauEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private NiveauEnum niveau;
+  private String niveau;
 
   private String filiere;
 
@@ -84,7 +46,7 @@ public class EtudiantRequestDTO {
   /**
    * Constructor with only required parameters
    */
-  public EtudiantRequestDTO(String nom, String prenom, String email, String motDePasse, String numeroCarteEtudiant, NiveauEnum niveau, String filiere) {
+  public EtudiantRequestDTO(String nom, String prenom, String email, String motDePasse, String numeroCarteEtudiant, String niveau, String filiere) {
     this.nom = nom;
     this.prenom = prenom;
     this.email = email;
@@ -100,11 +62,11 @@ public class EtudiantRequestDTO {
   }
 
   /**
-   * Get nom
+   * Nom de famille
    * @return nom
   */
   @NotNull 
-  @Schema(name = "nom", example = "Diallo", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "nom", example = "Diallo", description = "Nom de famille", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("nom")
   public String getNom() {
     return nom;
@@ -120,11 +82,11 @@ public class EtudiantRequestDTO {
   }
 
   /**
-   * Get prenom
+   * Prénom
    * @return prenom
   */
   @NotNull 
-  @Schema(name = "prenom", example = "Mamadou", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "prenom", example = "Mamadou", description = "Prénom", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("prenom")
   public String getPrenom() {
     return prenom;
@@ -140,11 +102,11 @@ public class EtudiantRequestDTO {
   }
 
   /**
-   * Get email
+   * Adresse email
    * @return email
   */
   @NotNull @jakarta.validation.constraints.Email 
-  @Schema(name = "email", example = "mamadou.diallo@uasz.sn", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "email", example = "mamadou.diallo@uasz.sn", description = "Adresse email", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("email")
   public String getEmail() {
     return email;
@@ -160,11 +122,11 @@ public class EtudiantRequestDTO {
   }
 
   /**
-   * Get username
+   * Nom d'utilisateur (optionnel)
    * @return username
   */
   
-  @Schema(name = "username", example = "mdiallo", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "username", example = "mdiallo", description = "Nom d'utilisateur (optionnel)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("username")
   public String getUsername() {
     return username;
@@ -180,11 +142,11 @@ public class EtudiantRequestDTO {
   }
 
   /**
-   * Get motDePasse
+   * Mot de passe
    * @return motDePasse
   */
   @NotNull 
-  @Schema(name = "motDePasse", example = "MotDePasse123!", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "motDePasse", example = "MotDePasse123!", description = "Mot de passe", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("motDePasse")
   public String getMotDePasse() {
     return motDePasse;
@@ -200,11 +162,11 @@ public class EtudiantRequestDTO {
   }
 
   /**
-   * Get telephone
+   * Numéro de téléphone (format Sénégal)
    * @return telephone
   */
-  
-  @Schema(name = "telephone", example = "+221781234567", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Pattern(regexp = "^(\\+221|00221)?7[015678]\\d{7}$") 
+  @Schema(name = "telephone", example = "+221781234567", description = "Numéro de téléphone (format Sénégal)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("telephone")
   public String getTelephone() {
     return telephone;
@@ -220,11 +182,11 @@ public class EtudiantRequestDTO {
   }
 
   /**
-   * Get numeroCarteEtudiant
+   * Numéro de carte étudiant
    * @return numeroCarteEtudiant
   */
   @NotNull 
-  @Schema(name = "numeroCarteEtudiant", example = "ETU123456", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "numeroCarteEtudiant", example = "ETU123456", description = "Numéro de carte étudiant", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("numeroCarteEtudiant")
   public String getNumeroCarteEtudiant() {
     return numeroCarteEtudiant;
@@ -234,23 +196,23 @@ public class EtudiantRequestDTO {
     this.numeroCarteEtudiant = numeroCarteEtudiant;
   }
 
-  public EtudiantRequestDTO niveau(NiveauEnum niveau) {
+  public EtudiantRequestDTO niveau(String niveau) {
     this.niveau = niveau;
     return this;
   }
 
   /**
-   * Get niveau
+   * Niveau d'études
    * @return niveau
   */
   @NotNull 
-  @Schema(name = "niveau", example = "MASTER", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "niveau", example = "MASTER", description = "Niveau d'études", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("niveau")
-  public NiveauEnum getNiveau() {
+  public String getNiveau() {
     return niveau;
   }
 
-  public void setNiveau(NiveauEnum niveau) {
+  public void setNiveau(String niveau) {
     this.niveau = niveau;
   }
 
@@ -260,11 +222,11 @@ public class EtudiantRequestDTO {
   }
 
   /**
-   * Get filiere
+   * Filière d'études
    * @return filiere
   */
   @NotNull 
-  @Schema(name = "filiere", example = "Informatique", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "filiere", example = "Informatique", description = "Filière d'études", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("filiere")
   public String getFiliere() {
     return filiere;

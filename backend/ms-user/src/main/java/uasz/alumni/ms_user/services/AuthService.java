@@ -1,9 +1,9 @@
 package uasz.alumni.ms_user.services;
 
 import lombok.RequiredArgsConstructor;
-import uasz.alumni.ms_user.dtos.LoginRequest;
-import uasz.alumni.ms_user.dtos.RefreshRequest;
-import uasz.alumni.ms_user.dtos.TokenResponse;
+import uasz.alumni.spi.model.LoginRequest;
+import uasz.alumni.spi.model.RefreshRequest;
+import uasz.alumni.spi.model.TokenResponse;
 import uasz.alumni.ms_user.entities.RefreshToken;
 import uasz.alumni.ms_user.entities.Utilisateur;
 import uasz.alumni.ms_user.repositories.RefreshTokenRepository;
@@ -40,13 +40,11 @@ public class AuthService {
     @Value("${jwt.access-exp-seconds:900}")
     private long accessExpSeconds;
 
-
     /** LOGIN */
     public TokenResponse login(LoginRequest req) {
 
         Authentication auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.email(), req.motDePasse())
-        );
+                new UsernamePasswordAuthenticationToken(req.getEmail(), req.getMotDePasse()));
 
         UtilisateurDetails user = (UtilisateurDetails) auth.getPrincipal();
         Utilisateur u = utilisateurRepository
@@ -70,14 +68,18 @@ public class AuthService {
 
         refreshTokenRepository.save(rt);
 
-        return new TokenResponse(accessToken, refreshToken, "Bearer", accessExpSeconds);
+        TokenResponse response = new TokenResponse();
+        response.setAccessToken(accessToken);
+        response.setRefreshToken(refreshToken);
+        response.setTokenType("Bearer");
+        response.setExpiresInSeconds(accessExpSeconds);
+        return response;
     }
-
 
     /** REFRESH TOKEN */
     public TokenResponse refresh(RefreshRequest refreshReq) {
 
-        String hash = TokenHashUtil.sha256(refreshReq.refreshToken());
+        String hash = TokenHashUtil.sha256(refreshReq.getRefreshToken());
 
         RefreshToken stored = refreshTokenRepository.findByTokenHash(hash)
                 .orElseThrow(() -> new IllegalArgumentException("Refresh token invalide"));
@@ -107,9 +109,13 @@ public class AuthService {
 
         String newAccess = jwtService.generateAccessToken(userDetails);
 
-        return new TokenResponse(newAccess, newRefresh, "Bearer", accessExpSeconds);
+        TokenResponse response = new TokenResponse();
+        response.setAccessToken(newAccess);
+        response.setRefreshToken(newRefresh);
+        response.setTokenType("Bearer");
+        response.setExpiresInSeconds(accessExpSeconds);
+        return response;
     }
-
 
     /** LOGOUT */
     public void logout(String refreshToken) {
