@@ -4,724 +4,151 @@ info:
   description: |
     Microservice de gestion des utilisateurs et authentification pour la plateforme UASZ Alumni.
     Cette API permet de gérer les utilisateurs, les rôles, les permissions et l'authentification.
-  license:
-    name: MIT License
-    url: https://opensource.org/licenses/MIT
   version: 1.0.0
 servers:
-  - url: http://localhost:8081
+  - url: http://localhost:8081/api/v1
     description: Environnement de développement
 security:
   - bearerAuth: []
 tags:
   - name: Authentification
     description: Endpoints pour l'authentification et la gestion des sessions
-  - name: Rôle
+  - name: Rôles
     description: API pour la gestion des rôles utilisateurs
-  - name: Inscription Étudiant
-    description: Endpoints pour l'inscription des étudiants
-  - name: Inscription Alumni
-    description: Endpoints pour l'inscription des alumni
-  - name: Recherche Alumni
-    description: Endpoints pour la recherche et l'indexation des profils alumni
   - name: Utilisateurs
     description: API pour gérer les utilisateurs
+  - name: Validation
+    description: Endpoints pour la validation des codes par email
+
 paths:
-  /api/v1/auth/connexion:
+  # ==================== AUTHENTIFICATION ====================
+  /auth/connecter:
     post:
       tags:
         - Authentification
       summary: Connexion utilisateur
-      description: |
-        Authentifie un utilisateur (Admin, Étudiant ou Alumni) et retourne un token JWT.
-        L'utilisateur peut se connecter avec son email ou son username.
-      operationId: connexion
+      description: Authentifie un utilisateur et retourne un token JWT
+      operationId: login
       security: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ConnexionRequestDTO'
-        required: true
+              $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
           description: Connexion réussie
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConnexionResponseDTO'
-              examples:
-                success:
-                  summary: Connexion réussie
-                  value:
-                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    type: "Bearer"
-                    expiresIn: 3600
-                    refreshTokenExpiresIn: 604800
-                    createdAt: "2025-11-26T10:30:00Z"
-                    utilisateur:
-                      id: 123
-                      nom: "Diallo"
-                      prenom: "Mamadou"
-                      email: "mamadou.diallo@uasz.sn"
-                      username: "mdiallo"
-                      role: "ETUDIANT"
-                      actif: true
+                $ref: '#/components/schemas/TokenResponse'
         '401':
           description: Identifiants invalides
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                invalid_credentials:
-                  summary: Identifiants incorrects
-                  value:
-                    timestamp: "2025-11-26T10:30:00Z"
-                    status: 401
-                    error: "Unauthorized"
-                    message: "Email ou mot de passe incorrect"
-                    path: "/api/v1/auth/connexion"
-                    code: "INVALID_CREDENTIALS"
         '403':
           description: Compte inactif ou supprimé
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                account_inactive:
-                  summary: Compte désactivé
-                  value:
-                    timestamp: "2025-11-26T10:30:00Z"
-                    status: 403
-                    error: "Forbidden"
-                    message: "Votre compte a été désactivé. Veuillez contacter l'administrateur."
-                    path: "/api/v1/auth/connexion"
-                    code: "ACCOUNT_INACTIVE"
-                account_deleted:
-                  summary: Compte supprimé
-                  value:
-                    timestamp: "2025-11-26T10:30:00Z"
-                    status: 403
-                    error: "Forbidden"
-                    message: "Ce compte n'existe plus"
-                    path: "/api/v1/auth/connexion"
-                    code: "ACCOUNT_DELETED"
 
-  /api/v1/auth/refresh-token:
+  /auth/refresh:
     post:
       tags:
         - Authentification
       summary: Rafraîchir le token JWT
-      description: |
-        Permet de renouveler un token JWT expiré en utilisant le refresh token.
-        Cette opération implémente la rotation des tokens : un nouveau refresh token est émis
-        et l'ancien est automatiquement invalidé pour renforcer la sécurité.
-      operationId: refreshToken
+      description: Permet de renouveler un token JWT expiré en utilisant le refresh token
+      operationId: refresh
       security: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RefreshTokenRequestDTO'
-        required: true
+              $ref: '#/components/schemas/RefreshRequest'
       responses:
         '200':
           description: Token rafraîchi avec succès
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConnexionResponseDTO'
-              examples:
-                success:
-                  summary: Token rafraîchi
-                  value:
-                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    type: "Bearer"
-                    expiresIn: 3600
-                    refreshTokenExpiresIn: 604800
-                    createdAt: "2025-11-26T10:35:00Z"
-                    utilisateur:
-                      id: 123
-                      nom: "Diallo"
-                      prenom: "Mamadou"
-                      email: "mamadou.diallo@uasz.sn"
-                      username: "mdiallo"
-                      role: "ETUDIANT"
-                      actif: true
+                $ref: '#/components/schemas/TokenResponse'
         '401':
           description: Refresh token invalide ou expiré
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                expired_token:
-                  summary: Token expiré
-                  value:
-                    timestamp: "2025-11-26T10:30:00Z"
-                    status: 401
-                    error: "Unauthorized"
-                    message: "Le refresh token a expiré. Veuillez vous reconnecter."
-                    path: "/api/v1/auth/refresh-token"
-                    code: "REFRESH_TOKEN_EXPIRED"
-                invalid_token:
-                  summary: Token invalide
-                  value:
-                    timestamp: "2025-11-26T10:30:00Z"
-                    status: 401
-                    error: "Unauthorized"
-                    message: "Le refresh token est invalide"
-                    path: "/api/v1/auth/refresh-token"
-                    code: "INVALID_REFRESH_TOKEN"
 
-  /api/v1/auth/deconnexion:
+  /auth/deconnecter:
     post:
       tags:
         - Authentification
       summary: Déconnexion utilisateur
-      description: |
-        Déconnecte l'utilisateur et invalide le token JWT ainsi que le refresh token associé.
-        Cette opération permet d'assurer qu'aucun token actif ne reste valide après déconnexion.
-      operationId: deconnexion
+      description: Déconnecte l'utilisateur et invalide le refresh token
+      operationId: logout
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
       responses:
         '204':
           description: Déconnexion réussie
         '401':
           description: Non authentifié
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                not_authenticated:
-                  summary: Non authentifié
-                  value:
-                    timestamp: "2025-11-26T10:30:00Z"
-                    status: 401
-                    error: "Unauthorized"
-                    message: "Vous devez être authentifié pour effectuer cette action"
-                    path: "/api/v1/auth/deconnexion"
-                    code: "NOT_AUTHENTICATED"
 
-  /api/v1/auth/validate-token:
+  /auth/inscription-etudiant:
     post:
       tags:
         - Authentification
-      summary: Valider un token JWT
-      description: |
-        Vérifie la validité et l'intégrité d'un token JWT.
-        Utile pour les validations côté client ou pour les microservices.
-      operationId: validateToken
-      responses:
-        '200':
-          description: Token valide
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenValidationResponse'
-              examples:
-                valid_token:
-                  summary: Token valide
-                  value:
-                    valid: true
-                    expiresAt: "2025-11-26T11:30:00Z"
-                    utilisateur:
-                      id: 123
-                      email: "mamadou.diallo@uasz.sn"
-                      role: "ETUDIANT"
-        '401':
-          description: Token invalide ou expiré
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                invalid_token:
-                  summary: Token invalide
-                  value:
-                    timestamp: "2025-11-26T10:30:00Z"
-                    status: 401
-                    error: "Unauthorized"
-                    message: "Token JWT invalide ou expiré"
-                    path: "/api/v1/auth/validate-token"
-                    code: "INVALID_TOKEN"
-
-  /api/v1/alumni/search/suggestions:
-    get:
-      tags:
-        - Recherche Alumni
-      summary: Suggestions automatiques lors de la saisie
-      description: |
-        Fournit des suggestions d'autocomplétion en temps réel pendant que l'utilisateur tape.
-        Optimisé pour une réponse rapide (< 100ms). Retourne les 10 suggestions les plus pertinentes.
-      operationId: getSuggestions
-      parameters:
-        - name: query
-          in: query
-          description: Texte saisi par l'utilisateur (minimum 2 caractères)
-          required: true
-          schema:
-            type: string
-            minLength: 2
-          example: "mam"
-        - name: field
-          in: query
-          description: Champ sur lequel effectuer la suggestion
-          required: false
-          schema:
-            type: string
-            enum:
-              - nom
-              - prenom
-              - entreprise
-              - poste
-            default: nom
-          example: "nom"
-      responses:
-        '200':
-          description: Suggestions récupérées avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuggestionsResponseDTO'
-              examples:
-                suggestions_nom:
-                  summary: Suggestions pour un nom
-                  value:
-                    query: "mam"
-                    field: "nom"
-                    suggestions:
-                      - text: "Mamadou Diallo"
-                        score: 0.95
-                        highlight: "<em>Mam</em>adou Diallo"
-                      - text: "Mama Sow"
-                        score: 0.87
-                        highlight: "<em>Mam</em>a Sow"
-                    count: 2
-                    executionTime: 45
-        '400':
-          description: Paramètres de requête invalides
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /api/v1/alumni/search:
-    get:
-      tags:
-        - Recherche Alumni
-      summary: Recherche simple avec filtres
-      description: |
-        Recherche simple d'alumni avec possibilité d'appliquer des filtres basiques.
-        Utilise la recherche full-text pour trouver des correspondances dans tous les champs.
-      operationId: searchAlumni
-      parameters:
-        - name: q
-          in: query
-          description: Terme de recherche général
-          required: false
-          schema:
-            type: string
-          example: "informatique"
-        - name: filiere
-          in: query
-          description: Filtrer par filière
-          required: false
-          schema:
-            type: string
-          example: "Informatique"
-        - name: niveau
-          in: query
-          description: Filtrer par niveau d'études
-          required: false
-          schema:
-            type: string
-            enum:
-              - LICENCE
-              - MASTER
-              - DOCTORAT
-          example: "MASTER"
-        - name: entreprise
-          in: query
-          description: Filtrer par entreprise actuelle
-          required: false
-          schema:
-            type: string
-          example: "Orange Sénégal"
-        - name: ville
-          in: query
-          description: Filtrer par ville
-          required: false
-          schema:
-            type: string
-          example: "Dakar"
-      responses:
-        '200':
-          description: Résultats de recherche récupérés avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SearchResultsDTO'
-              examples:
-                search_results:
-                  summary: Résultats de recherche
-                  value:
-                    query: "informatique"
-                    filters:
-                      filiere: "Informatique"
-                      niveau: "MASTER"
-                    results:
-                      - id: 123
-                        nom: "Diallo"
-                        prenom: "Mamadou"
-                        email: "mamadou.diallo@example.com"
-                        filiere: "Informatique"
-                        niveau: "MASTER"
-                        entreprise: "Orange Sénégal"
-                        poste: "Développeur Senior"
-                        ville: "Dakar"
-                        score: 0.92
-                      - id: 124
-                        nom: "Sow"
-                        prenom: "Aïssatou"
-                        email: "aissatou.sow@example.com"
-                        filiere: "Informatique"
-                        niveau: "MASTER"
-                        entreprise: "Sonatel"
-                        poste: "Data Scientist"
-                        ville: "Dakar"
-                        score: 0.88
-                    total: 2
-                    executionTime: 120
-        '400':
-          description: Paramètres de recherche invalides
-
-  /api/v1/alumni/search/advanced:
-    post:
-      tags:
-        - Recherche Alumni
-      summary: Recherche avancée avec tri et pagination
-      description: |
-        Recherche avancée d'alumni avec support complet de pagination, tri multiple,
-        et filtres complexes. Utilise un système de scoring pour pertinence.
-      operationId: advancedSearchAlumni
+      summary: Inscrire un nouvel étudiant
+      description: Crée un nouveau compte étudiant
+      operationId: inscrireEtudiant
+      security: []
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AdvancedSearchRequestDTO'
         required: true
-      responses:
-        '200':
-          description: Résultats de recherche avancée récupérés avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AdvancedSearchResultsDTO'
-              examples:
-                advanced_results:
-                  summary: Résultats de recherche avancée
-                  value:
-                    query:
-                      text: "développeur"
-                      filters:
-                        filiere: ["Informatique", "Mathématiques"]
-                        niveau: ["MASTER"]
-                        anneeDiplome:
-                          min: 2018
-                          max: 2023
-                      sort:
-                        - field: "score"
-                          order: "desc"
-                        - field: "nom"
-                          order: "asc"
-                      pagination:
-                        page: 1
-                        size: 20
-                    results:
-                      - id: 123
-                        nom: "Diallo"
-                        prenom: "Mamadou"
-                        email: "mamadou.diallo@example.com"
-                        filiere: "Informatique"
-                        niveau: "MASTER"
-                        anneeDiplome: 2020
-                        entreprise: "Orange Sénégal"
-                        poste: "Développeur Senior"
-                        ville: "Dakar"
-                        score: 0.95
-                        highlights:
-                          poste: "<em>Développeur</em> Senior"
-                    pagination:
-                      currentPage: 1
-                      pageSize: 20
-                      totalPages: 3
-                      totalElements: 52
-                      hasNext: true
-                      hasPrevious: false
-                    aggregations:
-                      filieres:
-                        - value: "Informatique"
-                          count: 35
-                        - value: "Mathématiques"
-                          count: 17
-                      niveaux:
-                        - value: "MASTER"
-                          count: 42
-                        - value: "LICENCE"
-                          count: 10
-                    executionTime: 185
-        '400':
-          description: Requête de recherche invalide
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /api/v1/alumni/index:
-    post:
-      tags:
-        - Recherche Alumni
-      summary: Créer ou mettre à jour l'index des profils d'alumni
-      description: |
-        Crée ou met à jour l'index de recherche des alumni.
-        Cette opération peut prendre plusieurs minutes selon le nombre de profils.
-        Opération réservée aux administrateurs.
-      operationId: indexAlumni
-      requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IndexRequestDTO'
-        required: false
+              $ref: '#/components/schemas/EtudiantRequestDTO'
       responses:
-        '202':
-          description: Indexation lancée avec succès (opération asynchrone)
+        '201':
+          description: Étudiant inscrit avec succès
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IndexResponseDTO'
-              examples:
-                index_started:
-                  summary: Indexation démarrée
-                  value:
-                    jobId: "idx-20251126-103045"
-                    status: "STARTED"
-                    message: "L'indexation a été lancée et s'exécute en arrière-plan"
-                    estimatedDuration: 300
-                    startedAt: "2025-11-26T10:30:45Z"
-        '403':
-          description: Accès refusé - Réservé aux administrateurs
+                $ref: '#/components/schemas/EtudiantResponseDTO'
+        '400':
+          description: Données invalides
         '409':
-          description: Une indexation est déjà en cours
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                already_running:
-                  summary: Indexation en cours
-                  value:
-                    timestamp: "2025-11-26T10:30:00Z"
-                    status: 409
-                    error: "Conflict"
-                    message: "Une opération d'indexation est déjà en cours"
-                    path: "/api/v1/alumni/index"
-                    code: "INDEX_ALREADY_RUNNING"
+          description: Email, username ou numéro de carte déjà utilisé
 
-  /api/v1/alumni/index/status:
-    get:
-      tags:
-        - Recherche Alumni
-      summary: Vérifier l'état de l'index
-      description: |
-        Récupère les informations sur l'état actuel de l'index de recherche des alumni.
-        Inclut les statistiques et l'état de santé de l'index.
-      operationId: getIndexStatus
-      responses:
-        '200':
-          description: État de l'index récupéré avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IndexStatusResponseDTO'
-              examples:
-                index_healthy:
-                  summary: Index en bon état
-                  value:
-                    status: "HEALTHY"
-                    lastIndexedAt: "2025-11-26T08:00:00Z"
-                    documentsCount: 1250
-                    indexSize: "45.2 MB"
-                    health:
-                      status: "GREEN"
-                      issues: []
-                    statistics:
-                      totalAlumni: 1250
-                      indexedAlumni: 1250
-                      failedAlumni: 0
-                      lastUpdateDuration: 285
-                    currentJob:
-                      jobId: null
-                      status: "NONE"
-                      progress: null
-                index_indexing:
-                  summary: Indexation en cours
-                  value:
-                    status: "INDEXING"
-                    lastIndexedAt: "2025-11-25T08:00:00Z"
-                    documentsCount: 1150
-                    indexSize: "42.8 MB"
-                    health:
-                      status: "YELLOW"
-                      issues: ["Indexation en cours"]
-                    statistics:
-                      totalAlumni: 1250
-                      indexedAlumni: 1150
-                      failedAlumni: 5
-                      lastUpdateDuration: null
-                    currentJob:
-                      jobId: "idx-20251126-103045"
-                      status: "RUNNING"
-                      progress: 92
-                      startedAt: "2025-11-26T10:30:45Z"
-                      estimatedCompletion: "2025-11-26T10:35:30Z"
-        '503':
-          description: Index non disponible
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /api/v1/roles/{id}:
-    get:
-      tags:
-        - Rôle
-      summary: Récupérer un rôle par son ID
-      description: Retourne les détails d'un rôle spécifique en fonction de son identifiant
-      operationId: getRoleById
-      parameters:
-        - name: id
-          in: path
-          description: ID du rôle à récupérer
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1
-      responses:
-        '200':
-          description: Rôle trouvé et retourné avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RoleResponseDTO'
-        '400':
-          description: ID invalide
-        '404':
-          description: Rôle non trouvé
-    put:
-      tags:
-        - Rôle
-      summary: Mettre à jour un rôle existant
-      description: Met à jour les informations d'un rôle existant en fonction de son ID
-      operationId: updateRole
-      parameters:
-        - name: id
-          in: path
-          description: ID du rôle à mettre à jour
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RoleRequestDTO'
-        required: true
-      responses:
-        '200':
-          description: Rôle mis à jour avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RoleResponseDTO'
-        '400':
-          description: Données de requête invalides
-        '404':
-          description: Rôle non trouvé
-    delete:
-      tags:
-        - Rôle
-      summary: Supprimer logiquement un rôle
-      description: Effectue une suppression logique (soft delete) d'un rôle en fonction de son ID
-      operationId: softDeleteRole
-      parameters:
-        - name: id
-          in: path
-          description: ID du rôle à supprimer logiquement
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1
-      responses:
-        '204':
-          description: Rôle supprimé logiquement avec succès
-        '400':
-          description: ID invalide
-        '404':
-          description: Rôle non trouvé
-  /api/v1/validation/verifier:
+  /auth/inscription-alumni:
     post:
       tags:
-        - code-validation-controller
-      operationId: verifierCode
+        - Authentification
+      summary: Inscrire un nouvel alumni
+      description: Crée un nouveau compte alumni
+      operationId: inscrireAlumni
       security: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CodeValidationCheckDTO'
-        required: true
+              $ref: '#/components/schemas/AlumniRequestDTO'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Alumni inscrit avec succès
           content:
             application/json:
               schema:
-                type: string
-              example: "Code validé avec succès"
-  /api/v1/validation/envoyer:
-    post:
-      tags:
-        - code-validation-controller
-      operationId: envoyerCode
-      security: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CodeValidationRequestDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
-              example: "Code envoyé avec succès"
-  /api/v1/roles:
+                $ref: '#/components/schemas/AlumniResponseDTO'
+        '400':
+          description: Données invalides
+        '409':
+          description: Email ou username déjà utilisé
+
+  # ==================== RÔLES ====================
+  /roles:
     get:
       tags:
-        - Rôle
+        - Rôles
       summary: Récupérer tous les rôles
       description: Retourne la liste de tous les rôles disponibles dans le système
       operationId: getAllRoles
@@ -734,20 +161,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RoleResponseDTO'
-        '500':
-          description: Erreur interne du serveur
+
     post:
       tags:
-        - Rôle
+        - Rôles
       summary: Créer un nouveau rôle
-      description: Crée un nouveau rôle dans le système avec les données fournies
+      description: Crée un nouveau rôle dans le système
       operationId: createRole
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RoleRequestDTO'
-        required: true
       responses:
         '201':
           description: Rôle créé avec succès
@@ -756,58 +182,92 @@ paths:
               schema:
                 $ref: '#/components/schemas/RoleResponseDTO'
         '400':
-          description: Données de requête invalides
+          description: Données invalides
         '409':
           description: Un rôle avec le même nom existe déjà
-  /api/v1/auth/inscription-etudiant:
-    post:
+
+  /roles/{id}:
+    get:
       tags:
-        - Inscription Étudiant
-      summary: Inscrire un nouvel étudiant
-      description: Crée un nouveau compte étudiant.
-      operationId: inscrireEtudiant
-      security: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EtudiantRequestDTO'
-        required: true
+        - Rôles
+      summary: Récupérer un rôle par son ID
+      description: Retourne les détails d'un rôle spécifique
+      operationId: getRoleById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
-        '201':
-          description: Étudiant inscrit avec succès
+        '200':
+          description: Rôle trouvé
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EtudiantResponseDTO'
-  /api/v1/auth/inscription-alumni:
-    post:
+                $ref: '#/components/schemas/RoleResponseDTO'
+        '404':
+          description: Rôle non trouvé
+
+    put:
       tags:
-        - Inscription Alumni
-      summary: Inscrire un nouvel alumni
-      description: Crée un nouveau compte alumni.
-      operationId: inscrireAlumni
-      security: []
+        - Rôles
+      summary: Mettre à jour un rôle existant
+      description: Met à jour les informations d'un rôle
+      operationId: updateRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AlumniRequestDTO'
-        required: true
+              $ref: '#/components/schemas/RoleRequestDTO'
       responses:
-        '201':
-          description: Alumni inscrit avec succès
+        '200':
+          description: Rôle mis à jour avec succès
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AlumniResponseDTO'
-  /api/v1/utilisateurs:
+                $ref: '#/components/schemas/RoleResponseDTO'
+        '400':
+          description: Données invalides
+        '404':
+          description: Rôle non trouvé
+
+    delete:
+      tags:
+        - Rôles
+      summary: Supprimer logiquement un rôle
+      description: Effectue une suppression logique (soft delete) d'un rôle
+      operationId: softDeleteRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Rôle supprimé logiquement avec succès
+        '404':
+          description: Rôle non trouvé
+
+  # ==================== UTILISATEURS ====================
+  /utilisateurs:
     get:
       tags:
         - Utilisateurs
-      summary: Récupère tous les utilisateurs
-      description: Retourne la liste complète de tous les utilisateurs de la plateforme
-      operationId: getAll
+      summary: Récupérer tous les utilisateurs
+      description: Retourne la liste complète de tous les utilisateurs (y compris supprimés)
+      operationId: getAllUtilisateurs
       responses:
         '200':
           description: Liste des utilisateurs récupérée avec succès
@@ -817,13 +277,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UtilisateurResponseDTO'
-  /api/v1/utilisateurs/actifs:
+
+  /utilisateurs/non-supprimes:
     get:
       tags:
         - Utilisateurs
-      summary: Récupère les utilisateurs actifs
-      description: Retourne la liste des utilisateurs non supprimés (actifs) de la plateforme
-      operationId: getUtilisateursActifs
+      summary: Récupérer les utilisateurs actifs
+      description: Retourne la liste des utilisateurs non supprimés
+      operationId: getUtilisateursNonSupprimes
       responses:
         '200':
           description: Liste des utilisateurs actifs récupérée avec succès
@@ -834,287 +295,224 @@ paths:
                 items:
                   $ref: '#/components/schemas/UtilisateurResponseDTO'
 
+  /utilisateurs/email/{email}:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Récupérer un utilisateur par email
+      description: Retourne les informations d'un utilisateur par son email
+      operationId: getUtilisateurByEmail
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Utilisateur trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UtilisateurResponseDTO'
+        '404':
+          description: Utilisateur non trouvé
+
+  /utilisateurs/exists/email/{email}:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Vérifier si un email existe
+      description: Vérifie si un email est déjà utilisé dans le système
+      operationId: emailExists
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Résultat de la vérification
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  /utilisateurs/exists/username/{username}:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Vérifier si un username existe
+      description: Vérifie si un username est déjà utilisé dans le système
+      operationId: usernameExists
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Résultat de la vérification
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  # ==================== VALIDATION ====================
+  /validation/envoyer:
+    post:
+      tags:
+        - Validation
+      summary: Envoyer un code de validation
+      description: Génère et envoie un code de validation par email
+      operationId: envoyerCode
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeValidationRequestDTO'
+      responses:
+        '201':
+          description: Code envoyé avec succès
+        '400':
+          description: Email invalide
+
+  /validation/verifier:
+    post:
+      tags:
+        - Validation
+      summary: Vérifier un code de validation
+      description: Valide un code fourni par l'utilisateur
+      operationId: verifierCode
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeValidationCheckDTO'
+      responses:
+        '200':
+          description: Code validé avec succès
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Code invalide ou expiré
+          content:
+            application/json:
+              schema:
+                type: string
+
 components:
   schemas:
-    ConnexionRequestDTO:
-      required:
-        - identifiant
-        - motDePasse
+    # ==================== AUTHENTIFICATION ====================
+    LoginRequest:
       type: object
+      required:
+        - email
+        - motDePasse
       properties:
-        identifiant:
+        email:
           type: string
-          description: Email ou username de l'utilisateur
+          format: email
+          description: Email de l'utilisateur
           example: etudiant@uasz.sn
         motDePasse:
           type: string
-          description: Mot de passe de l'utilisateur
           format: password
+          description: Mot de passe de l'utilisateur
           example: MotDePasse123!
-      description: Données de connexion
 
-    ConnexionResponseDTO:
+    RefreshRequest:
       type: object
-      properties:
-        token:
-          type: string
-          description: Token JWT d'authentification (Access Token)
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-        refreshToken:
-          type: string
-          description: |
-            Token de rafraîchissement permettant d'obtenir un nouveau token JWT.
-            Ce token est automatiquement roté à chaque utilisation pour renforcer la sécurité.
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-        type:
-          type: string
-          description: Type de token (toujours Bearer pour JWT)
-          example: Bearer
-          default: Bearer
-        expiresIn:
-          type: integer
-          description: Durée de validité du token JWT en secondes
-          format: int64
-          example: 3600
-        refreshTokenExpiresIn:
-          type: integer
-          description: Durée de validité du refresh token en secondes (généralement 7 jours)
-          format: int64
-          example: 604800
-        createdAt:
-          type: string
-          format: date-time
-          description: Date et heure de création du token
-          example: "2025-11-26T10:30:00Z"
-        utilisateur:
-          $ref: '#/components/schemas/UtilisateurConnecteDTO'
-      description: Réponse de connexion avec les tokens JWT et les informations utilisateur
-
-    UtilisateurConnecteDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Identifiant unique de l'utilisateur
-          example: 123
-        nom:
-          type: string
-          description: Nom de famille de l'utilisateur
-          example: Diallo
-        prenom:
-          type: string
-          description: Prénom de l'utilisateur
-          example: Mamadou
-        email:
-          type: string
-          format: email
-          description: Adresse email de l'utilisateur
-          example: mamadou.diallo@uasz.sn
-        username:
-          type: string
-          description: Nom d'utilisateur unique
-          example: mdiallo
-        role:
-          type: string
-          description: Rôle de l'utilisateur dans le système
-          enum:
-            - ADMIN
-            - ALUMNI
-            - ETUDIANT
-          example: ETUDIANT
-        actif:
-          type: boolean
-          description: Indique si le compte utilisateur est actif
-          example: true
-      description: Informations détaillées de l'utilisateur connecté
-
-    RefreshTokenRequestDTO:
       required:
         - refreshToken
-      type: object
       properties:
         refreshToken:
           type: string
-          description: Token de rafraîchissement obtenu lors de la connexion
+          description: Token de rafraîchissement
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-      description: Requête de rafraîchissement du token JWT
 
-    TokenValidationResponse:
+    TokenResponse:
       type: object
       properties:
-        valid:
-          type: boolean
-          description: Indique si le token est valide
-          example: true
-        expiresAt:
+        accessToken:
           type: string
-          format: date-time
-          description: Date et heure d'expiration du token
-          example: "2025-11-26T11:30:00Z"
-        utilisateur:
-          type: object
-          properties:
-            id:
-              type: integer
-              format: int64
-              example: 123
-            email:
-              type: string
-              example: mamadou.diallo@uasz.sn
-            role:
-              type: string
-              example: ETUDIANT
-      description: Réponse de validation du token JWT
-
-    ErrorResponse:
-      type: object
-      properties:
-        timestamp:
+          description: Token JWT d'accès
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
           type: string
-          format: date-time
-          description: Date et heure de l'erreur au format ISO 8601
-          example: "2025-11-26T10:30:00Z"
-        status:
+          description: Token de rafraîchissement
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        tokenType:
+          type: string
+          description: Type de token
+          example: Bearer
+          default: Bearer
+        expiresInSeconds:
           type: integer
-          description: Code de statut HTTP de l'erreur
-          example: 401
-        error:
-          type: string
-          description: Type d'erreur HTTP
-          example: Unauthorized
-        message:
-          type: string
-          description: Message d'erreur détaillé et lisible par l'utilisateur
-          example: Identifiants invalides
-        path:
-          type: string
-          description: Chemin de la requête qui a généré l'erreur
-          example: /api/v1/auth/connexion
-        code:
-          type: string
-          description: |
-            Code d'erreur applicatif pour identification programmatique.
-            Exemples: INVALID_CREDENTIALS, ACCOUNT_INACTIVE, INVALID_TOKEN, etc.
-          example: INVALID_CREDENTIALS
-      description: Structure standardisée de réponse d'erreur pour toute l'API
-
-    RoleRequestDTO:
-      required:
-        - libelle
-      type: object
-      properties:
-        libelle:
-          maxLength: 50
-          minLength: 2
-          pattern: ^[A-Z_]+$
-          type: string
-          description: Libellé unique du rôle. Doit contenir uniquement des lettres majuscules et des underscores.
-          example: ADMIN
-          enum:
-            - ADMIN
-            - ALUMNI
-            - ETUDIANT
-      description: Données du rôle à créer
-
-    RoleResponseDTO:
-      required:
-        - libelle
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Identifiant unique du rôle
           format: int64
-          readOnly: true
-          example: 1
-        libelle:
-          maxLength: 50
-          minLength: 2
-          type: string
-          description: Libellé du rôle
-          example: ADMIN
-        deleted:
-          type: boolean
-          description: Indique si le rôle est supprimé logiquement
-          example: false
-          default: false
-      description: DTO de réponse pour les données d'un rôle
+          description: Durée de validité du token en secondes
+          example: 900
 
-    CodeValidationCheckDTO:
-      required:
-        - code
-        - email
-        - typeCode
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-          example: mamadou.diallo@uasz.sn
-        code:
-          type: string
-          example: "123456"
-        typeCode:
-          type: string
-          enum: ["INSCRIPTION", "REINITIALISATION_MDP", "VALIDATION_EMAIL"]
-          example: "INSCRIPTION"
-
-    CodeValidationRequestDTO:
-      required:
-        - email
-        - typeCode
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-          example: mamadou.diallo@uasz.sn
-        typeCode:
-          type: string
-          enum: ["INSCRIPTION", "REINITIALISATION_MDP", "VALIDATION_EMAIL"]
-          example: "INSCRIPTION"
-
+    # ==================== ÉTUDIANT ====================
     EtudiantRequestDTO:
-      required:
-        - email
-        - filiere
-        - motDePasse
-        - niveau
-        - nom
-        - numeroCarteEtudiant
-        - prenom
       type: object
+      required:
+        - nom
+        - prenom
+        - email
+        - motDePasse
+        - numeroCarteEtudiant
+        - niveau
+        - filiere
       properties:
         nom:
           type: string
+          description: Nom de famille
           example: Diallo
         prenom:
           type: string
+          description: Prénom
           example: Mamadou
         email:
           type: string
           format: email
+          description: Adresse email
           example: mamadou.diallo@uasz.sn
         username:
           type: string
+          description: Nom d'utilisateur (optionnel)
           example: mdiallo
         motDePasse:
           type: string
           format: password
+          description: Mot de passe
           example: MotDePasse123!
         telephone:
           type: string
+          description: Numéro de téléphone (format Sénégal)
+          pattern: '^(\+221|00221)?7[015678]\d{7}$'
           example: "+221781234567"
         numeroCarteEtudiant:
           type: string
+          description: Numéro de carte étudiant
           example: "ETU123456"
         niveau:
           type: string
-          enum: ["LICENCE", "MASTER", "DOCTORAT"]
+          description: Niveau d'études
           example: "MASTER"
         filiere:
           type: string
+          description: Filière d'études
           example: "Informatique"
 
     EtudiantResponseDTO:
@@ -1123,6 +521,7 @@ components:
         id:
           type: integer
           format: int64
+          description: Identifiant unique
           example: 123
         nom:
           type: string
@@ -1150,62 +549,62 @@ components:
           example: "Informatique"
         actif:
           type: boolean
+          description: Indique si le compte est actif
           example: true
         role:
           type: string
+          description: Rôle de l'utilisateur
           example: "ETUDIANT"
         deleted:
           type: boolean
+          description: Indique si le compte est supprimé
           example: false
 
+    # ==================== ALUMNI ====================
     AlumniRequestDTO:
+      type: object
       required:
         - nom
         - prenom
         - email
         - motDePasse
         - telephone
-      type: object
       properties:
         nom:
           type: string
+          description: Nom de famille
           example: Sow
         prenom:
           type: string
+          description: Prénom
           example: Aïssatou
         email:
           type: string
           format: email
+          description: Adresse email
           example: aissatou.sow@alumni.uasz.sn
         username:
           type: string
+          description: Nom d'utilisateur (optionnel)
           example: asow
         motDePasse:
           type: string
           format: password
+          description: Mot de passe
           example: MotDePasse123!
         telephone:
           type: string
+          description: Numéro de téléphone (format Sénégal)
+          pattern: '^(\+221|00221)?7[015678]\d{7}$'
           example: "+221781234568"
         profession:
           type: string
+          description: Profession actuelle
           example: "Data Scientist"
         entreprise:
           type: string
+          description: Entreprise actuelle
           example: "Sonatel"
-        filiere:
-          type: string
-          example: "Informatique"
-        niveau:
-          type: string
-          enum: ["LICENCE", "MASTER", "DOCTORAT"]
-          example: "MASTER"
-        anneeDiplome:
-          type: integer
-          example: 2020
-        ville:
-          type: string
-          example: "Dakar"
 
     AlumniResponseDTO:
       type: object
@@ -1213,6 +612,7 @@ components:
         id:
           type: integer
           format: int64
+          description: Identifiant unique
           example: 124
         nom:
           type: string
@@ -1235,34 +635,58 @@ components:
         entreprise:
           type: string
           example: "Sonatel"
-        filiere:
-          type: string
-          example: "Informatique"
-        niveau:
-          type: string
-          example: "MASTER"
-        anneeDiplome:
-          type: integer
-          example: 2020
-        ville:
-          type: string
-          example: "Dakar"
         actif:
           type: boolean
+          description: Indique si le compte est actif
           example: true
         role:
           type: string
+          description: Rôle de l'utilisateur
           example: "ALUMNI"
         deleted:
           type: boolean
+          description: Indique si le compte est supprimé
           example: false
 
+    # ==================== RÔLE ====================
+    RoleRequestDTO:
+      type: object
+      required:
+        - libelle
+      properties:
+        libelle:
+          type: string
+          minLength: 2
+          maxLength: 50
+          pattern: '^[A-Z_]+$'
+          description: Libellé du rôle (majuscules et underscores uniquement)
+          example: ADMIN
+
+    RoleResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifiant unique du rôle
+          example: 1
+        libelle:
+          type: string
+          description: Libellé du rôle
+          example: ADMIN
+        deleted:
+          type: boolean
+          description: Indique si le rôle est supprimé
+          example: false
+
+    # ==================== UTILISATEUR ====================
     UtilisateurResponseDTO:
       type: object
       properties:
         id:
           type: integer
           format: int64
+          description: Identifiant unique
           example: 123
         nom:
           type: string
@@ -1281,267 +705,44 @@ components:
           example: mdiallo
         actif:
           type: boolean
+          description: Indique si le compte est actif
           example: true
         deleted:
           type: boolean
+          description: Indique si le compte est supprimé
           example: false
         role:
           type: string
+          description: Rôle de l'utilisateur
           example: ETUDIANT
 
-    # NOUVEAUX SCHÉMAS POUR LA RECHERCHE ALUMNI
-    SuggestionsResponseDTO:
+    # ==================== VALIDATION ====================
+    CodeValidationRequestDTO:
       type: object
+      required:
+        - email
       properties:
-        query:
-          type: string
-          example: "mam"
-        field:
-          type: string
-          example: "nom"
-        suggestions:
-          type: array
-          items:
-            type: object
-            properties:
-              text:
-                type: string
-                example: "Mamadou Diallo"
-              score:
-                type: number
-                format: float
-                example: 0.95
-              highlight:
-                type: string
-                example: "<em>Mam</em>adou Diallo"
-        count:
-          type: integer
-          example: 2
-        executionTime:
-          type: integer
-          example: 45
-
-    SearchResultsDTO:
-      type: object
-      properties:
-        query:
-          type: string
-          example: "informatique"
-        filters:
-          type: object
-          properties:
-            filiere:
-              type: string
-              example: "Informatique"
-            niveau:
-              type: string
-              example: "MASTER"
-            entreprise:
-              type: string
-            ville:
-              type: string
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlumniSearchResultDTO'
-        total:
-          type: integer
-          example: 2
-        executionTime:
-          type: integer
-          example: 120
-
-    AlumniSearchResultDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 123
-        nom:
-          type: string
-          example: "Diallo"
-        prenom:
-          type: string
-          example: "Mamadou"
         email:
           type: string
-          example: "mamadou.diallo@example.com"
-        filiere:
-          type: string
-          example: "Informatique"
-        niveau:
-          type: string
-          example: "MASTER"
-        anneeDiplome:
-          type: integer
-          example: 2020
-        entreprise:
-          type: string
-          example: "Orange Sénégal"
-        poste:
-          type: string
-          example: "Développeur Senior"
-        ville:
-          type: string
-          example: "Dakar"
-        score:
-          type: number
-          format: float
-          example: 0.92
+          format: email
+          description: Email de l'utilisateur
+          example: mamadou.diallo@uasz.sn
 
-    AdvancedSearchRequestDTO:
+    CodeValidationCheckDTO:
       type: object
+      required:
+        - email
+        - code
       properties:
-        text:
+        email:
           type: string
-          example: "développeur"
-        filters:
-          type: object
-          properties:
-            filiere:
-              type: array
-              items:
-                type: string
-              example: ["Informatique", "Mathématiques"]
-            niveau:
-              type: array
-              items:
-                type: string
-              example: ["MASTER"]
-            anneeDiplome:
-              type: object
-              properties:
-                min:
-                  type: integer
-                  example: 2018
-                max:
-                  type: integer
-                  example: 2023
-        sort:
-          type: array
-          items:
-            type: object
-            properties:
-              field:
-                type: string
-                example: "score"
-              order:
-                type: string
-                example: "desc"
-        pagination:
-          type: object
-          properties:
-            page:
-              type: integer
-              example: 1
-            size:
-              type: integer
-              example: 20
-
-    AdvancedSearchResultsDTO:
-      type: object
-      properties:
-        query:
-          $ref: '#/components/schemas/AdvancedSearchRequestDTO'
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlumniSearchResultDTO'
-        pagination:
-          type: object
-          properties:
-            currentPage:
-              type: integer
-              example: 1
-            pageSize:
-              type: integer
-              example: 20
-            totalPages:
-              type: integer
-              example: 3
-            totalElements:
-              type: integer
-              example: 52
-            hasNext:
-              type: boolean
-              example: true
-            hasPrevious:
-              type: boolean
-              example: false
-        executionTime:
-          type: integer
-          example: 185
-
-    IndexRequestDTO:
-      type: object
-      properties:
-        forceReindex:
-          type: boolean
-          example: false
-        batchSize:
-          type: integer
-          example: 100
-
-    IndexResponseDTO:
-      type: object
-      properties:
-        jobId:
+          format: email
+          description: Email de l'utilisateur
+          example: mamadou.diallo@uasz.sn
+        code:
           type: string
-          example: "idx-20251126-103045"
-        status:
-          type: string
-          example: "STARTED"
-        message:
-          type: string
-          example: "L'indexation a été lancée et s'exécute en arrière-plan"
-        estimatedDuration:
-          type: integer
-          example: 300
-        startedAt:
-          type: string
-          format: date-time
-          example: "2025-11-26T10:30:45Z"
-
-    IndexStatusResponseDTO:
-      type: object
-      properties:
-        status:
-          type: string
-          example: "HEALTHY"
-        lastIndexedAt:
-          type: string
-          format: date-time
-          example: "2025-11-26T08:00:00Z"
-        documentsCount:
-          type: integer
-          example: 1250
-        indexSize:
-          type: string
-          example: "45.2 MB"
-        statistics:
-          type: object
-          properties:
-            totalAlumni:
-              type: integer
-              example: 1250
-            indexedAlumni:
-              type: integer
-              example: 1250
-            failedAlumni:
-              type: integer
-              example: 0
-        currentJob:
-          type: object
-          properties:
-            jobId:
-              type: string
-            status:
-              type: string
-            progress:
-              type: integer
-            startedAt:
-              type: string
-              format: date-time
+          description: Code de validation reçu par email
+          example: "123456"
 
   securitySchemes:
     bearerAuth:
@@ -1555,17 +756,3 @@ components:
         ```
         Authorization: Bearer <votre_token_jwt>
         ```
-        
-        **Comment obtenir un token:**
-        1. Appelez l'endpoint POST /api/v1/auth/connexion avec vos identifiants
-        2. Récupérez le token JWT dans la réponse
-        3. Incluez-le dans le header Authorization de vos requêtes
-        
-        **Durée de vie:**
-        - Access Token: 1 heure (3600 secondes)
-        - Refresh Token: 7 jours (604800 secondes)
-        
-        **Sécurité:**
-        - Le token contient le rôle de l'utilisateur (ADMIN, ALUMNI, ETUDIANT)
-        - Les refresh tokens sont automatiquement rotés à chaque utilisation
-        - Les tokens sont invalidés lors de la déconnexion

@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -19,7 +18,7 @@ import jakarta.annotation.Generated;
  * AlumniRequestDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T20:19:48.415438204Z[Africa/Dakar]")
 public class AlumniRequestDTO {
 
   private String nom;
@@ -37,51 +36,6 @@ public class AlumniRequestDTO {
   private String profession;
 
   private String entreprise;
-
-  private String filiere;
-
-  /**
-   * Gets or Sets niveau
-   */
-  public enum NiveauEnum {
-    LICENCE("LICENCE"),
-    
-    MASTER("MASTER"),
-    
-    DOCTORAT("DOCTORAT");
-
-    private String value;
-
-    NiveauEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static NiveauEnum fromValue(String value) {
-      for (NiveauEnum b : NiveauEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private NiveauEnum niveau;
-
-  private Integer anneeDiplome;
-
-  private String ville;
 
   public AlumniRequestDTO() {
     super();
@@ -104,11 +58,11 @@ public class AlumniRequestDTO {
   }
 
   /**
-   * Get nom
+   * Nom de famille
    * @return nom
   */
   @NotNull 
-  @Schema(name = "nom", example = "Sow", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "nom", example = "Sow", description = "Nom de famille", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("nom")
   public String getNom() {
     return nom;
@@ -124,11 +78,11 @@ public class AlumniRequestDTO {
   }
 
   /**
-   * Get prenom
+   * Prénom
    * @return prenom
   */
   @NotNull 
-  @Schema(name = "prenom", example = "Aïssatou", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "prenom", example = "Aïssatou", description = "Prénom", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("prenom")
   public String getPrenom() {
     return prenom;
@@ -144,11 +98,11 @@ public class AlumniRequestDTO {
   }
 
   /**
-   * Get email
+   * Adresse email
    * @return email
   */
   @NotNull @jakarta.validation.constraints.Email 
-  @Schema(name = "email", example = "aissatou.sow@alumni.uasz.sn", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "email", example = "aissatou.sow@alumni.uasz.sn", description = "Adresse email", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("email")
   public String getEmail() {
     return email;
@@ -164,11 +118,11 @@ public class AlumniRequestDTO {
   }
 
   /**
-   * Get username
+   * Nom d'utilisateur (optionnel)
    * @return username
   */
   
-  @Schema(name = "username", example = "asow", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "username", example = "asow", description = "Nom d'utilisateur (optionnel)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("username")
   public String getUsername() {
     return username;
@@ -184,11 +138,11 @@ public class AlumniRequestDTO {
   }
 
   /**
-   * Get motDePasse
+   * Mot de passe
    * @return motDePasse
   */
   @NotNull 
-  @Schema(name = "motDePasse", example = "MotDePasse123!", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "motDePasse", example = "MotDePasse123!", description = "Mot de passe", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("motDePasse")
   public String getMotDePasse() {
     return motDePasse;
@@ -204,11 +158,11 @@ public class AlumniRequestDTO {
   }
 
   /**
-   * Get telephone
+   * Numéro de téléphone (format Sénégal)
    * @return telephone
   */
-  @NotNull 
-  @Schema(name = "telephone", example = "+221781234568", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Pattern(regexp = "^(\\+221|00221)?7[015678]\\d{7}$") 
+  @Schema(name = "telephone", example = "+221781234568", description = "Numéro de téléphone (format Sénégal)", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("telephone")
   public String getTelephone() {
     return telephone;
@@ -224,11 +178,11 @@ public class AlumniRequestDTO {
   }
 
   /**
-   * Get profession
+   * Profession actuelle
    * @return profession
   */
   
-  @Schema(name = "profession", example = "Data Scientist", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "profession", example = "Data Scientist", description = "Profession actuelle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("profession")
   public String getProfession() {
     return profession;
@@ -244,11 +198,11 @@ public class AlumniRequestDTO {
   }
 
   /**
-   * Get entreprise
+   * Entreprise actuelle
    * @return entreprise
   */
   
-  @Schema(name = "entreprise", example = "Sonatel", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "entreprise", example = "Sonatel", description = "Entreprise actuelle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("entreprise")
   public String getEntreprise() {
     return entreprise;
@@ -256,86 +210,6 @@ public class AlumniRequestDTO {
 
   public void setEntreprise(String entreprise) {
     this.entreprise = entreprise;
-  }
-
-  public AlumniRequestDTO filiere(String filiere) {
-    this.filiere = filiere;
-    return this;
-  }
-
-  /**
-   * Get filiere
-   * @return filiere
-  */
-  
-  @Schema(name = "filiere", example = "Informatique", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("filiere")
-  public String getFiliere() {
-    return filiere;
-  }
-
-  public void setFiliere(String filiere) {
-    this.filiere = filiere;
-  }
-
-  public AlumniRequestDTO niveau(NiveauEnum niveau) {
-    this.niveau = niveau;
-    return this;
-  }
-
-  /**
-   * Get niveau
-   * @return niveau
-  */
-  
-  @Schema(name = "niveau", example = "MASTER", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("niveau")
-  public NiveauEnum getNiveau() {
-    return niveau;
-  }
-
-  public void setNiveau(NiveauEnum niveau) {
-    this.niveau = niveau;
-  }
-
-  public AlumniRequestDTO anneeDiplome(Integer anneeDiplome) {
-    this.anneeDiplome = anneeDiplome;
-    return this;
-  }
-
-  /**
-   * Get anneeDiplome
-   * @return anneeDiplome
-  */
-  
-  @Schema(name = "anneeDiplome", example = "2020", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("anneeDiplome")
-  public Integer getAnneeDiplome() {
-    return anneeDiplome;
-  }
-
-  public void setAnneeDiplome(Integer anneeDiplome) {
-    this.anneeDiplome = anneeDiplome;
-  }
-
-  public AlumniRequestDTO ville(String ville) {
-    this.ville = ville;
-    return this;
-  }
-
-  /**
-   * Get ville
-   * @return ville
-  */
-  
-  @Schema(name = "ville", example = "Dakar", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("ville")
-  public String getVille() {
-    return ville;
-  }
-
-  public void setVille(String ville) {
-    this.ville = ville;
   }
 
   @Override
@@ -354,16 +228,12 @@ public class AlumniRequestDTO {
         Objects.equals(this.motDePasse, alumniRequestDTO.motDePasse) &&
         Objects.equals(this.telephone, alumniRequestDTO.telephone) &&
         Objects.equals(this.profession, alumniRequestDTO.profession) &&
-        Objects.equals(this.entreprise, alumniRequestDTO.entreprise) &&
-        Objects.equals(this.filiere, alumniRequestDTO.filiere) &&
-        Objects.equals(this.niveau, alumniRequestDTO.niveau) &&
-        Objects.equals(this.anneeDiplome, alumniRequestDTO.anneeDiplome) &&
-        Objects.equals(this.ville, alumniRequestDTO.ville);
+        Objects.equals(this.entreprise, alumniRequestDTO.entreprise);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(nom, prenom, email, username, motDePasse, telephone, profession, entreprise, filiere, niveau, anneeDiplome, ville);
+    return Objects.hash(nom, prenom, email, username, motDePasse, telephone, profession, entreprise);
   }
 
   @Override
@@ -378,10 +248,6 @@ public class AlumniRequestDTO {
     sb.append("    telephone: ").append(toIndentedString(telephone)).append("\n");
     sb.append("    profession: ").append(toIndentedString(profession)).append("\n");
     sb.append("    entreprise: ").append(toIndentedString(entreprise)).append("\n");
-    sb.append("    filiere: ").append(toIndentedString(filiere)).append("\n");
-    sb.append("    niveau: ").append(toIndentedString(niveau)).append("\n");
-    sb.append("    anneeDiplome: ").append(toIndentedString(anneeDiplome)).append("\n");
-    sb.append("    ville: ").append(toIndentedString(ville)).append("\n");
     sb.append("}");
     return sb.toString();
   }

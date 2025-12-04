@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * EtudiantResponseDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T20:19:48.415438204Z[Africa/Dakar]")
 public class EtudiantResponseDTO {
 
   private Long id;
@@ -51,11 +51,11 @@ public class EtudiantResponseDTO {
   }
 
   /**
-   * Get id
+   * Identifiant unique
    * @return id
   */
   
-  @Schema(name = "id", example = "123", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", example = "123", description = "Identifiant unique", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public Long getId() {
     return id;
@@ -231,11 +231,11 @@ public class EtudiantResponseDTO {
   }
 
   /**
-   * Get actif
+   * Indique si le compte est actif
    * @return actif
   */
   
-  @Schema(name = "actif", example = "true", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "actif", example = "true", description = "Indique si le compte est actif", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("actif")
   public Boolean getActif() {
     return actif;
@@ -251,11 +251,11 @@ public class EtudiantResponseDTO {
   }
 
   /**
-   * Get role
+   * Rôle de l'utilisateur
    * @return role
   */
   
-  @Schema(name = "role", example = "ETUDIANT", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "role", example = "ETUDIANT", description = "Rôle de l'utilisateur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("role")
   public String getRole() {
     return role;
@@ -271,11 +271,11 @@ public class EtudiantResponseDTO {
   }
 
   /**
-   * Get deleted
+   * Indique si le compte est supprimé
    * @return deleted
   */
   
-  @Schema(name = "deleted", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "deleted", example = "false", description = "Indique si le compte est supprimé", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("deleted")
   public Boolean getDeleted() {
     return deleted;

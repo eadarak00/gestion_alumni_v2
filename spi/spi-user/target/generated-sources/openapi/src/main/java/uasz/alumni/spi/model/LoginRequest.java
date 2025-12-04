@@ -15,50 +15,49 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Données de connexion
+ * LoginRequest
  */
 
-@Schema(name = "ConnexionRequestDTO", description = "Données de connexion")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
-public class ConnexionRequestDTO {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T20:19:48.415438204Z[Africa/Dakar]")
+public class LoginRequest {
 
-  private String identifiant;
+  private String email;
 
   private String motDePasse;
 
-  public ConnexionRequestDTO() {
+  public LoginRequest() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public ConnexionRequestDTO(String identifiant, String motDePasse) {
-    this.identifiant = identifiant;
+  public LoginRequest(String email, String motDePasse) {
+    this.email = email;
     this.motDePasse = motDePasse;
   }
 
-  public ConnexionRequestDTO identifiant(String identifiant) {
-    this.identifiant = identifiant;
+  public LoginRequest email(String email) {
+    this.email = email;
     return this;
   }
 
   /**
-   * Email ou username de l'utilisateur
-   * @return identifiant
+   * Email de l'utilisateur
+   * @return email
   */
-  @NotNull 
-  @Schema(name = "identifiant", example = "etudiant@uasz.sn", description = "Email ou username de l'utilisateur", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("identifiant")
-  public String getIdentifiant() {
-    return identifiant;
+  @NotNull @jakarta.validation.constraints.Email 
+  @Schema(name = "email", example = "etudiant@uasz.sn", description = "Email de l'utilisateur", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("email")
+  public String getEmail() {
+    return email;
   }
 
-  public void setIdentifiant(String identifiant) {
-    this.identifiant = identifiant;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
-  public ConnexionRequestDTO motDePasse(String motDePasse) {
+  public LoginRequest motDePasse(String motDePasse) {
     this.motDePasse = motDePasse;
     return this;
   }
@@ -86,21 +85,21 @@ public class ConnexionRequestDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ConnexionRequestDTO connexionRequestDTO = (ConnexionRequestDTO) o;
-    return Objects.equals(this.identifiant, connexionRequestDTO.identifiant) &&
-        Objects.equals(this.motDePasse, connexionRequestDTO.motDePasse);
+    LoginRequest loginRequest = (LoginRequest) o;
+    return Objects.equals(this.email, loginRequest.email) &&
+        Objects.equals(this.motDePasse, loginRequest.motDePasse);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(identifiant, motDePasse);
+    return Objects.hash(email, motDePasse);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ConnexionRequestDTO {\n");
-    sb.append("    identifiant: ").append(toIndentedString(identifiant)).append("\n");
+    sb.append("class LoginRequest {\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    motDePasse: ").append("*").append("\n");
     sb.append("}");
     return sb.toString();

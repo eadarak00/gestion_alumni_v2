@@ -8,8 +8,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import uasz.alumni.ms_user.common.exceptions.ResourceAlreadyExistsException;
 import uasz.alumni.ms_user.common.exceptions.ResourceNotFoundException;
-import uasz.alumni.ms_user.dtos.AlumniRequestDTO;
-import uasz.alumni.ms_user.dtos.AlumniResponseDTO;
+import uasz.alumni.spi.model.AlumniRequestDTO;
+import uasz.alumni.spi.model.AlumniResponseDTO;
 import uasz.alumni.ms_user.entities.Alumni;
 import uasz.alumni.ms_user.entities.Role;
 import uasz.alumni.ms_user.mappers.AlumniMapper;
@@ -36,8 +36,8 @@ public class AlumniService {
     public AlumniResponseDTO inscrireAlumni(@NonNull AlumniRequestDTO dto) {
 
         // Vérification d'unicité
-        checkEmailUnique(dto.email());
-        checkUsernameUnique(dto.username());
+        checkEmailUnique(dto.getEmail());
+        checkUsernameUnique(dto.getUsername());
 
         // Récupération du rôle ALUMNI
         Role roleAlumni = roleRepository.findByLibelle("ALUMNI")
