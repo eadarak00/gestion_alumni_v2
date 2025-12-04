@@ -8,56 +8,41 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
-import uasz.alumni.ms_user.dtos.UtilisateurResponseDTO;
 import uasz.alumni.ms_user.services.UtilisateurService;
+import uasz.alumni.spi.api.UtilisateursApi;
+import uasz.alumni.spi.model.UtilisateurResponseDTO;
 
 @RestController
 @RequestMapping("/api/v1/utilisateurs")
 @RequiredArgsConstructor
-public class UtilisateurController {
+public class UtilisateurController implements UtilisateursApi {
 
     private final UtilisateurService utilisateurService;
 
-    /**
-     * Récupérer tous les utilisateurs (y compris supprimés)
-     */
-    @GetMapping
+    @Override
+    public ResponseEntity<Boolean> emailExists(@Email String email) {
+        return ResponseEntity.ok(utilisateurService.emailExists(email));
+    }
+
+    @Override
     public ResponseEntity<List<UtilisateurResponseDTO>> getAllUtilisateurs() {
         return ResponseEntity.ok(utilisateurService.getAllUtilisateurs());
     }
 
-    /**
-     * Récupérer uniquement les utilisateurs non supprimés (actifs)
-     */
-    @GetMapping("/non-supprimes")
+    @Override
+    public ResponseEntity<UtilisateurResponseDTO> getUtilisateurByEmail(@Email String email) {
+        return ResponseEntity.ok(utilisateurService.getUtilisateurDtoByEmail(email));
+    }
+
+    @Override
     public ResponseEntity<List<UtilisateurResponseDTO>> getUtilisateursNonSupprimes() {
         return ResponseEntity.ok(utilisateurService.getUtilisateursNonSupprimes());
     }
 
-    /**
-     * Récupérer un utilisateur par email (DTO)
-     */
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UtilisateurResponseDTO> getUtilisateurByEmail(@PathVariable String email) {
-        UtilisateurResponseDTO dto = utilisateurService.getUtilisateurDtoByEmail(email);
-        return ResponseEntity.ok(dto);
-    }
-
-    /**
-     * Vérifier si un email existe
-     */
-    @GetMapping("/exists/email/{email}")
-    public ResponseEntity<Boolean> emailExists(@PathVariable String email) {
-        return ResponseEntity.ok(utilisateurService.emailExists(email));
-    }
-
-    /**
-     * Vérifier si un username existe
-     */
-    @GetMapping("/exists/username/{username}")
-    public ResponseEntity<Boolean> usernameExists(@PathVariable String username) {
+    @Override
+    public ResponseEntity<Boolean> usernameExists(String username) {
         return ResponseEntity.ok(utilisateurService.usernameExists(username));
     }
-
 }

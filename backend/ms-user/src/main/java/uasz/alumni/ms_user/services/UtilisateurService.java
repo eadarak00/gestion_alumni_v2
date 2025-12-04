@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import uasz.alumni.ms_user.common.exceptions.ResourceNotFoundException;
-import uasz.alumni.ms_user.dtos.UtilisateurResponseDTO;
 import uasz.alumni.ms_user.entities.Utilisateur;
 import uasz.alumni.ms_user.mappers.UtilisateurMapper;
 import uasz.alumni.ms_user.repositories.UtilisateurRepository;
+import uasz.alumni.spi.model.UtilisateurResponseDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -53,14 +53,14 @@ public class UtilisateurService {
     }
 
     /**
-     * Récupération d’un utilisateur (entité) par email — uniquement actif/non supprimé
+     * Récupération d’un utilisateur (entité) par email — uniquement actif/non
+     * supprimé
      */
     @Transactional(readOnly = true)
     public Utilisateur getUtilisateurEntityByEmail(@NonNull String email) {
         return utilisateurRepository.findByEmailAndDeletedFalse(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Utilisateur non trouvé ou supprimé avec l'email : " + email
-                ));
+                        "Utilisateur non trouvé ou supprimé avec l'email : " + email));
     }
 
     /**
