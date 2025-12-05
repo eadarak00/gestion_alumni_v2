@@ -19,7 +19,7 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "RefreshTokenRequestDTO", description = "Requête de rafraîchissement du token JWT")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T15:56:29.254042115Z[Etc/UTC]")
 public class RefreshTokenRequestDTO {
 
   private String refreshToken;

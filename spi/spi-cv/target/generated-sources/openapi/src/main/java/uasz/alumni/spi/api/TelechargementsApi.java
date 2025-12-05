@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:08:49.971400101Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T15:56:06.326666890Z[Etc/UTC]")
 @Validated
 @Tag(name = "Téléchargements", description = "the Téléchargements API")
 public interface TelechargementsApi {

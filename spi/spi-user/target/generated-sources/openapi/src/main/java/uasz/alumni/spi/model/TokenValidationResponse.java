@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "TokenValidationResponse", description = "Réponse de validation du token JWT")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T15:56:29.254042115Z[Etc/UTC]")
 public class TokenValidationResponse {
 
   private Boolean valid;

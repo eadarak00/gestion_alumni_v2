@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * Certification
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:08:49.971400101Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T15:56:06.326666890Z[Etc/UTC]")
 public class Certification {
 
   private Integer id;
@@ -129,7 +129,7 @@ public class Certification {
    * @return dateObtention
   */
   @Valid 
-  @Schema(name = "dateObtention", example = "Tue Mar 15 00:00:00 GMT 2022", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateObtention", example = "Tue Mar 15 00:00:00 UTC 2022", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateObtention")
   public LocalDate getDateObtention() {
     return dateObtention;
@@ -149,7 +149,7 @@ public class Certification {
    * @return dateExpiration
   */
   @Valid 
-  @Schema(name = "dateExpiration", example = "Sat Mar 15 00:00:00 GMT 2025", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateExpiration", example = "Sat Mar 15 00:00:00 UTC 2025", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateExpiration")
   public LocalDate getDateExpiration() {
     return dateExpiration;

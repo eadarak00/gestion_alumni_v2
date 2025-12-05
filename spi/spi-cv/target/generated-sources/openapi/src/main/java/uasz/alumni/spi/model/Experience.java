@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * Experience
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:08:49.971400101Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T15:56:06.326666890Z[Etc/UTC]")
 public class Experience {
 
   private Integer id;
@@ -153,7 +153,7 @@ public class Experience {
    * @return dateDebut
   */
   @Valid 
-  @Schema(name = "dateDebut", example = "Wed Jan 15 00:00:00 GMT 2020", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateDebut", example = "Wed Jan 15 00:00:00 UTC 2020", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateDebut")
   public LocalDate getDateDebut() {
     return dateDebut;
@@ -173,7 +173,7 @@ public class Experience {
    * @return dateFin
   */
   @Valid 
-  @Schema(name = "dateFin", example = "Fri Jun 30 00:00:00 GMT 2023", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateFin", example = "Fri Jun 30 00:00:00 UTC 2023", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateFin")
   public LocalDate getDateFin() {
     return dateFin;
