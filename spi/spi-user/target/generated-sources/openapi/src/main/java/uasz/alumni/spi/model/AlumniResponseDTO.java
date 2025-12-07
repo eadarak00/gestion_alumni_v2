@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * AlumniResponseDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-05T18:32:33.604147700Z[Atlantic/Reykjavik]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-07T16:06:12.737777592Z[Africa/Dakar]")
 public class AlumniResponseDTO {
 
   private Long id;
@@ -37,14 +37,6 @@ public class AlumniResponseDTO {
 
   private String entreprise;
 
-  private String filiere;
-
-  private String niveau;
-
-  private Integer anneeDiplome;
-
-  private String ville;
-
   private Boolean actif;
 
   private String role;
@@ -57,11 +49,11 @@ public class AlumniResponseDTO {
   }
 
   /**
-   * Get id
+   * Identifiant unique
    * @return id
   */
   
-  @Schema(name = "id", example = "124", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", example = "124", description = "Identifiant unique", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public Long getId() {
     return id;
@@ -211,97 +203,17 @@ public class AlumniResponseDTO {
     this.entreprise = entreprise;
   }
 
-  public AlumniResponseDTO filiere(String filiere) {
-    this.filiere = filiere;
-    return this;
-  }
-
-  /**
-   * Get filiere
-   * @return filiere
-  */
-  
-  @Schema(name = "filiere", example = "Informatique", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("filiere")
-  public String getFiliere() {
-    return filiere;
-  }
-
-  public void setFiliere(String filiere) {
-    this.filiere = filiere;
-  }
-
-  public AlumniResponseDTO niveau(String niveau) {
-    this.niveau = niveau;
-    return this;
-  }
-
-  /**
-   * Get niveau
-   * @return niveau
-  */
-  
-  @Schema(name = "niveau", example = "MASTER", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("niveau")
-  public String getNiveau() {
-    return niveau;
-  }
-
-  public void setNiveau(String niveau) {
-    this.niveau = niveau;
-  }
-
-  public AlumniResponseDTO anneeDiplome(Integer anneeDiplome) {
-    this.anneeDiplome = anneeDiplome;
-    return this;
-  }
-
-  /**
-   * Get anneeDiplome
-   * @return anneeDiplome
-  */
-  
-  @Schema(name = "anneeDiplome", example = "2020", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("anneeDiplome")
-  public Integer getAnneeDiplome() {
-    return anneeDiplome;
-  }
-
-  public void setAnneeDiplome(Integer anneeDiplome) {
-    this.anneeDiplome = anneeDiplome;
-  }
-
-  public AlumniResponseDTO ville(String ville) {
-    this.ville = ville;
-    return this;
-  }
-
-  /**
-   * Get ville
-   * @return ville
-  */
-  
-  @Schema(name = "ville", example = "Dakar", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("ville")
-  public String getVille() {
-    return ville;
-  }
-
-  public void setVille(String ville) {
-    this.ville = ville;
-  }
-
   public AlumniResponseDTO actif(Boolean actif) {
     this.actif = actif;
     return this;
   }
 
   /**
-   * Get actif
+   * Indique si le compte est actif
    * @return actif
   */
   
-  @Schema(name = "actif", example = "true", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "actif", example = "true", description = "Indique si le compte est actif", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("actif")
   public Boolean getActif() {
     return actif;
@@ -317,11 +229,11 @@ public class AlumniResponseDTO {
   }
 
   /**
-   * Get role
+   * Rôle de l'utilisateur
    * @return role
   */
   
-  @Schema(name = "role", example = "ALUMNI", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "role", example = "ALUMNI", description = "Rôle de l'utilisateur", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("role")
   public String getRole() {
     return role;
@@ -337,11 +249,11 @@ public class AlumniResponseDTO {
   }
 
   /**
-   * Get deleted
+   * Indique si le compte est supprimé
    * @return deleted
   */
   
-  @Schema(name = "deleted", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "deleted", example = "false", description = "Indique si le compte est supprimé", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("deleted")
   public Boolean getDeleted() {
     return deleted;
@@ -368,10 +280,6 @@ public class AlumniResponseDTO {
         Objects.equals(this.telephone, alumniResponseDTO.telephone) &&
         Objects.equals(this.profession, alumniResponseDTO.profession) &&
         Objects.equals(this.entreprise, alumniResponseDTO.entreprise) &&
-        Objects.equals(this.filiere, alumniResponseDTO.filiere) &&
-        Objects.equals(this.niveau, alumniResponseDTO.niveau) &&
-        Objects.equals(this.anneeDiplome, alumniResponseDTO.anneeDiplome) &&
-        Objects.equals(this.ville, alumniResponseDTO.ville) &&
         Objects.equals(this.actif, alumniResponseDTO.actif) &&
         Objects.equals(this.role, alumniResponseDTO.role) &&
         Objects.equals(this.deleted, alumniResponseDTO.deleted);
@@ -379,7 +287,7 @@ public class AlumniResponseDTO {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, nom, prenom, email, username, telephone, profession, entreprise, filiere, niveau, anneeDiplome, ville, actif, role, deleted);
+    return Objects.hash(id, nom, prenom, email, username, telephone, profession, entreprise, actif, role, deleted);
   }
 
   @Override
@@ -394,10 +302,6 @@ public class AlumniResponseDTO {
     sb.append("    telephone: ").append(toIndentedString(telephone)).append("\n");
     sb.append("    profession: ").append(toIndentedString(profession)).append("\n");
     sb.append("    entreprise: ").append(toIndentedString(entreprise)).append("\n");
-    sb.append("    filiere: ").append(toIndentedString(filiere)).append("\n");
-    sb.append("    niveau: ").append(toIndentedString(niveau)).append("\n");
-    sb.append("    anneeDiplome: ").append(toIndentedString(anneeDiplome)).append("\n");
-    sb.append("    ville: ").append(toIndentedString(ville)).append("\n");
     sb.append("    actif: ").append(toIndentedString(actif)).append("\n");
     sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");

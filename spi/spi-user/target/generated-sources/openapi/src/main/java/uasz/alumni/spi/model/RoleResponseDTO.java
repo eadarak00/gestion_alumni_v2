@@ -15,29 +15,17 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * DTO de réponse pour les données d&#39;un rôle
+ * RoleResponseDTO
  */
 
-@Schema(name = "RoleResponseDTO", description = "DTO de réponse pour les données d'un rôle")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-05T18:32:33.604147700Z[Atlantic/Reykjavik]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-07T16:06:12.737777592Z[Africa/Dakar]")
 public class RoleResponseDTO {
 
   private Long id;
 
   private String libelle;
 
-  private Boolean deleted = false;
-
-  public RoleResponseDTO() {
-    super();
-  }
-
-  /**
-   * Constructor with only required parameters
-   */
-  public RoleResponseDTO(String libelle) {
-    this.libelle = libelle;
-  }
+  private Boolean deleted;
 
   public RoleResponseDTO id(Long id) {
     this.id = id;
@@ -49,7 +37,7 @@ public class RoleResponseDTO {
    * @return id
   */
   
-  @Schema(name = "id", accessMode = Schema.AccessMode.READ_ONLY, example = "1", description = "Identifiant unique du rôle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", example = "1", description = "Identifiant unique du rôle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public Long getId() {
     return id;
@@ -68,8 +56,8 @@ public class RoleResponseDTO {
    * Libellé du rôle
    * @return libelle
   */
-  @NotNull @Size(min = 2, max = 50) 
-  @Schema(name = "libelle", example = "ADMIN", description = "Libellé du rôle", requiredMode = Schema.RequiredMode.REQUIRED)
+  
+  @Schema(name = "libelle", example = "ADMIN", description = "Libellé du rôle", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("libelle")
   public String getLibelle() {
     return libelle;
@@ -85,11 +73,11 @@ public class RoleResponseDTO {
   }
 
   /**
-   * Indique si le rôle est supprimé logiquement
+   * Indique si le rôle est supprimé
    * @return deleted
   */
   
-  @Schema(name = "deleted", example = "false", description = "Indique si le rôle est supprimé logiquement", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "deleted", example = "false", description = "Indique si le rôle est supprimé", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("deleted")
   public Boolean getDeleted() {
     return deleted;

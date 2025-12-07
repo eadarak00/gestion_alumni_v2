@@ -1,12 +1,20 @@
 package uasz.alumni.ms_user.services;
 
 import lombok.RequiredArgsConstructor;
-import uasz.alumni.ms_user.dtos.LoginRequest;
-import uasz.alumni.ms_user.dtos.RefreshRequest;
-import uasz.alumni.ms_user.dtos.TokenResponse;
+import lombok.extern.slf4j.Slf4j;
+import uasz.alumni.spi.model.LoginRequest;
+import uasz.alumni.spi.model.RefreshRequest;
+import uasz.alumni.spi.model.TokenResponse;
+import uasz.alumni.spi.model.UtilisateurRequestDTO;
+import uasz.alumni.spi.model.UtilisateurResponseDTO;
+import uasz.alumni.ms_user.common.exceptions.ResourceAlreadyExistsException;
+import uasz.alumni.ms_user.common.exceptions.ResourceNotFoundException;
 import uasz.alumni.ms_user.entities.RefreshToken;
+import uasz.alumni.ms_user.entities.Role;
 import uasz.alumni.ms_user.entities.Utilisateur;
+import uasz.alumni.ms_user.mappers.UtilisateurMapper;
 import uasz.alumni.ms_user.repositories.RefreshTokenRepository;
+import uasz.alumni.ms_user.repositories.RoleRepository;
 import uasz.alumni.ms_user.repositories.UtilisateurRepository;
 import uasz.alumni.ms_user.security.JwtService;
 import uasz.alumni.ms_user.security.TokenHashUtil;
@@ -19,6 +27,7 @@ import java.util.UUID;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -26,6 +35,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class AuthService {
 
@@ -33,6 +43,10 @@ public class AuthService {
     private final JwtService jwtService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UtilisateurMapper utilisateurMapper;
+    private final RoleRepository roleRepository;
+    private final CodeValidationService codeValidationService;
 
     @Value("${jwt.refresh-exp-days:30}")
     private long refreshExpDays;
@@ -40,13 +54,11 @@ public class AuthService {
     @Value("${jwt.access-exp-seconds:900}")
     private long accessExpSeconds;
 
-
     /** LOGIN */
     public TokenResponse login(LoginRequest req) {
 
         Authentication auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(req.email(), req.motDePasse())
-        );
+                new UsernamePasswordAuthenticationToken(req.getEmail(), req.getMotDePasse()));
 
         UtilisateurDetails user = (UtilisateurDetails) auth.getPrincipal();
         Utilisateur u = utilisateurRepository
@@ -70,14 +82,18 @@ public class AuthService {
 
         refreshTokenRepository.save(rt);
 
-        return new TokenResponse(accessToken, refreshToken, "Bearer", accessExpSeconds);
+        TokenResponse response = new TokenResponse();
+        response.setAccessToken(accessToken);
+        response.setRefreshToken(refreshToken);
+        response.setTokenType("Bearer");
+        response.setExpiresInSeconds(accessExpSeconds);
+        return response;
     }
-
 
     /** REFRESH TOKEN */
     public TokenResponse refresh(RefreshRequest refreshReq) {
 
-        String hash = TokenHashUtil.sha256(refreshReq.refreshToken());
+        String hash = TokenHashUtil.sha256(refreshReq.getRefreshToken());
 
         RefreshToken stored = refreshTokenRepository.findByTokenHash(hash)
                 .orElseThrow(() -> new IllegalArgumentException("Refresh token invalide"));
@@ -107,9 +123,13 @@ public class AuthService {
 
         String newAccess = jwtService.generateAccessToken(userDetails);
 
-        return new TokenResponse(newAccess, newRefresh, "Bearer", accessExpSeconds);
+        TokenResponse response = new TokenResponse();
+        response.setAccessToken(newAccess);
+        response.setRefreshToken(newRefresh);
+        response.setTokenType("Bearer");
+        response.setExpiresInSeconds(accessExpSeconds);
+        return response;
     }
-
 
     /** LOGOUT */
     public void logout(String refreshToken) {
@@ -120,4 +140,49 @@ public class AuthService {
                     refreshTokenRepository.save(rt);
                 });
     }
+
+    public UtilisateurResponseDTO inscrire(UtilisateurRequestDTO dto) {
+
+        validateUniqueness(dto);
+
+        Role role = findRole(dto.getRole());
+
+        Utilisateur utilisateur = buildUtilisateur(dto, role);
+
+        Utilisateur savedUser = utilisateurRepository.save(utilisateur);
+
+        codeValidationService.creerEtEnvoyerCode(savedUser.getEmail());
+
+        log.info("Nouvel utilisateur inscrit : {} ({})", savedUser.getNom(), savedUser.getEmail());
+
+        return utilisateurMapper.toDto(savedUser);
+    }
+
+    //
+    // ---------------- Méthodes privées propres ----------------
+    //
+
+    private void validateUniqueness(UtilisateurRequestDTO dto) {
+        if (utilisateurRepository.findByEmail(dto.getEmail()).isPresent())
+            throw new ResourceAlreadyExistsException("Email déjà utilisé");
+
+        if (dto.getUsername() != null && utilisateurRepository.findByUsername(dto.getUsername()).isPresent())
+            throw new ResourceAlreadyExistsException("Username déjà utilisé");
+
+    }
+
+    private Role findRole(String roleLibelle) {
+        return roleRepository.findByLibelle(roleLibelle)
+                .orElseThrow(() -> new ResourceNotFoundException("Le rôle " + roleLibelle + " n'existe pas"));
+    }
+
+    private Utilisateur buildUtilisateur(UtilisateurRequestDTO dto, Role role) {
+        Utilisateur utilisateur = utilisateurMapper.toEntity(dto);
+
+        utilisateur.setRole(role);
+        utilisateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
+
+        return utilisateur;
+    }
+
 }

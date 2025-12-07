@@ -6,8 +6,8 @@ import java.util.Locale;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
-import uasz.alumni.ms_user.dtos.RoleRequestDTO;
 import uasz.alumni.ms_user.services.RoleService;
+import uasz.alumni.spi.model.RoleRequestDTO;
 
 @Component
 @AllArgsConstructor

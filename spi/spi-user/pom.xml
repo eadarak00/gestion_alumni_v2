@@ -137,8 +137,8 @@
                             <configOptions>
                                 <!-- Générer uniquement les interfaces -->
                                 <interfaceOnly>true</interfaceOnly>
-                                <!-- Ne pas wrapper dans ResponseEntity (retourne List<Student>) -->
-                                <useResponseEntity>false</useResponseEntity>
+                                <!-- Wrapper dans ResponseEntity -->
+                                <useResponseEntity>true</useResponseEntity>
                                 <!-- Ne pas générer de code spécifique Spring Boot -->
                                 <skipDefaultInterface>true</skipDefaultInterface>
                                 <!-- Utiliser Jakarta EE -->
