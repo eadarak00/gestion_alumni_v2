@@ -2,6 +2,9 @@ import React from 'react';
 import InscriptionEtudiant from '../fonctionnalites/etudiant/pages/InscriptionEtudiant';
 import ConnexionEtudiant from '../fonctionnalites/etudiant/pages/ConnexionEtudiant';
 import ConditionsUtilisation from '../fonctionnalites/etudiant/pages/ConditionsUtilisation';
+import InscriptionAlumni from '../fonctionnalites/alumni/pages/InscriptionAlumni';
+import ConnexionAlumni from '../fonctionnalites/alumni/pages/ConnexionAlumni';
+import MotDePasseOublie from '../fonctionnalites/alumni/pages/MotDePasseOublie';
 
 const RoutesApp = () => {
   const pathname = globalThis.location.pathname;
@@ -15,7 +18,16 @@ const RoutesApp = () => {
   if (pathname === '/ConditionsUtilisation') {
     return <ConditionsUtilisation />;
   }
- 
+  if (pathname === '/inscription-alumni') {
+    return <InscriptionAlumni />;
+  }
+  if (pathname === '/connexion-alumni') {
+    return <ConnexionAlumni />;
+  }
+  if (pathname === '/mot-de-passe-oublie') {
+    return <MotDePasseOublie />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center">
