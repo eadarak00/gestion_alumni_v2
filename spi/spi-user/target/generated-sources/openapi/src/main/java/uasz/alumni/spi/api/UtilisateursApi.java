@@ -5,6 +5,7 @@
  */
 package uasz.alumni.spi.api;
 
+import uasz.alumni.spi.model.GetAllUtilisateursFiltered200Response;
 import uasz.alumni.spi.model.UtilisateurResponseDTO;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-07T12:35:46.023545471Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-07T14:57:34.104957876Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Utilisateurs", description = "API pour gérer les utilisateurs")
 public interface UtilisateursApi {
@@ -70,19 +71,24 @@ public interface UtilisateursApi {
 
 
     /**
-     * GET /utilisateurs : Récupérer tous les utilisateurs
-     * Retourne la liste complète de tous les utilisateurs (y compris supprimés)
+     * GET /utilisateurs : Lister et filtrer les utilisateurs
+     * Permet de lister les utilisateurs avec pagination, filtre par actif et filtre par suppression (soft delete). 
      *
-     * @return Liste des utilisateurs récupérée avec succès (status code 200)
+     * @param actif Filtre sur l&#39;état d&#39;activation du compte (optional)
+     * @param deleted Filtre sur l&#39;état de suppression logique (soft delete) (optional)
+     * @param page  (optional)
+     * @param size  (optional)
+     * @param sort Format: champ,ordre (asc|desc) (optional)
+     * @return Résultats de la recherche filtrée (status code 200)
      */
     @Operation(
-        operationId = "getAllUtilisateurs",
-        summary = "Récupérer tous les utilisateurs",
-        description = "Retourne la liste complète de tous les utilisateurs (y compris supprimés)",
+        operationId = "getAllUtilisateursFiltered",
+        summary = "Lister et filtrer les utilisateurs",
+        description = "Permet de lister les utilisateurs avec pagination, filtre par actif et filtre par suppression (soft delete). ",
         tags = { "Utilisateurs" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Liste des utilisateurs récupérée avec succès", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UtilisateurResponseDTO.class)))
+            @ApiResponse(responseCode = "200", description = "Résultats de la recherche filtrée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = GetAllUtilisateursFiltered200Response.class))
             })
         },
         security = {
@@ -95,8 +101,12 @@ public interface UtilisateursApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<UtilisateurResponseDTO>> getAllUtilisateurs(
-        
+    ResponseEntity<GetAllUtilisateursFiltered200Response> getAllUtilisateursFiltered(
+        @Parameter(name = "actif", description = "Filtre sur l'état d'activation du compte", in = ParameterIn.QUERY) @Valid @RequestParam(value = "actif", required = false) Boolean actif,
+        @Parameter(name = "deleted", description = "Filtre sur l'état de suppression logique (soft delete)", in = ParameterIn.QUERY) @Valid @RequestParam(value = "deleted", required = false) Boolean deleted,
+        @Min(0) @Parameter(name = "page", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false) Integer page,
+        @Min(1) @Parameter(name = "size", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "size", required = false) Integer size,
+        @Parameter(name = "sort", description = "Format: champ,ordre (asc|desc)", in = ParameterIn.QUERY) @Valid @RequestParam(value = "sort", required = false) String sort
     );
 
 
@@ -131,37 +141,6 @@ public interface UtilisateursApi {
     
     ResponseEntity<UtilisateurResponseDTO> getUtilisateurByEmail(
         @jakarta.validation.constraints.Email @Parameter(name = "email", description = "", required = true, in = ParameterIn.PATH) @PathVariable("email") String email
-    );
-
-
-    /**
-     * GET /utilisateurs/non-supprimes : Récupérer les utilisateurs actifs
-     * Retourne la liste des utilisateurs non supprimés
-     *
-     * @return Liste des utilisateurs actifs récupérée avec succès (status code 200)
-     */
-    @Operation(
-        operationId = "getUtilisateursNonSupprimes",
-        summary = "Récupérer les utilisateurs actifs",
-        description = "Retourne la liste des utilisateurs non supprimés",
-        tags = { "Utilisateurs" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Liste des utilisateurs actifs récupérée avec succès", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UtilisateurResponseDTO.class)))
-            })
-        },
-        security = {
-            @SecurityRequirement(name = "bearerAuth")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/utilisateurs/non-supprimes",
-        produces = { "application/json" }
-    )
-    
-    ResponseEntity<List<UtilisateurResponseDTO>> getUtilisateursNonSupprimes(
-        
     );
 
 

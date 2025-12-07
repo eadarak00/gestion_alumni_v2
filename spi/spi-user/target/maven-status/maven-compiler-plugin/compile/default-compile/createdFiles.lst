@@ -1,4 +1,5 @@
 uasz/alumni/spi/api/ValidationApi.class
+uasz/alumni/spi/model/GetAllUtilisateursFiltered200Response.class
 uasz/alumni/spi/model/RefreshRequest.class
 uasz/alumni/spi/api/UtilisateursApi.class
 uasz/alumni/spi/api/RolesApi.class

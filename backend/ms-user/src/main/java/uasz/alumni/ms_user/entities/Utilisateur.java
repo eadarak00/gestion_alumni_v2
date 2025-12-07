@@ -59,7 +59,7 @@ public class Utilisateur extends BaseEntity {
     @Column(nullable = false)
     private boolean actif = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 

@@ -12,6 +12,7 @@ src/main/java/uasz/alumni/spi/model/CodeValidationCheckDTO.java
 src/main/java/uasz/alumni/spi/model/CodeValidationRequestDTO.java
 src/main/java/uasz/alumni/spi/model/EtudiantRequestDTO.java
 src/main/java/uasz/alumni/spi/model/EtudiantResponseDTO.java
+src/main/java/uasz/alumni/spi/model/GetAllUtilisateursFiltered200Response.java
 src/main/java/uasz/alumni/spi/model/LoginRequest.java
 src/main/java/uasz/alumni/spi/model/RefreshRequest.java
 src/main/java/uasz/alumni/spi/model/RoleRequestDTO.java
