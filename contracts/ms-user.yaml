@@ -92,57 +92,32 @@ paths:
         '401':
           description: Non authentifié
 
-  /auth/inscription-etudiant:
+  /auth/inscrire:
     post:
       tags:
         - Authentification
-      summary: Inscrire un nouvel étudiant
-      description: Crée un nouveau compte étudiant
-      operationId: inscrireEtudiant
+      summary: Inscrire un nouvel Utilisateur
+      description: Crée un nouveau compte utilisateur
+      operationId: inscrire
       security: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EtudiantRequestDTO'
+              $ref: '#/components/schemas/UtilisateurRequestDTO'
       responses:
         '201':
-          description: Étudiant inscrit avec succès
+          description: Utilisateur inscrit avec succès
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EtudiantResponseDTO'
+                $ref: '#/components/schemas/UtilisateurResponseDTO'
         '400':
           description: Données invalides
         '409':
           description: Email, username ou numéro de carte déjà utilisé
-
-  /auth/inscription-alumni:
-    post:
-      tags:
-        - Authentification
-      summary: Inscrire un nouvel alumni
-      description: Crée un nouveau compte alumni
-      operationId: inscrireAlumni
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AlumniRequestDTO'
-      responses:
-        '201':
-          description: Alumni inscrit avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AlumniResponseDTO'
-        '400':
-          description: Données invalides
-        '409':
-          description: Email ou username déjà utilisé
+    
 
   # ==================== RÔLES ====================
   /roles:
@@ -462,6 +437,50 @@ components:
           format: int64
           description: Durée de validité du token en secondes
           example: 900
+
+    UtilisateurRequestDTO:
+      type: object
+      required:
+        - nom
+        - prenom
+        - email
+        - motDePasse
+        - username
+        - telephone
+        - role
+      properties:
+        nom:
+          type: string
+          description: Nom de famille
+          example: Diallo
+        prenom:
+          type: string
+          description: Prénom
+          example: Mamadou
+        email:
+          type: string
+          format: email
+          description: Adresse email
+          example: mamadou.diallo@uasz.sn
+        username:
+          type: string
+          description: Nom d'utilisateur
+          example: mdiallo
+        motDePasse:
+          type: string
+          format: password
+          description: Mot de passe
+          example: MotDePasse123!
+        telephone:
+          type: string
+          description: Numéro de téléphone (format Sénégal)
+          pattern: '^(\+221|00221)?7[015678]\d{7}$'
+          example: "+221781234567"
+        role:
+          type: string
+          description: Rôle de l'utilisateur
+          example: "ETUDIANT"
+    
 
     # ==================== ÉTUDIANT ====================
     EtudiantRequestDTO:

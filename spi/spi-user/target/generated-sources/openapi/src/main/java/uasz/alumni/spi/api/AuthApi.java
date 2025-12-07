@@ -5,13 +5,11 @@
  */
 package uasz.alumni.spi.api;
 
-import uasz.alumni.spi.model.AlumniRequestDTO;
-import uasz.alumni.spi.model.AlumniResponseDTO;
-import uasz.alumni.spi.model.EtudiantRequestDTO;
-import uasz.alumni.spi.model.EtudiantResponseDTO;
 import uasz.alumni.spi.model.LoginRequest;
 import uasz.alumni.spi.model.RefreshRequest;
 import uasz.alumni.spi.model.TokenResponse;
+import uasz.alumni.spi.model.UtilisateurRequestDTO;
+import uasz.alumni.spi.model.UtilisateurResponseDTO;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,62 +36,28 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T20:19:48.415438204Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-07T12:35:46.023545471Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Authentification", description = "Endpoints pour l'authentification et la gestion des sessions")
 public interface AuthApi {
 
     /**
-     * POST /auth/inscription-alumni : Inscrire un nouvel alumni
-     * Crée un nouveau compte alumni
+     * POST /auth/inscrire : Inscrire un nouvel Utilisateur
+     * Crée un nouveau compte utilisateur
      *
-     * @param alumniRequestDTO  (required)
-     * @return Alumni inscrit avec succès (status code 201)
-     *         or Données invalides (status code 400)
-     *         or Email ou username déjà utilisé (status code 409)
-     */
-    @Operation(
-        operationId = "inscrireAlumni",
-        summary = "Inscrire un nouvel alumni",
-        description = "Crée un nouveau compte alumni",
-        tags = { "Authentification" },
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Alumni inscrit avec succès", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = AlumniResponseDTO.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Données invalides"),
-            @ApiResponse(responseCode = "409", description = "Email ou username déjà utilisé")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/auth/inscription-alumni",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    
-    ResponseEntity<AlumniResponseDTO> inscrireAlumni(
-        @Parameter(name = "AlumniRequestDTO", description = "", required = true) @Valid @RequestBody AlumniRequestDTO alumniRequestDTO
-    );
-
-
-    /**
-     * POST /auth/inscription-etudiant : Inscrire un nouvel étudiant
-     * Crée un nouveau compte étudiant
-     *
-     * @param etudiantRequestDTO  (required)
-     * @return Étudiant inscrit avec succès (status code 201)
+     * @param utilisateurRequestDTO  (required)
+     * @return Utilisateur inscrit avec succès (status code 201)
      *         or Données invalides (status code 400)
      *         or Email, username ou numéro de carte déjà utilisé (status code 409)
      */
     @Operation(
-        operationId = "inscrireEtudiant",
-        summary = "Inscrire un nouvel étudiant",
-        description = "Crée un nouveau compte étudiant",
+        operationId = "inscrire",
+        summary = "Inscrire un nouvel Utilisateur",
+        description = "Crée un nouveau compte utilisateur",
         tags = { "Authentification" },
         responses = {
-            @ApiResponse(responseCode = "201", description = "Étudiant inscrit avec succès", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = EtudiantResponseDTO.class))
+            @ApiResponse(responseCode = "201", description = "Utilisateur inscrit avec succès", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UtilisateurResponseDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Données invalides"),
             @ApiResponse(responseCode = "409", description = "Email, username ou numéro de carte déjà utilisé")
@@ -101,13 +65,13 @@ public interface AuthApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/auth/inscription-etudiant",
+        value = "/auth/inscrire",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<EtudiantResponseDTO> inscrireEtudiant(
-        @Parameter(name = "EtudiantRequestDTO", description = "", required = true) @Valid @RequestBody EtudiantRequestDTO etudiantRequestDTO
+    ResponseEntity<UtilisateurResponseDTO> inscrire(
+        @Parameter(name = "UtilisateurRequestDTO", description = "", required = true) @Valid @RequestBody UtilisateurRequestDTO utilisateurRequestDTO
     );
 
 

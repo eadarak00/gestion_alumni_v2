@@ -1,3 +1,4 @@
+.openapi-generator-ignore
 README.md
 pom.xml
 src/main/java/uasz/alumni/spi/api/ApiUtil.java
@@ -16,4 +17,5 @@ src/main/java/uasz/alumni/spi/model/RefreshRequest.java
 src/main/java/uasz/alumni/spi/model/RoleRequestDTO.java
 src/main/java/uasz/alumni/spi/model/RoleResponseDTO.java
 src/main/java/uasz/alumni/spi/model/TokenResponse.java
+src/main/java/uasz/alumni/spi/model/UtilisateurRequestDTO.java
 src/main/java/uasz/alumni/spi/model/UtilisateurResponseDTO.java

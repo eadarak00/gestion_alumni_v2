@@ -15,11 +15,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * EtudiantRequestDTO
+ * UtilisateurRequestDTO
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-07T12:35:46.023545471Z[Africa/Dakar]")
-public class EtudiantRequestDTO {
+public class UtilisateurRequestDTO {
 
   private String nom;
 
@@ -33,30 +33,26 @@ public class EtudiantRequestDTO {
 
   private String telephone;
 
-  private String numeroCarteEtudiant;
+  private String role;
 
-  private String niveau;
-
-  private String filiere;
-
-  public EtudiantRequestDTO() {
+  public UtilisateurRequestDTO() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public EtudiantRequestDTO(String nom, String prenom, String email, String motDePasse, String numeroCarteEtudiant, String niveau, String filiere) {
+  public UtilisateurRequestDTO(String nom, String prenom, String email, String username, String motDePasse, String telephone, String role) {
     this.nom = nom;
     this.prenom = prenom;
     this.email = email;
+    this.username = username;
     this.motDePasse = motDePasse;
-    this.numeroCarteEtudiant = numeroCarteEtudiant;
-    this.niveau = niveau;
-    this.filiere = filiere;
+    this.telephone = telephone;
+    this.role = role;
   }
 
-  public EtudiantRequestDTO nom(String nom) {
+  public UtilisateurRequestDTO nom(String nom) {
     this.nom = nom;
     return this;
   }
@@ -76,7 +72,7 @@ public class EtudiantRequestDTO {
     this.nom = nom;
   }
 
-  public EtudiantRequestDTO prenom(String prenom) {
+  public UtilisateurRequestDTO prenom(String prenom) {
     this.prenom = prenom;
     return this;
   }
@@ -96,7 +92,7 @@ public class EtudiantRequestDTO {
     this.prenom = prenom;
   }
 
-  public EtudiantRequestDTO email(String email) {
+  public UtilisateurRequestDTO email(String email) {
     this.email = email;
     return this;
   }
@@ -116,17 +112,17 @@ public class EtudiantRequestDTO {
     this.email = email;
   }
 
-  public EtudiantRequestDTO username(String username) {
+  public UtilisateurRequestDTO username(String username) {
     this.username = username;
     return this;
   }
 
   /**
-   * Nom d'utilisateur (optionnel)
+   * Nom d'utilisateur
    * @return username
   */
-  
-  @Schema(name = "username", example = "mdiallo", description = "Nom d'utilisateur (optionnel)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "username", example = "mdiallo", description = "Nom d'utilisateur", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("username")
   public String getUsername() {
     return username;
@@ -136,7 +132,7 @@ public class EtudiantRequestDTO {
     this.username = username;
   }
 
-  public EtudiantRequestDTO motDePasse(String motDePasse) {
+  public UtilisateurRequestDTO motDePasse(String motDePasse) {
     this.motDePasse = motDePasse;
     return this;
   }
@@ -156,7 +152,7 @@ public class EtudiantRequestDTO {
     this.motDePasse = motDePasse;
   }
 
-  public EtudiantRequestDTO telephone(String telephone) {
+  public UtilisateurRequestDTO telephone(String telephone) {
     this.telephone = telephone;
     return this;
   }
@@ -165,8 +161,8 @@ public class EtudiantRequestDTO {
    * Numéro de téléphone (format Sénégal)
    * @return telephone
   */
-  @Pattern(regexp = "^(\\+221|00221)?7[015678]\\d{7}$") 
-  @Schema(name = "telephone", example = "+221781234567", description = "Numéro de téléphone (format Sénégal)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull @Pattern(regexp = "^(\\+221|00221)?7[015678]\\d{7}$") 
+  @Schema(name = "telephone", example = "+221781234567", description = "Numéro de téléphone (format Sénégal)", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("telephone")
   public String getTelephone() {
     return telephone;
@@ -176,64 +172,24 @@ public class EtudiantRequestDTO {
     this.telephone = telephone;
   }
 
-  public EtudiantRequestDTO numeroCarteEtudiant(String numeroCarteEtudiant) {
-    this.numeroCarteEtudiant = numeroCarteEtudiant;
+  public UtilisateurRequestDTO role(String role) {
+    this.role = role;
     return this;
   }
 
   /**
-   * Numéro de carte étudiant
-   * @return numeroCarteEtudiant
+   * Rôle de l'utilisateur
+   * @return role
   */
   @NotNull 
-  @Schema(name = "numeroCarteEtudiant", example = "ETU123456", description = "Numéro de carte étudiant", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("numeroCarteEtudiant")
-  public String getNumeroCarteEtudiant() {
-    return numeroCarteEtudiant;
+  @Schema(name = "role", example = "ETUDIANT", description = "Rôle de l'utilisateur", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("role")
+  public String getRole() {
+    return role;
   }
 
-  public void setNumeroCarteEtudiant(String numeroCarteEtudiant) {
-    this.numeroCarteEtudiant = numeroCarteEtudiant;
-  }
-
-  public EtudiantRequestDTO niveau(String niveau) {
-    this.niveau = niveau;
-    return this;
-  }
-
-  /**
-   * Niveau d'études
-   * @return niveau
-  */
-  @NotNull 
-  @Schema(name = "niveau", example = "MASTER", description = "Niveau d'études", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("niveau")
-  public String getNiveau() {
-    return niveau;
-  }
-
-  public void setNiveau(String niveau) {
-    this.niveau = niveau;
-  }
-
-  public EtudiantRequestDTO filiere(String filiere) {
-    this.filiere = filiere;
-    return this;
-  }
-
-  /**
-   * Filière d'études
-   * @return filiere
-  */
-  @NotNull 
-  @Schema(name = "filiere", example = "Informatique", description = "Filière d'études", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("filiere")
-  public String getFiliere() {
-    return filiere;
-  }
-
-  public void setFiliere(String filiere) {
-    this.filiere = filiere;
+  public void setRole(String role) {
+    this.role = role;
   }
 
   @Override
@@ -244,36 +200,32 @@ public class EtudiantRequestDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    EtudiantRequestDTO etudiantRequestDTO = (EtudiantRequestDTO) o;
-    return Objects.equals(this.nom, etudiantRequestDTO.nom) &&
-        Objects.equals(this.prenom, etudiantRequestDTO.prenom) &&
-        Objects.equals(this.email, etudiantRequestDTO.email) &&
-        Objects.equals(this.username, etudiantRequestDTO.username) &&
-        Objects.equals(this.motDePasse, etudiantRequestDTO.motDePasse) &&
-        Objects.equals(this.telephone, etudiantRequestDTO.telephone) &&
-        Objects.equals(this.numeroCarteEtudiant, etudiantRequestDTO.numeroCarteEtudiant) &&
-        Objects.equals(this.niveau, etudiantRequestDTO.niveau) &&
-        Objects.equals(this.filiere, etudiantRequestDTO.filiere);
+    UtilisateurRequestDTO utilisateurRequestDTO = (UtilisateurRequestDTO) o;
+    return Objects.equals(this.nom, utilisateurRequestDTO.nom) &&
+        Objects.equals(this.prenom, utilisateurRequestDTO.prenom) &&
+        Objects.equals(this.email, utilisateurRequestDTO.email) &&
+        Objects.equals(this.username, utilisateurRequestDTO.username) &&
+        Objects.equals(this.motDePasse, utilisateurRequestDTO.motDePasse) &&
+        Objects.equals(this.telephone, utilisateurRequestDTO.telephone) &&
+        Objects.equals(this.role, utilisateurRequestDTO.role);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(nom, prenom, email, username, motDePasse, telephone, numeroCarteEtudiant, niveau, filiere);
+    return Objects.hash(nom, prenom, email, username, motDePasse, telephone, role);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class EtudiantRequestDTO {\n");
+    sb.append("class UtilisateurRequestDTO {\n");
     sb.append("    nom: ").append(toIndentedString(nom)).append("\n");
     sb.append("    prenom: ").append(toIndentedString(prenom)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    motDePasse: ").append("*").append("\n");
     sb.append("    telephone: ").append(toIndentedString(telephone)).append("\n");
-    sb.append("    numeroCarteEtudiant: ").append(toIndentedString(numeroCarteEtudiant)).append("\n");
-    sb.append("    niveau: ").append(toIndentedString(niveau)).append("\n");
-    sb.append("    filiere: ").append(toIndentedString(filiere)).append("\n");
+    sb.append("    role: ").append(toIndentedString(role)).append("\n");
     sb.append("}");
     return sb.toString();
   }
