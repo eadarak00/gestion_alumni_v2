@@ -92,57 +92,32 @@ paths:
         '401':
           description: Non authentifié
 
-  /auth/inscription-etudiant:
+  /auth/inscrire:
     post:
       tags:
         - Authentification
-      summary: Inscrire un nouvel étudiant
-      description: Crée un nouveau compte étudiant
-      operationId: inscrireEtudiant
+      summary: Inscrire un nouvel Utilisateur
+      description: Crée un nouveau compte utilisateur
+      operationId: inscrire
       security: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EtudiantRequestDTO'
+              $ref: '#/components/schemas/UtilisateurRequestDTO'
       responses:
         '201':
-          description: Étudiant inscrit avec succès
+          description: Utilisateur inscrit avec succès
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EtudiantResponseDTO'
+                $ref: '#/components/schemas/UtilisateurResponseDTO'
         '400':
           description: Données invalides
         '409':
           description: Email, username ou numéro de carte déjà utilisé
-
-  /auth/inscription-alumni:
-    post:
-      tags:
-        - Authentification
-      summary: Inscrire un nouvel alumni
-      description: Crée un nouveau compte alumni
-      operationId: inscrireAlumni
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AlumniRequestDTO'
-      responses:
-        '201':
-          description: Alumni inscrit avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AlumniResponseDTO'
-        '400':
-          description: Données invalides
-        '409':
-          description: Email ou username déjà utilisé
+    
 
   # ==================== RÔLES ====================
   /roles:
@@ -265,35 +240,74 @@ paths:
     get:
       tags:
         - Utilisateurs
-      summary: Récupérer tous les utilisateurs
-      description: Retourne la liste complète de tous les utilisateurs (y compris supprimés)
-      operationId: getAllUtilisateurs
-      responses:
-        '200':
-          description: Liste des utilisateurs récupérée avec succès
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UtilisateurResponseDTO'
+      summary: Lister et filtrer les utilisateurs
+      description: >
+        Permet de lister les utilisateurs avec pagination, filtre par actif et filtre par suppression (soft delete).
+      operationId: getAllUtilisateursFiltered
+      parameters:
 
-  /utilisateurs/non-supprimes:
-    get:
-      tags:
-        - Utilisateurs
-      summary: Récupérer les utilisateurs actifs
-      description: Retourne la liste des utilisateurs non supprimés
-      operationId: getUtilisateursNonSupprimes
+        - name: actif
+          in: query
+          description: Filtre sur l'état d'activation du compte
+          required: false
+          schema:
+            type: boolean
+          example: true
+
+        - name: deleted
+          in: query
+          description: Filtre sur l'état de suppression logique (soft delete)
+          required: false
+          schema:
+            type: boolean
+          example: false
+
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          example: 0
+
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          example: 10
+
+        - name: sort
+          in: query
+          description: "Format: champ,ordre (asc|desc)"
+          required: false
+          schema:
+            type: string
+          example: nom,asc
+
       responses:
         '200':
-          description: Liste des utilisateurs actifs récupérée avec succès
+          description: Résultats de la recherche filtrée
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UtilisateurResponseDTO'
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UtilisateurResponseDTO"
+                  totalElements:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  size:
+                    type: integer
+                  number:
+                    type: integer
+
+
 
   /utilisateurs/email/{email}:
     get:
@@ -410,6 +424,43 @@ paths:
             application/json:
               schema:
                 type: string
+  # ==================== RECHERCHE ====================
+  /alumni/search:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Recherche avancée des alumni
+      description: >
+        Permet de rechercher des alumni à l'aide de filtres optionnels
+        par entreprise et profession.
+      operationId: searchAlumni
+      parameters:
+        - name: entreprise
+          in: query
+          description: Nom de l'entreprise actuelle de l'alumni
+          required: false
+          schema:
+            type: string
+        - name: profession
+          in: query
+          description: "Profession actuelle de l'alumni (ex: Data Scientist, Médecin...)"
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste filtrée des alumni
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlumniResponseDTO'
+        '400':
+          description: Requête invalide
+        '500':
+          description: Erreur interne du serveur
+
 
 components:
   schemas:
@@ -462,6 +513,50 @@ components:
           format: int64
           description: Durée de validité du token en secondes
           example: 900
+
+    UtilisateurRequestDTO:
+      type: object
+      required:
+        - nom
+        - prenom
+        - email
+        - motDePasse
+        - username
+        - telephone
+        - role
+      properties:
+        nom:
+          type: string
+          description: Nom de famille
+          example: Diallo
+        prenom:
+          type: string
+          description: Prénom
+          example: Mamadou
+        email:
+          type: string
+          format: email
+          description: Adresse email
+          example: mamadou.diallo@uasz.sn
+        username:
+          type: string
+          description: Nom d'utilisateur
+          example: mdiallo
+        motDePasse:
+          type: string
+          format: password
+          description: Mot de passe
+          example: MotDePasse123!
+        telephone:
+          type: string
+          description: Numéro de téléphone (format Sénégal)
+          pattern: '^(\+221|00221)?7[015678]\d{7}$'
+          example: "+221781234567"
+        role:
+          type: string
+          description: Rôle de l'utilisateur
+          example: "ETUDIANT"
+    
 
     # ==================== ÉTUDIANT ====================
     EtudiantRequestDTO:

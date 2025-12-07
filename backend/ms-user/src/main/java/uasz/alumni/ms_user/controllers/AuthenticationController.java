@@ -5,40 +5,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import uasz.alumni.ms_user.services.AlumniService;
 import uasz.alumni.ms_user.services.AuthService;
-import uasz.alumni.ms_user.services.EtudiantService;
 import uasz.alumni.spi.api.AuthApi;
-import uasz.alumni.spi.model.AlumniRequestDTO;
-import uasz.alumni.spi.model.AlumniResponseDTO;
-import uasz.alumni.spi.model.EtudiantRequestDTO;
-import uasz.alumni.spi.model.EtudiantResponseDTO;
 import uasz.alumni.spi.model.LoginRequest;
 import uasz.alumni.spi.model.RefreshRequest;
 import uasz.alumni.spi.model.TokenResponse;
+import uasz.alumni.spi.model.UtilisateurRequestDTO;
+import uasz.alumni.spi.model.UtilisateurResponseDTO;
 
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class AuthenticationController implements AuthApi {
 
-    private final EtudiantService etudiantService;
-    private final AlumniService alumniService;
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<EtudiantResponseDTO> inscrireEtudiant(EtudiantRequestDTO etudiantRequestDTO) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(etudiantService.inscrireEtudiant(etudiantRequestDTO));
-    }
-
-    @Override
-    public ResponseEntity<AlumniResponseDTO> inscrireAlumni(AlumniRequestDTO alumniRequestDTO) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(alumniService.inscrireAlumni(alumniRequestDTO));
+    public ResponseEntity<UtilisateurResponseDTO> inscrire(@Valid UtilisateurRequestDTO dto) {
+        return ResponseEntity.ok(authService.inscrire(dto));
     }
 
     @Override
@@ -56,4 +42,5 @@ public class AuthenticationController implements AuthApi {
         authService.logout(refreshRequest.getRefreshToken());
         return ResponseEntity.noContent().build();
     }
+
 }

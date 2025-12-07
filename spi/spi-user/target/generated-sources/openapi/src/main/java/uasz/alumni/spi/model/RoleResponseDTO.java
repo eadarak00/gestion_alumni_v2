@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * RoleResponseDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-04T20:19:48.415438204Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-07T16:06:12.737777592Z[Africa/Dakar]")
 public class RoleResponseDTO {
 
   private Long id;
