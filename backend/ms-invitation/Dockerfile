@@ -17,8 +17,7 @@ WORKDIR /app/backend/ms-invitation
 
 # Optimisation du cache des dépendances pour ms-invitation
 COPY backend/ms-invitation/pom.xml .
-RUN mvn dependency:go-offline -B
-
+RUN mvn dependency:go-offline -B -Dmaven.wagon.http.retryHandler.count=5 -Dmaven.wagon.httpconnectionManager.ttlSeconds=600
 # Copie des sources et build
 COPY backend/ms-invitation/src ./src
 RUN mvn clean package -DskipTests

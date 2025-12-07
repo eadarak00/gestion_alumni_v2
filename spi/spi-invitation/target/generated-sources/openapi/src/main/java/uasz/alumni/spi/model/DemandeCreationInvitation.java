@@ -1,28 +1,22 @@
 package uasz.alumni.spi.model;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import org.openapitools.jackson.nullable.JsonNullable;
-import java.util.NoSuchElementException;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
-import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
  * DemandeCreationInvitation
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:08:55.841877373Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-05T18:32:29.145661100Z[Atlantic/Reykjavik]")
 public class DemandeCreationInvitation {
 
   private String idEnvoyeur;
@@ -107,12 +101,12 @@ public class DemandeCreationInvitation {
 
   /**
    * Get roleEnvoyeur
+   *
    * @return roleEnvoyeur
-  */
-  @NotNull 
+   */
   @Schema(name = "roleEnvoyeur", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roleEnvoyeur")
-  public RoleEnvoyeurEnum getRoleEnvoyeur() {
+  public String getRoleEnvoyeur() {
     return roleEnvoyeur;
   }
 

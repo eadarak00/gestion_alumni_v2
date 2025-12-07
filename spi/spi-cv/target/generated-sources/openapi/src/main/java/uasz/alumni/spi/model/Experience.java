@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * Experience
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-03T23:32:01.179463330Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-05T18:58:58.392024500Z[Atlantic/Reykjavik]")
 public class Experience {
 
   private Integer id;

@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:08:55.841877373Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-05T18:32:29.145661100Z[Atlantic/Reykjavik]")
 @Validated
 @Tag(name = "Invitations", description = "Création et gestion des invitations")
 public interface InvitationsApi {

@@ -6,7 +6,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class MsInvitationApplication {
+public class MsInvitationApplication  {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MsInvitationApplication.class, args);

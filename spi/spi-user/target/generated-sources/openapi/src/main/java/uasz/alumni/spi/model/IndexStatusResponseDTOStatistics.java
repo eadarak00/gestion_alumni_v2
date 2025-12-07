@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("IndexStatusResponseDTO_statistics")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-05T18:32:33.604147700Z[Atlantic/Reykjavik]")
 public class IndexStatusResponseDTOStatistics {
 
   private Integer totalAlumni;
