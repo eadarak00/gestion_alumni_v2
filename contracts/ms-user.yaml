@@ -424,6 +424,43 @@ paths:
             application/json:
               schema:
                 type: string
+  # ==================== RECHERCHE ====================
+  /alumni/search:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Recherche avancée des alumni
+      description: >
+        Permet de rechercher des alumni à l'aide de filtres optionnels
+        par entreprise et profession.
+      operationId: searchAlumni
+      parameters:
+        - name: entreprise
+          in: query
+          description: Nom de l'entreprise actuelle de l'alumni
+          required: false
+          schema:
+            type: string
+        - name: profession
+          in: query
+          description: "Profession actuelle de l'alumni (ex: Data Scientist, Médecin...)"
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste filtrée des alumni
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlumniResponseDTO'
+        '400':
+          description: Requête invalide
+        '500':
+          description: Erreur interne du serveur
+
 
 components:
   schemas:
