@@ -380,6 +380,69 @@ paths:
               schema:
                 type: boolean
 
+  /utilisateurs/{id}/completer-profil/alumni:
+    put:
+      tags:
+        - Utilisateurs
+      summary: Compléter le profil d’un alumni
+      description: Ajoute les informations spécifiques à un alumni après l'inscription.
+      operationId: completerProfilAlumni
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumniProfilRequestDTO'
+      responses:
+        '200':
+          description: Profil alumni complété
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniResponseDTO'
+        '400':
+          description: Données invalides
+        '404':
+          description: Utilisateur non trouvé ou n'est pas un alumni
+
+  /utilisateurs/{id}/completer-profil/etudiant:
+    put:
+      tags:
+        - Utilisateurs
+      summary: Compléter le profil d’un étudiant
+      description: Ajoute les informations spécifiques à un étudiant après l'inscription.
+      operationId: completerProfilEtudiant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EtudiantProfilRequestDTO'
+      responses:
+        '200':
+          description: Profil étudiant complété
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EtudiantResponseDTO'
+        '400':
+          description: Données invalides
+        '404':
+          description: Utilisateur non trouvé ou n'est pas un étudiant
+
+
   # ==================== VALIDATION ====================
   /validation/envoyer:
     post:
@@ -658,6 +721,21 @@ components:
           type: boolean
           description: Indique si le compte est supprimé
           example: false
+    
+    EtudiantProfilRequestDTO:
+      type: object
+      required:
+        - numeroEtudiant
+        - filiere
+        - niveau
+      properties:
+        numeroEtudiant:
+          type: string
+        filiere:
+          type: string
+        niveau:
+          type: string
+
 
     # ==================== ALUMNI ====================
     AlumniRequestDTO:
@@ -746,6 +824,14 @@ components:
           type: boolean
           description: Indique si le compte est supprimé
           example: false
+
+    AlumniProfilRequestDTO:
+      type: object
+      properties:
+        profession:
+          type: string
+        entreprise:
+          type: string
 
     # ==================== RÔLE ====================
     RoleRequestDTO:
