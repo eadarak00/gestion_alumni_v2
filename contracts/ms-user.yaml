@@ -17,6 +17,10 @@ tags:
     description: API pour la gestion des rôles utilisateurs
   - name: Utilisateurs
     description: API pour gérer les utilisateurs
+  - name: Alumnis
+    description: API pour gérer les alumnis
+  - name: Etudiants
+    description: API pour gérer les etudiants
   - name: Validation
     description: Endpoints pour la validation des codes par email
 
@@ -428,7 +432,7 @@ paths:
   /alumni/search:
     get:
       tags:
-        - Utilisateurs
+        - Alumnis
       summary: Recherche avancée des alumni
       description: >
         Permet de rechercher des alumni à l'aide de filtres optionnels
