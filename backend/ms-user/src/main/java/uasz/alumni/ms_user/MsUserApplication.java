@@ -4,7 +4,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableJpaAuditing
+@EnableAsync
+@ComponentScan(basePackages = {"uasz.alumni.ms_user"})
 @RequiredArgsConstructor
 @Slf4j
 public class MsUserApplication implements CommandLineRunner {

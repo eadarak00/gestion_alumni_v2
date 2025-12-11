@@ -4,15 +4,7 @@
 FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
-# 1. Copier les contrats (nécessaire pour le SPI)
-COPY contracts /app/contracts
-
-# 2. Copier et builder le SPI User
-COPY spi/spi-user /app/spi/spi-user
-WORKDIR /app/spi/spi-user
-RUN mvn clean install -DskipTests
-
-# 3. Builder le microservice User
+# Builder le microservice User
 WORKDIR /app/backend/ms-user
 
 # Optimisation du cache des dépendances pour ms-user

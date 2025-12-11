@@ -34,3 +34,27 @@ jwt:
   access-exp-seconds: 900          # 15 min
   refresh-exp-days: 30
 
+# Configuration Elasticsearch pour ms-user
+# À ajouter dans le fichier application.yml ou application.properties
+
+spring:
+  elasticsearch:
+    uris: ${SPRING_ELASTICSEARCH_URIS:http://localhost:9200}
+    connection-timeout: 5s
+    socket-timeout: 30s
+  
+  # Configuration pour les opérations asynchrones
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 100
+      thread-name-prefix: async-task-
+
+# Configuration de log pour Elasticsearch
+logging:
+  level:
+    org.springframework.data.elasticsearch: DEBUG
+    sn.uasz.gestion_alumni.ms_user.service: DEBUG
+    co.elastic.clients: INFO

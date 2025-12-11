@@ -239,7 +239,25 @@ services:
     depends_on:
       - ms-invitation-db
     restart: unless-stopped
-  
+
+   # FRONTEND REACT + VITE 
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:80"         # NGINX sert l’app sur 80
+    networks:
+      - microservices-net
+    depends_on:
+      ms-gateway:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   microservices-net:
     driver: bridge

@@ -1,0 +1,57 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: ms-user
+  config:
+    import: "configserver:http://ms-config:8888"
+  
+  # Configuration Email
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME:djibyf573@gmail.com}
+    password: "${EMAIL_PASSWORD:sgfq yjzs ioev tkbk}"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  # Configuration Elasticsearch
+  elasticsearch:
+    uris: ${SPRING_ELASTICSEARCH_URIS:http://localhost:9200}
+    connection-timeout: 5s
+    socket-timeout: 30s
+  
+  # Configuration pour les opérations asynchrones
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 100
+      thread-name-prefix: async-task-
+
+# Configuration personnalisée pour l'application
+app:
+  email:
+    from: ${EMAIL_FROM:noreply@alumni.uasz.sn}
+    code-expiration-minutes: 15
+    
+jwt:
+  secret: "eL8Jf0uI1H1YBcvSMBjDyF4EK7TMLDNK4sC7uQslY6t8tP0vqEoL8g6avsznxYjYRXKChP5BcbM4g38c+QFhAw=="
+  access-exp-seconds: 900          # 15 min
+  refresh-exp-days: 30
+
+# Configuration de log
+logging:
+  level:
+    org.springframework.data.elasticsearch: INFO
+    sn.uasz.gestion_alumni.ms_user.service: DEBUG
+    co.elastic.clients: INFO

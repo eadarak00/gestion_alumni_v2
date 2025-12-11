@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("_telechargements_demande_post_request")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-03T23:32:01.179463330Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-11T09:55:58.495296900Z[Etc/UTC]")
 public class TelechargementsDemandePostRequest {
 
   private Integer cvId;

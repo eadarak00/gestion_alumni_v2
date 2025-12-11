@@ -23,7 +23,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("_telechargements_logs_get_200_response_inner")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-03T23:32:01.179463330Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-11T09:55:58.495296900Z[Etc/UTC]")
 public class TelechargementsLogsGet200ResponseInner {
 
   private Integer id;

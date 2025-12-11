@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "UtilisateurConnecteDTO", description = "Informations détaillées de l'utilisateur connecté")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-02T02:07:51.481060929Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-11T09:56:07.154792300Z[Etc/UTC]")
 public class UtilisateurConnecteDTO {
 
   private Long id;
