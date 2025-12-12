@@ -1,13 +1,11 @@
 import AuthentificationApi from '../../api-ms-user/js-client/src/api/AuthentificationApi';
-import RlesApi from '../../api-ms-user/js-client/src/api/RlesApi';
 import LoginRequest from '../../api-ms-user/js-client/src/model/LoginRequest';
 import RefreshRequest from '../../api-ms-user/js-client/src/model/RefreshRequest';
 import UtilisateurRequestDTO from '../../api-ms-user/js-client/src/model/UtilisateurRequestDTO';
-import apiClient from '../../utils/apiConfig';
+import apiClient, { setAuthToken } from '../../utils/apiConfig';
 
+// Création de l'instance API
 const authApi = new AuthentificationApi(apiClient);
-const rolesApi = new RlesApi(apiClient);
-const API_BASE_URL = 'http://localhost:8088/api/v1';
 
 // Fonction pour décoder le JWT
 const decodeJWT = (token) => {
@@ -55,69 +53,60 @@ const mapJwtRoleToAppRole = (decoded, fallbackEmail) => {
 
 export const authService = {
   /**
-   * Connexion utilisateur
+   * Connexion utilisateur - Utilise le client généré
    */
-  login: async (email, motDePasse) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/connecter`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({ email, motDePasse }),
+  login: (email, motDePasse) => {
+    return new Promise((resolve, reject) => {
+      const loginRequest = new LoginRequest(email, motDePasse);
+
+      authApi.login(loginRequest, (error, data, response) => {
+        if (error) {
+          console.error('❌ Login échoué:', error);
+          reject(error);
+          return;
+        }
+
+        // Stocker les tokens
+        if (data.accessToken) {
+          localStorage.setItem('accessToken', data.accessToken);
+          setAuthToken(data.accessToken); // Configurer l'ApiClient
+        }
+        if (data.refreshToken) {
+          localStorage.setItem('refreshToken', data.refreshToken);
+        }
+
+        // Décoder JWT et créer l'objet utilisateur
+        const decoded = decodeJWT(data.accessToken);
+        const roleLibelle = mapJwtRoleToAppRole(decoded, email);
+
+        const user = {
+          id: decoded?.uid || decoded?.sub || null,
+          email: decoded?.email || decoded?.sub || email,
+          nom: decoded?.nom || '',
+          prenom: decoded?.prenom || '',
+          role: roleLibelle,
+          rawRole:
+            (Array.isArray(decoded?.roles) && decoded.roles[0]) ||
+            decoded?.role ||
+            null,
+          username:
+            decoded?.preferred_username ||
+            decoded?.username ||
+            email,
+          telephone: decoded?.telephone || decoded?.phone || '',
+        };
+
+        localStorage.setItem('user', JSON.stringify(user));
+        data.user = user;
+
+        console.log('✅ Login réussi:', { user });
+        resolve(data);
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      // Stocker tokens bruts
-      if (data.accessToken) {
-        localStorage.setItem('accessToken', data.accessToken);
-      }
-      if (data.refreshToken) {
-        localStorage.setItem('refreshToken', data.refreshToken);
-      }
-
-      // Décoder JWT
-      const decoded = decodeJWT(data.accessToken);
-
-      // Mapper le rôle JWT → rôle applicatif
-      const roleLibelle = mapJwtRoleToAppRole(decoded, email);
-
-      const user = {
-        id: decoded?.uid || decoded?.sub || null,
-        email: decoded?.email || decoded?.sub || email,
-        nom: decoded?.nom || '',
-        prenom: decoded?.prenom || '',
-        role: roleLibelle,               // 'ALUMNI' | 'ETUDIANT' | 'USER'
-        rawRole:
-          (Array.isArray(decoded?.roles) && decoded.roles[0]) ||
-          decoded?.role ||
-          null,
-        username:
-          decoded?.preferred_username ||
-          decoded?.username ||
-          email,
-        telephone: decoded?.telephone || decoded?.phone || '',
-      };
-
-      localStorage.setItem('user', JSON.stringify(user));
-      data.user = user;
-
-      console.log('✅ Login réussi:', { user });
-      return data;
-    } catch (error) {
-      console.error('❌ Login échoué:', error);
-      throw error;
-    }
+    });
   },
 
   /**
-   * Inscription d'un utilisateur
+   * Inscription d'un utilisateur - Utilise le client généré
    */
   registerUser: (userData) => {
     return new Promise((resolve, reject) => {
@@ -133,8 +122,10 @@ export const authService = {
 
       authApi.inscrire(utilisateurDTO, (error, data, response) => {
         if (error) {
+          console.error('❌ Inscription échouée:', error);
           reject(error);
         } else {
+          console.log('✅ Inscription réussie:', data);
           resolve(data);
         }
       });
@@ -142,75 +133,101 @@ export const authService = {
   },
 
   /**
-   * Rafraîchir le token JWT
+   * Rafraîchir le token JWT - Utilise le client généré
    */
-  refreshToken: async (refreshToken) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken }),
+  refreshToken: (refreshToken) => {
+    return new Promise((resolve, reject) => {
+      const refreshRequest = new RefreshRequest(refreshToken || localStorage.getItem('refreshToken'));
+
+      authApi.refresh(refreshRequest, (error, data, response) => {
+        if (error) {
+          console.error('❌ Refresh token échoué:', error);
+          // Nettoyer le localStorage en cas d'erreur
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('user');
+          setAuthToken(null);
+          reject(error);
+          return;
+        }
+
+        // Mettre à jour les tokens
+        if (data.accessToken) {
+          localStorage.setItem('accessToken', data.accessToken);
+          setAuthToken(data.accessToken);
+        }
+        if (data.refreshToken) {
+          localStorage.setItem('refreshToken', data.refreshToken);
+        }
+
+        console.log('✅ Token rafraîchi avec succès');
+        resolve(data);
       });
-
-      if (!response.ok) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
-      if (data.accessToken) {
-        localStorage.setItem('accessToken', data.accessToken);
-      }
-      if (data.refreshToken) {
-        localStorage.setItem('refreshToken', data.refreshToken);
-      }
-
-      return data;
-    } catch (error) {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      throw error;
-    }
+    });
   },
 
   /**
-   * Déconnexion utilisateur
+   * Déconnexion utilisateur - Utilise le client généré
    */
-  logout: async () => {
-    try {
+  logout: () => {
+    return new Promise((resolve, reject) => {
       const refreshToken = localStorage.getItem('refreshToken');
-      if (refreshToken) {
-        await fetch(`${API_BASE_URL}/auth/deconnecter`, {
-          // attention: path conforme à ton OpenAPI
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refreshToken }),
-        });
+      
+      if (!refreshToken) {
+        // Pas de refresh token, juste nettoyer localement
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        setAuthToken(null);
+        resolve();
+        return;
       }
-    } catch (error) {
-      console.warn('Logout serveur échoué:', error);
-    } finally {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-    }
+
+      const refreshRequest = new RefreshRequest(refreshToken);
+
+      authApi.logout(refreshRequest, (error, data, response) => {
+        // Nettoyer le localStorage dans tous les cas
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        setAuthToken(null);
+
+        if (error) {
+          console.warn('⚠️ Logout serveur échoué (mais nettoyage local effectué):', error);
+          // On ne rejette pas car le nettoyage local est fait
+          resolve();
+        } else {
+          console.log('✅ Déconnexion réussie');
+          resolve();
+        }
+      });
+    });
   },
 
+  /**
+   * Vérifie si l'utilisateur est authentifié
+   */
   isAuthenticated: () => {
     return !!localStorage.getItem('accessToken');
   },
 
+  /**
+   * Récupère le token d'accès
+   */
   getAccessToken: () => {
     return localStorage.getItem('accessToken');
   },
 
+  /**
+   * Récupère le refresh token
+   */
   getRefreshToken: () => {
     return localStorage.getItem('refreshToken');
   },
 
+  /**
+   * Récupère l'utilisateur courant
+   */
   getCurrentUser: () => {
     try {
       const userStr = localStorage.getItem('user');

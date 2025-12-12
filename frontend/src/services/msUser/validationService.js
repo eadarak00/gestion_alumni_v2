@@ -1,6 +1,6 @@
 import ValidationApi from '../../api-ms-user/js-client/src/api/ValidationApi';
 import CodeValidationRequestDTO from '../../api-ms-user/js-client/src/model/CodeValidationRequestDTO';
-import CodeValidationCheckDTO from '../../api-ms-user/js-client/src/model/CodeValidationCheckDTO';
+// import CodeValidationCheckDTO from '../../api-ms-user/js-client/src/model/CodeValidationCheckDTO';
 import apiClient from '../../utils/apiConfig';
 
 const validationApi = new ValidationApi(apiClient);
@@ -17,6 +17,8 @@ export const validationService = {
       });
     });
   },
+
+  
 
   verifyValidationCode: (email, code) => {
     // Pour la vérification, utiliser fetch directement

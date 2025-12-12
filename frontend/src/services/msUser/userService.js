@@ -1,37 +1,27 @@
-// Importation de l'API générée pour les utilisateurs
-// Le chemin est relatif à la position actuelle du fichier
 import UtilisateursApi from '../../api-ms-user/js-client/src/api/UtilisateursApi';
-
-// Importation du client API configuré
 import apiClient from '../../utils/apiConfig';
 
-// Création d'une instance de l'API utilisateurs en lui passant le client configuré
-// Cette instance permettra d'appeler les différentes méthodes d'API
+// Création d'une instance de l'API utilisateurs avec le client configuré
 const userApi = new UtilisateursApi(apiClient);
 
-// Service utilisateur qui encapsule les appels API
-// Ce service offre une interface simplifiée pour interagir avec le backend
+/**
+ * Service utilisateur qui encapsule les appels API
+ * Toutes les méthodes retournent des Promises pour une utilisation avec async/await
+ */
 export const userService = {
   /**
-   * Récupère tous les utilisateurs
+   * Récupère tous les utilisateurs avec filtres optionnels
+   * @param {Object} filters - Filtres optionnels (deleted, actif, role, etc.)
    * @returns {Promise} Promesse qui se résout avec les données des utilisateurs
-   * ou se rejette avec une erreur
    */
-  /**
-   * Récupère tous les utilisateurs
-   * @returns {Promise} Promesse qui se résout avec les données des utilisateurs
-   * ou se rejette avec une erreur
-   */
-  getAllUsers: () => {
+  getAllUsers: (filters = {}) => {
     return new Promise((resolve, reject) => {
-      // Appel à l'API pour obtenir tous les utilisateurs
-      // Utilisation de getAllUtilisateursFiltered sans filtre pour tout récupérer
-      userApi.getAllUtilisateursFiltered({}, (error, data, response) => {
+      userApi.getAllUtilisateursFiltered(filters, (error, data, response) => {
         if (error) {
-          // En cas d'erreur, on rejette la promesse avec l'erreur
+          console.error('❌ Erreur lors de la récupération des utilisateurs:', error);
           reject(error);
         } else {
-          // Si succès, on résout la promesse avec les données
+          console.log('✅ Utilisateurs récupérés avec succès:', data);
           resolve(data);
         }
       });
@@ -41,16 +31,34 @@ export const userService = {
   /**
    * Récupère uniquement les utilisateurs actifs (non supprimés)
    * @returns {Promise} Promesse qui se résout avec les données des utilisateurs actifs
-   * ou se rejette avec une erreur
    */
   getActiveUsers: () => {
     return new Promise((resolve, reject) => {
-      // Appel à l'API pour obtenir les utilisateurs non supprimés
-      // Utilisation de getAllUtilisateursFiltered avec le filtre deleted: false
       userApi.getAllUtilisateursFiltered({ deleted: false }, (error, data, response) => {
         if (error) {
+          console.error('❌ Erreur lors de la récupération des utilisateurs actifs:', error);
           reject(error);
         } else {
+          console.log('✅ Utilisateurs actifs récupérés:', data);
+          resolve(data);
+        }
+      });
+    });
+  },
+
+  /**
+   * Recherche un utilisateur par son ID
+   * @param {number} id - L'ID de l'utilisateur
+   * @returns {Promise} Promesse qui se résout avec les données de l'utilisateur
+   */
+  getUserById: (id) => {
+    return new Promise((resolve, reject) => {
+      userApi.getUtilisateurById(id, (error, data, response) => {
+        if (error) {
+          console.error(`❌ Erreur lors de la récupération de l'utilisateur ${id}:`, error);
+          reject(error);
+        } else {
+          console.log(`✅ Utilisateur ${id} récupéré:`, data);
           resolve(data);
         }
       });
@@ -61,15 +69,15 @@ export const userService = {
    * Recherche un utilisateur par son adresse email
    * @param {string} email - L'adresse email de l'utilisateur à rechercher
    * @returns {Promise} Promesse qui se résout avec les données de l'utilisateur
-   * ou se rejette avec une erreur
    */
   getUserByEmail: (email) => {
     return new Promise((resolve, reject) => {
-      // Appel à l'API pour rechercher un utilisateur par email
       userApi.getUtilisateurByEmail(email, (error, data, response) => {
         if (error) {
+          console.error(`❌ Utilisateur non trouvé pour l'email ${email}:`, error);
           reject(error);
         } else {
+          console.log(`✅ Utilisateur trouvé pour l'email ${email}:`, data);
           resolve(data);
         }
       });
@@ -79,16 +87,16 @@ export const userService = {
   /**
    * Vérifie si une adresse email existe déjà dans le système
    * @param {string} email - L'adresse email à vérifier
-   * @returns {Promise} Promesse qui se résout avec un booléen indiquant si l'email existe
-   * ou se rejette avec une erreur
+   * @returns {Promise} Promesse qui se résout avec un booléen
    */
   checkEmailExists: (email) => {
     return new Promise((resolve, reject) => {
-      // Appel à l'API pour vérifier l'existence de l'email
       userApi.emailExists(email, (error, data, response) => {
         if (error) {
+          console.error(`❌ Erreur lors de la vérification de l'email ${email}:`, error);
           reject(error);
         } else {
+          console.log(`✅ Vérification email ${email}:`, data);
           resolve(data);
         }
       });
@@ -98,19 +106,60 @@ export const userService = {
   /**
    * Vérifie si un nom d'utilisateur existe déjà dans le système
    * @param {string} username - Le nom d'utilisateur à vérifier
-   * @returns {Promise} Promesse qui se résout avec un booléen indiquant si le username existe
-   * ou se rejette avec une erreur
+   * @returns {Promise} Promesse qui se résout avec un booléen
    */
   checkUsernameExists: (username) => {
     return new Promise((resolve, reject) => {
-      // Appel à l'API pour vérifier l'existence du nom d'utilisateur
       userApi.usernameExists(username, (error, data, response) => {
         if (error) {
+          console.error(`❌ Erreur lors de la vérification du username ${username}:`, error);
           reject(error);
         } else {
+          console.log(`✅ Vérification username ${username}:`, data);
+          resolve(data);
+        }
+      });
+    });
+  },
+
+  /**
+   * Met à jour un utilisateur
+   * @param {number} id - L'ID de l'utilisateur
+   * @param {Object} userData - Les données à mettre à jour
+   * @returns {Promise} Promesse qui se résout avec les données mises à jour
+   */
+  updateUser: (id, userData) => {
+    return new Promise((resolve, reject) => {
+      userApi.updateUtilisateur(id, userData, (error, data, response) => {
+        if (error) {
+          console.error(`❌ Erreur lors de la mise à jour de l'utilisateur ${id}:`, error);
+          reject(error);
+        } else {
+          console.log(`✅ Utilisateur ${id} mis à jour:`, data);
+          resolve(data);
+        }
+      });
+    });
+  },
+
+  /**
+   * Supprime (soft delete) un utilisateur
+   * @param {number} id - L'ID de l'utilisateur à supprimer
+   * @returns {Promise} Promesse qui se résout si la suppression réussit
+   */
+  deleteUser: (id) => {
+    return new Promise((resolve, reject) => {
+      userApi.deleteUtilisateur(id, (error, data, response) => {
+        if (error) {
+          console.error(`❌ Erreur lors de la suppression de l'utilisateur ${id}:`, error);
+          reject(error);
+        } else {
+          console.log(`✅ Utilisateur ${id} supprimé`);
           resolve(data);
         }
       });
     });
   }
 };
+
+export default userService;
