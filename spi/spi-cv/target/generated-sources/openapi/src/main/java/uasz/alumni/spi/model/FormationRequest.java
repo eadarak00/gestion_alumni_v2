@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import java.time.LocalDate;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -17,11 +15,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * FormationCreate
+ * FormationRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:19.435775471Z[Africa/Dakar]")
-public class FormationCreate {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+public class FormationRequest {
 
   private Integer cvId;
 
@@ -31,31 +29,29 @@ public class FormationCreate {
 
   private String localisation;
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate dateDebut;
+  private String dateDebut;
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate dateFin;
+  private String dateFin;
 
-  private Boolean enCours = false;
+  private Boolean enCours;
 
   private String description;
 
-  public FormationCreate() {
+  public FormationRequest() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public FormationCreate(Integer cvId, String diplome, String etablissement, LocalDate dateDebut) {
+  public FormationRequest(Integer cvId, String diplome, String etablissement, String dateDebut) {
     this.cvId = cvId;
     this.diplome = diplome;
     this.etablissement = etablissement;
     this.dateDebut = dateDebut;
   }
 
-  public FormationCreate cvId(Integer cvId) {
+  public FormationRequest cvId(Integer cvId) {
     this.cvId = cvId;
     return this;
   }
@@ -65,7 +61,7 @@ public class FormationCreate {
    * @return cvId
   */
   @NotNull 
-  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;
@@ -75,7 +71,7 @@ public class FormationCreate {
     this.cvId = cvId;
   }
 
-  public FormationCreate diplome(String diplome) {
+  public FormationRequest diplome(String diplome) {
     this.diplome = diplome;
     return this;
   }
@@ -84,8 +80,8 @@ public class FormationCreate {
    * Get diplome
    * @return diplome
   */
-  @NotNull 
-  @Schema(name = "diplome", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Size(min = 2, max = 150) 
+  @Schema(name = "diplome", example = "Master en Génie Logiciel", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("diplome")
   public String getDiplome() {
     return diplome;
@@ -95,7 +91,7 @@ public class FormationCreate {
     this.diplome = diplome;
   }
 
-  public FormationCreate etablissement(String etablissement) {
+  public FormationRequest etablissement(String etablissement) {
     this.etablissement = etablissement;
     return this;
   }
@@ -104,8 +100,8 @@ public class FormationCreate {
    * Get etablissement
    * @return etablissement
   */
-  @NotNull 
-  @Schema(name = "etablissement", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Size(min = 2, max = 150) 
+  @Schema(name = "etablissement", example = "Université Assane Seck de Ziguinchor", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("etablissement")
   public String getEtablissement() {
     return etablissement;
@@ -115,7 +111,7 @@ public class FormationCreate {
     this.etablissement = etablissement;
   }
 
-  public FormationCreate localisation(String localisation) {
+  public FormationRequest localisation(String localisation) {
     this.localisation = localisation;
     return this;
   }
@@ -124,8 +120,8 @@ public class FormationCreate {
    * Get localisation
    * @return localisation
   */
-  
-  @Schema(name = "localisation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Size(max = 100) 
+  @Schema(name = "localisation", example = "Ziguinchor, Sénégal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("localisation")
   public String getLocalisation() {
     return localisation;
@@ -135,7 +131,7 @@ public class FormationCreate {
     this.localisation = localisation;
   }
 
-  public FormationCreate dateDebut(LocalDate dateDebut) {
+  public FormationRequest dateDebut(String dateDebut) {
     this.dateDebut = dateDebut;
     return this;
   }
@@ -144,18 +140,18 @@ public class FormationCreate {
    * Get dateDebut
    * @return dateDebut
   */
-  @NotNull @Valid 
-  @Schema(name = "dateDebut", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
+  @Schema(name = "dateDebut", example = "10/2020", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("dateDebut")
-  public LocalDate getDateDebut() {
+  public String getDateDebut() {
     return dateDebut;
   }
 
-  public void setDateDebut(LocalDate dateDebut) {
+  public void setDateDebut(String dateDebut) {
     this.dateDebut = dateDebut;
   }
 
-  public FormationCreate dateFin(LocalDate dateFin) {
+  public FormationRequest dateFin(String dateFin) {
     this.dateFin = dateFin;
     return this;
   }
@@ -164,18 +160,18 @@ public class FormationCreate {
    * Get dateFin
    * @return dateFin
   */
-  @Valid 
-  @Schema(name = "dateFin", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
+  @Schema(name = "dateFin", example = "07/2022", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateFin")
-  public LocalDate getDateFin() {
+  public String getDateFin() {
     return dateFin;
   }
 
-  public void setDateFin(LocalDate dateFin) {
+  public void setDateFin(String dateFin) {
     this.dateFin = dateFin;
   }
 
-  public FormationCreate enCours(Boolean enCours) {
+  public FormationRequest enCours(Boolean enCours) {
     this.enCours = enCours;
     return this;
   }
@@ -185,7 +181,7 @@ public class FormationCreate {
    * @return enCours
   */
   
-  @Schema(name = "enCours", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "enCours", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("enCours")
   public Boolean getEnCours() {
     return enCours;
@@ -195,7 +191,7 @@ public class FormationCreate {
     this.enCours = enCours;
   }
 
-  public FormationCreate description(String description) {
+  public FormationRequest description(String description) {
     this.description = description;
     return this;
   }
@@ -204,8 +200,8 @@ public class FormationCreate {
    * Get description
    * @return description
   */
-  
-  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Size(max = 2000) 
+  @Schema(name = "description", example = "Formation approfondie en développement logiciel et architecture des systèmes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public String getDescription() {
     return description;
@@ -223,15 +219,15 @@ public class FormationCreate {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    FormationCreate formationCreate = (FormationCreate) o;
-    return Objects.equals(this.cvId, formationCreate.cvId) &&
-        Objects.equals(this.diplome, formationCreate.diplome) &&
-        Objects.equals(this.etablissement, formationCreate.etablissement) &&
-        Objects.equals(this.localisation, formationCreate.localisation) &&
-        Objects.equals(this.dateDebut, formationCreate.dateDebut) &&
-        Objects.equals(this.dateFin, formationCreate.dateFin) &&
-        Objects.equals(this.enCours, formationCreate.enCours) &&
-        Objects.equals(this.description, formationCreate.description);
+    FormationRequest formationRequest = (FormationRequest) o;
+    return Objects.equals(this.cvId, formationRequest.cvId) &&
+        Objects.equals(this.diplome, formationRequest.diplome) &&
+        Objects.equals(this.etablissement, formationRequest.etablissement) &&
+        Objects.equals(this.localisation, formationRequest.localisation) &&
+        Objects.equals(this.dateDebut, formationRequest.dateDebut) &&
+        Objects.equals(this.dateFin, formationRequest.dateFin) &&
+        Objects.equals(this.enCours, formationRequest.enCours) &&
+        Objects.equals(this.description, formationRequest.description);
   }
 
   @Override
@@ -242,7 +238,7 @@ public class FormationCreate {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class FormationCreate {\n");
+    sb.append("class FormationRequest {\n");
     sb.append("    cvId: ").append(toIndentedString(cvId)).append("\n");
     sb.append("    diplome: ").append(toIndentedString(diplome)).append("\n");
     sb.append("    etablissement: ").append(toIndentedString(etablissement)).append("\n");

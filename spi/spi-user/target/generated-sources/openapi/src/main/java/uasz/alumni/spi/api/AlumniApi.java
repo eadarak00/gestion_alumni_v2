@@ -32,9 +32,9 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:28.367020818Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:27:33.610180887Z[Africa/Dakar]")
 @Validated
-@Tag(name = "Utilisateurs", description = "API pour gérer les utilisateurs")
+@Tag(name = "Alumnis", description = "API pour gérer les alumnis")
 public interface AlumniApi {
 
     /**
@@ -53,7 +53,7 @@ public interface AlumniApi {
         operationId = "searchAlumni",
         summary = "Recherche avancée des alumni",
         description = "Permet de rechercher des alumni à l'aide de filtres optionnels par entreprise et profession. ",
-        tags = { "Utilisateurs" },
+        tags = { "Alumnis" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Liste filtrée des alumni", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AlumniResponseDTO.class)))

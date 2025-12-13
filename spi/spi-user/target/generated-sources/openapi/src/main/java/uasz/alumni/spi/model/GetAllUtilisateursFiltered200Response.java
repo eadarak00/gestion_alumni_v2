@@ -24,7 +24,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("getAllUtilisateursFiltered_200_response")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:28.367020818Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:27:33.610180887Z[Africa/Dakar]")
 public class GetAllUtilisateursFiltered200Response {
 
   @Valid

@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import java.time.LocalDate;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -17,11 +15,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * ExperienceCreate
+ * ExperienceRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:19.435775471Z[Africa/Dakar]")
-public class ExperienceCreate {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+public class ExperienceRequest {
 
   private Integer cvId;
 
@@ -31,31 +29,29 @@ public class ExperienceCreate {
 
   private String localisation;
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate dateDebut;
+  private String dateDebut;
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate dateFin;
+  private String dateFin;
 
-  private Boolean enCours = false;
+  private Boolean enCours;
 
   private String description;
 
-  public ExperienceCreate() {
+  public ExperienceRequest() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public ExperienceCreate(Integer cvId, String poste, String entreprise, LocalDate dateDebut) {
+  public ExperienceRequest(Integer cvId, String poste, String entreprise, String dateDebut) {
     this.cvId = cvId;
     this.poste = poste;
     this.entreprise = entreprise;
     this.dateDebut = dateDebut;
   }
 
-  public ExperienceCreate cvId(Integer cvId) {
+  public ExperienceRequest cvId(Integer cvId) {
     this.cvId = cvId;
     return this;
   }
@@ -65,7 +61,7 @@ public class ExperienceCreate {
    * @return cvId
   */
   @NotNull 
-  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;
@@ -75,7 +71,7 @@ public class ExperienceCreate {
     this.cvId = cvId;
   }
 
-  public ExperienceCreate poste(String poste) {
+  public ExperienceRequest poste(String poste) {
     this.poste = poste;
     return this;
   }
@@ -84,8 +80,8 @@ public class ExperienceCreate {
    * Get poste
    * @return poste
   */
-  @NotNull 
-  @Schema(name = "poste", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Size(min = 2, max = 100) 
+  @Schema(name = "poste", example = "Développeur Full Stack", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("poste")
   public String getPoste() {
     return poste;
@@ -95,7 +91,7 @@ public class ExperienceCreate {
     this.poste = poste;
   }
 
-  public ExperienceCreate entreprise(String entreprise) {
+  public ExperienceRequest entreprise(String entreprise) {
     this.entreprise = entreprise;
     return this;
   }
@@ -104,8 +100,8 @@ public class ExperienceCreate {
    * Get entreprise
    * @return entreprise
   */
-  @NotNull 
-  @Schema(name = "entreprise", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Size(min = 2, max = 100) 
+  @Schema(name = "entreprise", example = "TechCorp SARL", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("entreprise")
   public String getEntreprise() {
     return entreprise;
@@ -115,7 +111,7 @@ public class ExperienceCreate {
     this.entreprise = entreprise;
   }
 
-  public ExperienceCreate localisation(String localisation) {
+  public ExperienceRequest localisation(String localisation) {
     this.localisation = localisation;
     return this;
   }
@@ -124,8 +120,8 @@ public class ExperienceCreate {
    * Get localisation
    * @return localisation
   */
-  
-  @Schema(name = "localisation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Size(max = 100) 
+  @Schema(name = "localisation", example = "Dakar, Sénégal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("localisation")
   public String getLocalisation() {
     return localisation;
@@ -135,7 +131,7 @@ public class ExperienceCreate {
     this.localisation = localisation;
   }
 
-  public ExperienceCreate dateDebut(LocalDate dateDebut) {
+  public ExperienceRequest dateDebut(String dateDebut) {
     this.dateDebut = dateDebut;
     return this;
   }
@@ -144,18 +140,18 @@ public class ExperienceCreate {
    * Get dateDebut
    * @return dateDebut
   */
-  @NotNull @Valid 
-  @Schema(name = "dateDebut", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
+  @Schema(name = "dateDebut", example = "01/2022", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("dateDebut")
-  public LocalDate getDateDebut() {
+  public String getDateDebut() {
     return dateDebut;
   }
 
-  public void setDateDebut(LocalDate dateDebut) {
+  public void setDateDebut(String dateDebut) {
     this.dateDebut = dateDebut;
   }
 
-  public ExperienceCreate dateFin(LocalDate dateFin) {
+  public ExperienceRequest dateFin(String dateFin) {
     this.dateFin = dateFin;
     return this;
   }
@@ -164,18 +160,18 @@ public class ExperienceCreate {
    * Get dateFin
    * @return dateFin
   */
-  @Valid 
-  @Schema(name = "dateFin", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
+  @Schema(name = "dateFin", example = "12/2023", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateFin")
-  public LocalDate getDateFin() {
+  public String getDateFin() {
     return dateFin;
   }
 
-  public void setDateFin(LocalDate dateFin) {
+  public void setDateFin(String dateFin) {
     this.dateFin = dateFin;
   }
 
-  public ExperienceCreate enCours(Boolean enCours) {
+  public ExperienceRequest enCours(Boolean enCours) {
     this.enCours = enCours;
     return this;
   }
@@ -185,7 +181,7 @@ public class ExperienceCreate {
    * @return enCours
   */
   
-  @Schema(name = "enCours", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "enCours", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("enCours")
   public Boolean getEnCours() {
     return enCours;
@@ -195,7 +191,7 @@ public class ExperienceCreate {
     this.enCours = enCours;
   }
 
-  public ExperienceCreate description(String description) {
+  public ExperienceRequest description(String description) {
     this.description = description;
     return this;
   }
@@ -204,8 +200,8 @@ public class ExperienceCreate {
    * Get description
    * @return description
   */
-  
-  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Size(max = 2000) 
+  @Schema(name = "description", example = "Développement d'applications web avec Spring Boot et Angular", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public String getDescription() {
     return description;
@@ -223,15 +219,15 @@ public class ExperienceCreate {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ExperienceCreate experienceCreate = (ExperienceCreate) o;
-    return Objects.equals(this.cvId, experienceCreate.cvId) &&
-        Objects.equals(this.poste, experienceCreate.poste) &&
-        Objects.equals(this.entreprise, experienceCreate.entreprise) &&
-        Objects.equals(this.localisation, experienceCreate.localisation) &&
-        Objects.equals(this.dateDebut, experienceCreate.dateDebut) &&
-        Objects.equals(this.dateFin, experienceCreate.dateFin) &&
-        Objects.equals(this.enCours, experienceCreate.enCours) &&
-        Objects.equals(this.description, experienceCreate.description);
+    ExperienceRequest experienceRequest = (ExperienceRequest) o;
+    return Objects.equals(this.cvId, experienceRequest.cvId) &&
+        Objects.equals(this.poste, experienceRequest.poste) &&
+        Objects.equals(this.entreprise, experienceRequest.entreprise) &&
+        Objects.equals(this.localisation, experienceRequest.localisation) &&
+        Objects.equals(this.dateDebut, experienceRequest.dateDebut) &&
+        Objects.equals(this.dateFin, experienceRequest.dateFin) &&
+        Objects.equals(this.enCours, experienceRequest.enCours) &&
+        Objects.equals(this.description, experienceRequest.description);
   }
 
   @Override
@@ -242,7 +238,7 @@ public class ExperienceCreate {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ExperienceCreate {\n");
+    sb.append("class ExperienceRequest {\n");
     sb.append("    cvId: ").append(toIndentedString(cvId)).append("\n");
     sb.append("    poste: ").append(toIndentedString(poste)).append("\n");
     sb.append("    entreprise: ").append(toIndentedString(entreprise)).append("\n");

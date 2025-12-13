@@ -17,7 +17,7 @@ WORKDIR /app/backend/ms-user
 
 # Optimisation du cache des dépendances pour ms-user
 COPY backend/ms-user/pom.xml .
-RUN mvn dependency:go-offline -B
+#RUN mvn dependency:go-offline -B
 
 # Copie des sources et build
 COPY backend/ms-user/src ./src

@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("StatistiquesInvitation_topEnvoyeurs_inner")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:23.314978840Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:26:58.951985870Z[Africa/Dakar]")
 public class StatistiquesInvitationTopEnvoyeursInner {
 
   private String idEnvoyeur;

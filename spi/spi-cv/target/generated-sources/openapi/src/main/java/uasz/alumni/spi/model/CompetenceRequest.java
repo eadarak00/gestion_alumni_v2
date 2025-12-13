@@ -5,6 +5,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import uasz.alumni.spi.model.CategorieCompetence;
+import uasz.alumni.spi.model.NiveauCompetence;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -16,72 +18,34 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * CompetenceCreate
+ * CompetenceRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:19.435775471Z[Africa/Dakar]")
-public class CompetenceCreate {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+public class CompetenceRequest {
 
   private Integer cvId;
 
   private String nom;
 
-  /**
-   * Gets or Sets niveau
-   */
-  public enum NiveauEnum {
-    DEBUTANT("DEBUTANT"),
-    
-    INTERMEDIAIRE("INTERMEDIAIRE"),
-    
-    AVANCE("AVANCE"),
-    
-    EXPERT("EXPERT");
+  private NiveauCompetence niveau;
 
-    private String value;
+  private CategorieCompetence categorie;
 
-    NiveauEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static NiveauEnum fromValue(String value) {
-      for (NiveauEnum b : NiveauEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private NiveauEnum niveau = NiveauEnum.INTERMEDIAIRE;
-
-  private String categorie;
-
-  public CompetenceCreate() {
+  public CompetenceRequest() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public CompetenceCreate(Integer cvId, String nom) {
+  public CompetenceRequest(Integer cvId, String nom, NiveauCompetence niveau) {
     this.cvId = cvId;
     this.nom = nom;
+    this.niveau = niveau;
   }
 
-  public CompetenceCreate cvId(Integer cvId) {
+  public CompetenceRequest cvId(Integer cvId) {
     this.cvId = cvId;
     return this;
   }
@@ -91,7 +55,7 @@ public class CompetenceCreate {
    * @return cvId
   */
   @NotNull 
-  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;
@@ -101,7 +65,7 @@ public class CompetenceCreate {
     this.cvId = cvId;
   }
 
-  public CompetenceCreate nom(String nom) {
+  public CompetenceRequest nom(String nom) {
     this.nom = nom;
     return this;
   }
@@ -110,8 +74,8 @@ public class CompetenceCreate {
    * Get nom
    * @return nom
   */
-  @NotNull 
-  @Schema(name = "nom", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Size(min = 2, max = 100) 
+  @Schema(name = "nom", example = "Java", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("nom")
   public String getNom() {
     return nom;
@@ -121,7 +85,7 @@ public class CompetenceCreate {
     this.nom = nom;
   }
 
-  public CompetenceCreate niveau(NiveauEnum niveau) {
+  public CompetenceRequest niveau(NiveauCompetence niveau) {
     this.niveau = niveau;
     return this;
   }
@@ -130,18 +94,18 @@ public class CompetenceCreate {
    * Get niveau
    * @return niveau
   */
-  
-  @Schema(name = "niveau", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "niveau", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("niveau")
-  public NiveauEnum getNiveau() {
+  public NiveauCompetence getNiveau() {
     return niveau;
   }
 
-  public void setNiveau(NiveauEnum niveau) {
+  public void setNiveau(NiveauCompetence niveau) {
     this.niveau = niveau;
   }
 
-  public CompetenceCreate categorie(String categorie) {
+  public CompetenceRequest categorie(CategorieCompetence categorie) {
     this.categorie = categorie;
     return this;
   }
@@ -150,14 +114,14 @@ public class CompetenceCreate {
    * Get categorie
    * @return categorie
   */
-  
+  @Valid 
   @Schema(name = "categorie", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("categorie")
-  public String getCategorie() {
+  public CategorieCompetence getCategorie() {
     return categorie;
   }
 
-  public void setCategorie(String categorie) {
+  public void setCategorie(CategorieCompetence categorie) {
     this.categorie = categorie;
   }
 
@@ -169,11 +133,11 @@ public class CompetenceCreate {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CompetenceCreate competenceCreate = (CompetenceCreate) o;
-    return Objects.equals(this.cvId, competenceCreate.cvId) &&
-        Objects.equals(this.nom, competenceCreate.nom) &&
-        Objects.equals(this.niveau, competenceCreate.niveau) &&
-        Objects.equals(this.categorie, competenceCreate.categorie);
+    CompetenceRequest competenceRequest = (CompetenceRequest) o;
+    return Objects.equals(this.cvId, competenceRequest.cvId) &&
+        Objects.equals(this.nom, competenceRequest.nom) &&
+        Objects.equals(this.niveau, competenceRequest.niveau) &&
+        Objects.equals(this.categorie, competenceRequest.categorie);
   }
 
   @Override
@@ -184,7 +148,7 @@ public class CompetenceCreate {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CompetenceCreate {\n");
+    sb.append("class CompetenceRequest {\n");
     sb.append("    cvId: ").append(toIndentedString(cvId)).append("\n");
     sb.append("    nom: ").append(toIndentedString(nom)).append("\n");
     sb.append("    niveau: ").append(toIndentedString(niveau)).append("\n");

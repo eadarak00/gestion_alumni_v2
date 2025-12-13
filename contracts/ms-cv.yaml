@@ -2,59 +2,122 @@ openapi: 3.0.3
 info:
   title: CV Service API
   version: 1.0.0
-  description: API de gestion des CV des alumni et étudiants - Génération de CV standardisés
+  description: API de gestion des CVs pour les alumni et étudiants de l'UASZ - Création, modification et consultation des CVs avec leurs différentes sections (expériences, formations, compétences, langues, certifications)
 
 servers:
-  - url: http://localhost:8082/api/v1
+  - url: http://localhost:8082/api
+    description: Serveur de développement
+
+tags:
+  - name: CVs
+    description: Gestion des CVs
+  - name: Expériences
+    description: Gestion des expériences professionnelles
+  - name: Formations
+    description: Gestion des formations académiques
+  - name: Compétences
+    description: Gestion des compétences
+  - name: Langues Parlées
+    description: Gestion des langues parlées
+  - name: Certifications
+    description: Gestion des certifications
 
 paths:
-  /cv:
+
+  # ==================== CVS ====================
+  
+  /cvs:
+    post:
+      tags:
+        - CVs
+      summary: Créer un nouveau CV
+      description: Crée un CV pour un utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CVRequest'
+      responses:
+        '201':
+          description: CV créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVResponse'
+        '400':
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: CV déjà existant pour cet utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
     get:
       tags:
-        - CV
-      summary: Liste des CV
-      parameters:
-        - name: utilisateurId
-          in: query
-          schema:
-            type: integer
-          description: Filtrer par utilisateur
+        - CVs
+      summary: Récupérer tous les CVs
+      description: Liste de tous les CVs
       responses:
-        "200":
-          description: OK
+        '200':
+          description: Liste des CVs
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/CV"
+                  $ref: '#/components/schemas/CVResponse'
 
-    post:
+  /cvs/page:
+    get:
       tags:
-        - CV
-      summary: Créer un CV (remplissage de formulaire)
-      description: L'utilisateur remplit les champs, le système génère le CV standardisé
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CVCreate"
+        - CVs
+      summary: Récupérer les CVs avec pagination
+      description: Liste paginée des CVs
+      parameters:
+        - name: page
+          in: query
+          description: Numéro de la page
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Taille de la page
+          schema:
+            type: integer
+            default: 10
+        - name: sortBy
+          in: query
+          description: Champ de tri
+          schema:
+            type: string
+            default: id
+        - name: direction
+          in: query
+          description: Direction du tri
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: DESC
       responses:
-        "201":
-          description: CV créé avec succès
+        '200':
+          description: Page de CVs
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CV"
-        "400":
-          description: Données invalides
+                $ref: '#/components/schemas/PageResponseCVResponse'
 
-  /cv/{id}:
+  /cvs/{id}:
     get:
       tags:
-        - CV
-      summary: Récupérer un CV par ID
+        - CVs
+      summary: Récupérer un CV par son ID
       parameters:
         - name: id
           in: path
@@ -62,20 +125,23 @@ paths:
           schema:
             type: integer
       responses:
-        "200":
-          description: OK
+        '200':
+          description: CV trouvé
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CV"
-        "404":
+                $ref: '#/components/schemas/CVResponse'
+        '404':
           description: CV non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
     put:
       tags:
-        - CV
+        - CVs
       summary: Mettre à jour un CV
-      description: Modification des informations du CV
       parameters:
         - name: id
           in: path
@@ -87,20 +153,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CVCreate"
+              $ref: '#/components/schemas/CVRequest'
       responses:
-        "200":
+        '200':
           description: CV mis à jour
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CV"
-        "404":
+                $ref: '#/components/schemas/CVResponse'
+        '404':
           description: CV non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
     delete:
       tags:
-        - CV
+        - CVs
       summary: Supprimer un CV
       parameters:
         - name: id
@@ -109,16 +179,76 @@ paths:
           schema:
             type: integer
       responses:
-        "204":
+        '204':
           description: CV supprimé
-        "404":
+        '404':
           description: CV non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
-  /cv/utilisateur/{utilisateurId}:
+  /cvs/{id}/complet:
     get:
       tags:
-        - CV
-      summary: Récupérer le CV d'un utilisateur
+        - CVs
+      summary: Récupérer un CV complet avec toutes ses sections
+      description: Retourne un CV avec expériences, formations, compétences, langues et certifications
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: CV complet trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVCompletResponse'
+        '404':
+          description: CV non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /cvs/{id}/utilisateur/{utilisateurId}:
+    get:
+      tags:
+        - CVs
+      summary: Récupérer un CV par ID et utilisateur (sécurité)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: utilisateurId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: CV trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVResponse'
+        '404':
+          description: CV non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /cvs/utilisateur/{utilisateurId}:
+    get:
+      tags:
+        - CVs
+      summary: Récupérer tous les CVs d'un utilisateur
       parameters:
         - name: utilisateurId
           in: path
@@ -126,99 +256,71 @@ paths:
           schema:
             type: integer
       responses:
-        "200":
-          description: OK
+        '200':
+          description: Liste des CVs de l'utilisateur
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CV"
-        "404":
-          description: CV non trouvé pour cet utilisateur
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVResponse'
 
-  /cv/{id}/generer-pdf:
-    get:
-      tags:
-        - Génération CV
-      summary: Générer le CV en PDF standardisé
-      description: Génère un PDF du CV avec le template UASZ
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: template
-          in: query
-          schema:
-            type: string
-            enum: [MODERNE, CLASSIQUE, PROFESSIONNEL]
-            default: MODERNE
-          description: Template de CV à utiliser
-      responses:
-        "200":
-          description: PDF généré avec succès
-          content:
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-        "404":
-          description: CV non trouvé
-
-  /cv/{id}/previsualiser:
-    get:
-      tags:
-        - Génération CV
-      summary: Prévisualiser le CV avant génération
-      description: Génère une prévisualisation HTML du CV
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: template
-          in: query
-          schema:
-            type: string
-            enum: [MODERNE, CLASSIQUE, PROFESSIONNEL]
-            default: MODERNE
-      responses:
-        "200":
-          description: Prévisualisation générée
-          content:
-            text/html:
-              schema:
-                type: string
-        "404":
-          description: CV non trouvé
+  # ==================== EXPÉRIENCES ====================
 
   /experiences:
     post:
       tags:
         - Expériences
-      summary: Ajouter une expérience professionnelle
+      summary: Créer une nouvelle expérience
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ExperienceCreate"
+              $ref: '#/components/schemas/ExperienceRequest'
       responses:
-        "201":
-          description: Expérience ajoutée
+        '201':
+          description: Expérience créée
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Experience"
-        "400":
+                $ref: '#/components/schemas/ExperienceResponse'
+        '400':
           description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /experiences/{id}:
+    get:
+      tags:
+        - Expériences
+      summary: Récupérer une expérience par son ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Expérience trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExperienceResponse'
+        '404':
+          description: Expérience non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
     put:
       tags:
         - Expériences
-      summary: Modifier une expérience
+      summary: Mettre à jour une expérience
       parameters:
         - name: id
           in: path
@@ -230,14 +332,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ExperienceCreate"
+              $ref: '#/components/schemas/ExperienceRequest'
       responses:
-        "200":
+        '200':
           description: Expérience mise à jour
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Experience"
+                $ref: '#/components/schemas/ExperienceResponse'
 
     delete:
       tags:
@@ -250,35 +352,125 @@ paths:
           schema:
             type: integer
       responses:
-        "204":
+        '204':
           description: Expérience supprimée
+
+  /experiences/{id}/cv/{cvId}:
+    get:
+      tags:
+        - Expériences
+      summary: Récupérer une expérience par ID et CV ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Expérience trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExperienceResponse'
+
+  /experiences/cv/{cvId}:
+    get:
+      tags:
+        - Expériences
+      summary: Récupérer toutes les expériences d'un CV
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des expériences
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExperienceResponse'
+
+  /experiences/cv/{cvId}/en-cours:
+    get:
+      tags:
+        - Expériences
+      summary: Récupérer les expériences en cours d'un CV
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des expériences en cours
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExperienceResponse'
+
+  # ==================== FORMATIONS ====================
 
   /formations:
     post:
       tags:
         - Formations
-      summary: Ajouter une formation
+      summary: Créer une nouvelle formation
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/FormationCreate"
+              $ref: '#/components/schemas/FormationRequest'
       responses:
-        "201":
-          description: Formation ajoutée
+        '201':
+          description: Formation créée
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Formation"
-        "400":
+                $ref: '#/components/schemas/FormationResponse'
+        '400':
           description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /formations/{id}:
+    get:
+      tags:
+        - Formations
+      summary: Récupérer une formation par son ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Formation trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormationResponse'
+
     put:
       tags:
         - Formations
-      summary: Modifier une formation
+      summary: Mettre à jour une formation
       parameters:
         - name: id
           in: path
@@ -290,10 +482,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/FormationCreate"
+              $ref: '#/components/schemas/FormationRequest'
       responses:
-        "200":
+        '200':
           description: Formation mise à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormationResponse'
 
     delete:
       tags:
@@ -306,33 +502,125 @@ paths:
           schema:
             type: integer
       responses:
-        "204":
+        '204':
           description: Formation supprimée
+
+  /formations/{id}/cv/{cvId}:
+    get:
+      tags:
+        - Formations
+      summary: Récupérer une formation par ID et CV ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Formation trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormationResponse'
+
+  /formations/cv/{cvId}:
+    get:
+      tags:
+        - Formations
+      summary: Récupérer toutes les formations d'un CV
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des formations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormationResponse'
+
+  /formations/cv/{cvId}/en-cours:
+    get:
+      tags:
+        - Formations
+      summary: Récupérer les formations en cours d'un CV
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des formations en cours
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormationResponse'
+
+  # ==================== COMPÉTENCES ====================
 
   /competences:
     post:
       tags:
         - Compétences
-      summary: Ajouter une compétence
+      summary: Créer une nouvelle compétence
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CompetenceCreate"
+              $ref: '#/components/schemas/CompetenceRequest'
       responses:
-        "201":
-          description: Compétence ajoutée
+        '201':
+          description: Compétence créée
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Competence"
+                $ref: '#/components/schemas/CompetenceResponse'
+        '409':
+          description: Compétence déjà existante
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /competences/{id}:
+    get:
+      tags:
+        - Compétences
+      summary: Récupérer une compétence par son ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Compétence trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetenceResponse'
+
     put:
       tags:
         - Compétences
-      summary: Modifier une compétence
+      summary: Mettre à jour une compétence
       parameters:
         - name: id
           in: path
@@ -344,10 +632,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CompetenceCreate"
+              $ref: '#/components/schemas/CompetenceRequest'
       responses:
-        "200":
+        '200':
           description: Compétence mise à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetenceResponse'
 
     delete:
       tags:
@@ -360,33 +652,156 @@ paths:
           schema:
             type: integer
       responses:
-        "204":
+        '204':
           description: Compétence supprimée
 
-  /langues:
-    post:
+  /competences/{id}/cv/{cvId}:
+    get:
       tags:
-        - Langues
-      summary: Ajouter une langue
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LangueCreate"
+        - Compétences
+      summary: Récupérer une compétence par ID et CV ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
-        "201":
-          description: Langue ajoutée
+        '200':
+          description: Compétence trouvée
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Langue"
+                $ref: '#/components/schemas/CompetenceResponse'
 
-  /langues/{id}:
+  /competences/cv/{cvId}:
+    get:
+      tags:
+        - Compétences
+      summary: Récupérer toutes les compétences d'un CV
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des compétences
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompetenceResponse'
+
+  /competences/cv/{cvId}/categorie/{categorie}:
+    get:
+      tags:
+        - Compétences
+      summary: Récupérer les compétences par catégorie
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: categorie
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/CategorieCompetence'
+      responses:
+        '200':
+          description: Liste des compétences
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompetenceResponse'
+
+  /competences/cv/{cvId}/niveau/{niveau}:
+    get:
+      tags:
+        - Compétences
+      summary: Récupérer les compétences par niveau
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: niveau
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/NiveauCompetence'
+      responses:
+        '200':
+          description: Liste des compétences
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompetenceResponse'
+
+  # ==================== LANGUES PARLÉES ====================
+
+  /langues-parlees:
+    post:
+      tags:
+        - Langues Parlées
+      summary: Créer une nouvelle langue parlée
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LangueParleesRequest'
+      responses:
+        '201':
+          description: Langue parlée créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LangueParleesResponse'
+        '409':
+          description: Langue déjà existante
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /langues-parlees/{id}:
+    get:
+      tags:
+        - Langues Parlées
+      summary: Récupérer une langue parlée par son ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Langue parlée trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LangueParleesResponse'
+
     put:
       tags:
-        - Langues
-      summary: Modifier une langue
+        - Langues Parlées
+      summary: Mettre à jour une langue parlée
       parameters:
         - name: id
           in: path
@@ -398,15 +813,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LangueCreate"
+              $ref: '#/components/schemas/LangueParleesRequest'
       responses:
-        "200":
-          description: Langue mise à jour
+        '200':
+          description: Langue parlée mise à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LangueParleesResponse'
 
     delete:
       tags:
-        - Langues
-      summary: Supprimer une langue
+        - Langues Parlées
+      summary: Supprimer une langue parlée
       parameters:
         - name: id
           in: path
@@ -414,33 +833,130 @@ paths:
           schema:
             type: integer
       responses:
-        "204":
-          description: Langue supprimée
+        '204':
+          description: Langue parlée supprimée
+
+  /langues-parlees/{id}/cv/{cvId}:
+    get:
+      tags:
+        - Langues Parlées
+      summary: Récupérer une langue parlée par ID et CV ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Langue parlée trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LangueParleesResponse'
+
+  /langues-parlees/cv/{cvId}:
+    get:
+      tags:
+        - Langues Parlées
+      summary: Récupérer toutes les langues parlées d'un CV
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des langues parlées
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LangueParleesResponse'
+
+  /langues-parlees/cv/{cvId}/niveau/{niveau}:
+    get:
+      tags:
+        - Langues Parlées
+      summary: Récupérer les langues parlées par niveau
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: niveau
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/NiveauLangue'
+      responses:
+        '200':
+          description: Liste des langues parlées
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LangueParleesResponse'
+
+  # ==================== CERTIFICATIONS ====================
 
   /certifications:
     post:
       tags:
         - Certifications
-      summary: Ajouter une certification
+      summary: Créer une nouvelle certification
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CertificationCreate"
+              $ref: '#/components/schemas/CertificationRequest'
       responses:
-        "201":
-          description: Certification ajoutée
+        '201':
+          description: Certification créée
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Certification"
+                $ref: '#/components/schemas/CertificationResponse'
+        '409':
+          description: Certification déjà existante
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /certifications/{id}:
+    get:
+      tags:
+        - Certifications
+      summary: Récupérer une certification par son ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Certification trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificationResponse'
+
     put:
       tags:
         - Certifications
-      summary: Modifier une certification
+      summary: Mettre à jour une certification
       parameters:
         - name: id
           in: path
@@ -452,10 +968,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CertificationCreate"
+              $ref: '#/components/schemas/CertificationRequest'
       responses:
-        "200":
+        '200':
           description: Certification mise à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificationResponse'
 
     delete:
       tags:
@@ -468,245 +988,218 @@ paths:
           schema:
             type: integer
       responses:
-        "204":
+        '204':
           description: Certification supprimée
 
-  /templates:
+  /certifications/{id}/cv/{cvId}:
     get:
       tags:
-        - Templates
-      summary: Liste des templates de CV disponibles
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Template"
-                  
-  /telechargements/demande:
-    post:
-      tags:
-        - Téléchargements
-      summary: Demander le téléchargement d'un CV
-      description: Crée une demande de téléchargement d'un CV, en attente de validation selon les permissions.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - cvId
-                - demandeurId
-              properties:
-                cvId:
-                  type: integer
-                  example: 5
-                demandeurId:
-                  type: integer
-                  example: 22
-                message:
-                  type: string
-                  example: "Je souhaiterais télécharger ce CV pour un partenariat."
-      responses:
-        "201":
-          description: Demande enregistrée
-        "400":
-          description: Données invalides
-          
-  /telechargements/demandes:
-    get:
-      tags:
-        - Téléchargements
-      summary: Liste des demandes de téléchargement
-      parameters:
-        - name: statut
-          in: query
-          schema:
-            type: string
-            enum: [EN_ATTENTE, ACCEPTEE, REFUSEE]
-      responses:
-        "200":
-          description: OK
-
-  /telechargements/demande/{id}/valider:
-    post:
-      tags:
-        - Téléchargements
-      summary: Valider une demande de téléchargement
+        - Certifications
+      summary: Récupérer une certification par ID et CV ID
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Demande validée
-        "404":
-          description: Demande non trouvée
-
-  /telechargements/demande/{id}/refuser:
-    post:
-      tags:
-        - Téléchargements
-      summary: Refuser une demande de téléchargement
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Demande refusée
-        "404":
-          description: Demande non trouvée
-          
-  /telechargements/logs:
-    get:
-      tags:
-        - Tracking
-      summary: Historique des téléchargements
-      parameters:
-        - name: utilisateurId
-          in: query
           schema:
             type: integer
         - name: cvId
-          in: query
+          in: path
+          required: true
           schema:
             type: integer
-        - name: depuis
-          in: query
-          schema:
-            type: string
-            format: date-time
-        - name: jusquA
-          in: query
-          schema:
-            type: string
-            format: date-time
       responses:
-        "200":
-          description: OK
+        '200':
+          description: Certification trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificationResponse'
+
+  /certifications/cv/{cvId}:
+    get:
+      tags:
+        - Certifications
+      summary: Récupérer toutes les certifications d'un CV
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des certifications
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    cvId:
-                      type: integer
-                    telechargeurId:
-                      type: integer
-                    date:
-                      type: string
-                      format: date-time
-                    format:
-                      type: string
-                      enum: [PDF, DOCX]
+                  $ref: '#/components/schemas/CertificationResponse'
 
+  /certifications/cv/{cvId}/avec-expiration:
+    get:
+      tags:
+        - Certifications
+      summary: Récupérer les certifications avec date d'expiration
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des certifications avec expiration
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CertificationResponse'
 
+  /certifications/cv/{cvId}/permanentes:
+    get:
+      tags:
+        - Certifications
+      summary: Récupérer les certifications permanentes
+      parameters:
+        - name: cvId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Liste des certifications permanentes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CertificationResponse'
 
-
+# ==================== COMPOSANTS ====================
 
 components:
   schemas:
-    CV:
+
+    # ========== ENUMS ==========
+
+    TypeTemplate:
+      type: string
+      enum:
+        - MODERNE
+        - CLASSIQUE
+        - PROFESSIONNEL
+      example: MODERNE
+
+    Langues:
+      type: string
+      enum:
+        - FRANCAIS
+        - ANGLAIS
+        - ESPAGNOL
+        - ALLEMAND
+        - ITALIEN
+        - PORTUGAIS
+        - ARABE
+        - CHINOIS
+        - AUTRE
+      example: FRANCAIS
+
+    NiveauLangue:
+      type: string
+      enum:
+        - DEBUTANT
+        - INTERMEDIAIRE
+        - AVANCE
+        - COURANT
+        - NATIF
+      example: COURANT
+
+    NiveauCompetence:
+      type: string
+      enum:
+        - DEBUTANT
+        - INTERMEDIAIRE
+        - AVANCE
+        - EXPERT
+      example: AVANCE
+
+    CategorieCompetence:
+      type: string
+      enum:
+        - TECHNIQUE
+        - LINGUISTIQUE
+        - SOFT_SKILLS
+        - AUTRE
+      example: TECHNIQUE
+
+    # ========== CV ==========
+
+    CVRequest:
       type: object
+      required:
+        - titre
+        - telephone
+        - email
+        - utilisateurId
       properties:
-        id:
-          type: integer
-          example: 1
-        utilisateurId:
-          type: integer
-          example: 1
         titre:
           type: string
-          example: "Ingénieur Full Stack"
+          minLength: 3
+          maxLength: 100
+          example: "Développeur Full Stack Java/Angular"
         resume:
           type: string
-          example: "Développeur passionné avec 5 ans d'expérience..."
+          maxLength: 2000
+          example: "Développeur passionné avec 3 ans d'expérience en développement web et mobile"
         photo:
           type: string
-          description: URL de la photo de profil
-          example: "https://storage.uasz.sn/photos/user1.jpg"
+          example: "https://example.com/photo.jpg"
         linkedin:
           type: string
+          pattern: "^(https?://)?(www\\.)?linkedin\\.com/.*$"
           example: "https://linkedin.com/in/johndoe"
         github:
           type: string
+          pattern: "^(https?://)?(www\\.)?github\\.com/.*$"
           example: "https://github.com/johndoe"
         portfolio:
           type: string
           example: "https://johndoe.com"
         telephone:
           type: string
-          example: "+221 77 123 45 67"
+          pattern: "^\\+221[0-9]{9}$"
+          example: "+221771234567"
         email:
           type: string
-          example: "john.doe@uasz.sn"
+          format: email
+          maxLength: 100
+          example: "john.doe@example.com"
         adresse:
           type: string
+          maxLength: 200
           example: "Dakar, Sénégal"
-        experiences:
-          type: array
-          items:
-            $ref: "#/components/schemas/Experience"
-        formations:
-          type: array
-          items:
-            $ref: "#/components/schemas/Formation"
-        competences:
-          type: array
-          items:
-            $ref: "#/components/schemas/Competence"
-        langues:
-          type: array
-          items:
-            $ref: "#/components/schemas/Langue"
-        certifications:
-          type: array
-          items:
-            $ref: "#/components/schemas/Certification"
-        templateUtilise:
-          type: string
-          enum: [MODERNE, CLASSIQUE, PROFESSIONNEL]
-          example: "MODERNE"
-        dateCreation:
-          type: string
-          format: date-time
-        dateModification:
-          type: string
-          format: date-time
-
-    CVCreate:
-      type: object
-      required:
-        - utilisateurId
-        - titre
-        - telephone
-        - email
-      properties:
         utilisateurId:
+          type: integer
+          example: 1
+        template:
+          $ref: '#/components/schemas/TypeTemplate'
+
+    CVResponse:
+      type: object
+      properties:
+        id:
           type: integer
           example: 1
         titre:
           type: string
-          example: "Ingénieur Full Stack"
+          example: "Développeur Full Stack Java/Angular"
         resume:
           type: string
-          example: "Développeur passionné..."
         photo:
           type: string
-          description: URL de la photo
         linkedin:
           type: string
         github:
@@ -715,19 +1208,96 @@ components:
           type: string
         telephone:
           type: string
-          example: "+221 77 123 45 67"
+          example: "+221771234567"
         email:
           type: string
-          example: "john.doe@uasz.sn"
+          example: "john.doe@example.com"
         adresse:
           type: string
-          example: "Dakar, Sénégal"
-        templateUtilise:
+        utilisateurId:
+          type: integer
+          example: 1
+        template:
+          $ref: '#/components/schemas/TypeTemplate'
+        dateCreation:
           type: string
-          enum: [MODERNE, CLASSIQUE, PROFESSIONNEL]
-          default: MODERNE
+          format: date-time
+          example: "2024-12-13T10:30:00"
+        dateDerniereModification:
+          type: string
+          format: date-time
+          example: "2024-12-13T15:45:00"
 
-    Experience:
+    CVCompletResponse:
+      allOf:
+        - $ref: '#/components/schemas/CVResponse'
+        - type: object
+          properties:
+            experiences:
+              type: array
+              items:
+                $ref: '#/components/schemas/ExperienceResponse'
+            formations:
+              type: array
+              items:
+                $ref: '#/components/schemas/FormationResponse'
+            competences:
+              type: array
+              items:
+                $ref: '#/components/schemas/CompetenceResponse'
+            languesParlees:
+              type: array
+              items:
+                $ref: '#/components/schemas/LangueParleesResponse'
+            certifications:
+              type: array
+              items:
+                $ref: '#/components/schemas/CertificationResponse'
+
+    # ========== EXPERIENCE ==========
+
+    ExperienceRequest:
+      type: object
+      required:
+        - cvId
+        - poste
+        - entreprise
+        - dateDebut
+      properties:
+        cvId:
+          type: integer
+          example: 1
+        poste:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: "Développeur Full Stack"
+        entreprise:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: "TechCorp SARL"
+        localisation:
+          type: string
+          maxLength: 100
+          example: "Dakar, Sénégal"
+        dateDebut:
+          type: string
+          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
+          example: "01/2022"
+        dateFin:
+          type: string
+          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
+          example: "12/2023"
+        enCours:
+          type: boolean
+          example: false
+        description:
+          type: string
+          maxLength: 2000
+          example: "Développement d'applications web avec Spring Boot et Angular"
+
+    ExperienceResponse:
       type: object
       properties:
         id:
@@ -741,54 +1311,72 @@ components:
           example: "Développeur Full Stack"
         entreprise:
           type: string
-          example: "Tech Company"
+          example: "TechCorp SARL"
         localisation:
           type: string
           example: "Dakar, Sénégal"
         dateDebut:
           type: string
-          format: date
-          example: "2020-01-15"
+          example: "01/2022"
         dateFin:
           type: string
-          format: date
-          example: "2023-06-30"
+          example: "12/2023"
         enCours:
           type: boolean
           example: false
         description:
           type: string
-          example: "- Développement d'applications web\n- Gestion de bases de données"
+        dateCreation:
+          type: string
+          format: date-time
+        dateDerniereModification:
+          type: string
+          format: date-time
 
-    ExperienceCreate:
+    # ========== FORMATION ==========
+
+    FormationRequest:
       type: object
       required:
         - cvId
-        - poste
-        - entreprise
+        - diplome
+        - etablissement
         - dateDebut
       properties:
         cvId:
           type: integer
-        poste:
+          example: 1
+        diplome:
           type: string
-        entreprise:
+          minLength: 2
+          maxLength: 150
+          example: "Master en Génie Logiciel"
+        etablissement:
           type: string
+          minLength: 2
+          maxLength: 150
+          example: "Université Assane Seck de Ziguinchor"
         localisation:
           type: string
+          maxLength: 100
+          example: "Ziguinchor, Sénégal"
         dateDebut:
           type: string
-          format: date
+          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
+          example: "10/2020"
         dateFin:
           type: string
-          format: date
+          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
+          example: "07/2022"
         enCours:
           type: boolean
-          default: false
+          example: false
         description:
           type: string
+          maxLength: 2000
+          example: "Formation approfondie en développement logiciel et architecture des systèmes"
 
-    Formation:
+    FormationResponse:
       type: object
       properties:
         id:
@@ -799,57 +1387,54 @@ components:
           example: 1
         diplome:
           type: string
-          example: "Licence en Informatique"
+          example: "Master en Génie Logiciel"
         etablissement:
           type: string
-          example: "UASZ"
+          example: "Université Assane Seck de Ziguinchor"
         localisation:
           type: string
           example: "Ziguinchor, Sénégal"
         dateDebut:
           type: string
-          format: date
-          example: "2015-10-01"
+          example: "10/2020"
         dateFin:
           type: string
-          format: date
-          example: "2018-07-30"
+          example: "07/2022"
         enCours:
           type: boolean
           example: false
         description:
           type: string
-          example: "Formation en développement logiciel"
+        dateCreation:
+          type: string
+          format: date-time
+        dateDerniereModification:
+          type: string
+          format: date-time
 
-    FormationCreate:
+    # ========== COMPETENCE ==========
+
+    CompetenceRequest:
       type: object
       required:
         - cvId
-        - diplome
-        - etablissement
-        - dateDebut
+        - nom
+        - niveau
       properties:
         cvId:
           type: integer
-        diplome:
+          example: 1
+        nom:
           type: string
-        etablissement:
-          type: string
-        localisation:
-          type: string
-        dateDebut:
-          type: string
-          format: date
-        dateFin:
-          type: string
-          format: date
-        enCours:
-          type: boolean
-          default: false
-        description:
-          type: string
+          minLength: 2
+          maxLength: 100
+          example: "Java"
+        niveau:
+          $ref: '#/components/schemas/NiveauCompetence'
+        categorie:
+          $ref: '#/components/schemas/CategorieCompetence'
 
-    Competence:
+    CompetenceResponse:
       type: object
       properties:
         id:
@@ -862,63 +1447,34 @@ components:
           type: string
           example: "Java"
         niveau:
-          type: string
-          enum: [DEBUTANT, INTERMEDIAIRE, AVANCE, EXPERT]
-          example: "AVANCE"
+          $ref: '#/components/schemas/NiveauCompetence'
         categorie:
+          $ref: '#/components/schemas/CategorieCompetence'
+        dateCreation:
           type: string
-          example: "Langage de programmation"
+          format: date-time
+        dateDerniereModification:
+          type: string
+          format: date-time
 
-    CompetenceCreate:
+    # ========== LANGUE PARLEES ==========
+
+    LangueParleesRequest:
       type: object
       required:
         - cvId
-        - nom
-      properties:
-        cvId:
-          type: integer
-        nom:
-          type: string
-        niveau:
-          type: string
-          enum: [DEBUTANT, INTERMEDIAIRE, AVANCE, EXPERT]
-          default: INTERMEDIAIRE
-        categorie:
-          type: string
-
-    Langue:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 1
-        cvId:
-          type: integer
-          example: 1
-        nom:
-          type: string
-          example: "Français"
-        niveau:
-          type: string
-          enum: [DEBUTANT, INTERMEDIAIRE, AVANCE, COURANT, LANGUE_MATERNELLE]
-          example: "LANGUE_MATERNELLE"
-
-    LangueCreate:
-      type: object
-      required:
-        - cvId
-        - nom
+        - langue
         - niveau
       properties:
         cvId:
           type: integer
-        nom:
-          type: string
+          example: 1
+        langue:
+          $ref: '#/components/schemas/Langues'
         niveau:
-          type: string
-          enum: [DEBUTANT, INTERMEDIAIRE, AVANCE, COURANT, LANGUE_MATERNELLE]
+          $ref: '#/components/schemas/NiveauLangue'
 
-    Certification:
+    LangueParleesResponse:
       type: object
       properties:
         id:
@@ -927,60 +1483,151 @@ components:
         cvId:
           type: integer
           example: 1
-        nom:
+        langue:
+          $ref: '#/components/schemas/Langues'
+        niveau:
+          $ref: '#/components/schemas/NiveauLangue'
+        dateCreation:
           type: string
-          example: "AWS Certified Developer"
-        organisme:
+          format: date-time
+        dateDerniereModification:
           type: string
-          example: "Amazon Web Services"
-        dateObtention:
-          type: string
-          format: date
-          example: "2022-03-15"
-        dateExpiration:
-          type: string
-          format: date
-          example: "2025-03-15"
-        lienCredential:
-          type: string
-          example: "https://aws.amazon.com/verification/12345"
+          format: date-time
 
-    CertificationCreate:
+    # ========== CERTIFICATION ==========
+
+    CertificationRequest:
       type: object
       required:
         - cvId
         - nom
         - organisme
+        - dateObtention
       properties:
         cvId:
           type: integer
+          example: 1
         nom:
           type: string
+          minLength: 2
+          maxLength: 150
+          example: "Oracle Certified Professional Java SE 11"
         organisme:
           type: string
+          minLength: 2
+          maxLength: 150
+          example: "Oracle"
         dateObtention:
           type: string
-          format: date
+          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
+          example: "06/2023"
         dateExpiration:
           type: string
-          format: date
-        lienCredential:
+          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
+          example: "06/2026"
+        numeroCredential:
           type: string
+          maxLength: 100
+          example: "OCP-12345678"
+        urlVerification:
+          type: string
+          example: "https://education.oracle.com/verify/credential/12345678"
 
-    Template:
+    CertificationResponse:
       type: object
       properties:
         id:
-          type: string
-          enum: [MODERNE, CLASSIQUE, PROFESSIONNEL]
-          example: "MODERNE"
+          type: integer
+          example: 1
+        cvId:
+          type: integer
+          example: 1
         nom:
           type: string
-          example: "Moderne"
-        description:
+          example: "Oracle Certified Professional Java SE 11"
+        organisme:
           type: string
-          example: "Design moderne avec sections colorées"
-        apercu:
+          example: "Oracle"
+        dateObtention:
           type: string
-          description: URL de l'image d'aperçu
-          example: "https://storage.uasz.sn/templates/moderne-preview.png"
+          example: "06/2023"
+        dateExpiration:
+          type: string
+          example: "06/2026"
+        numeroCredential:
+          type: string
+          example: "OCP-12345678"
+        urlVerification:
+          type: string
+          example: "https://education.oracle.com/verify/credential/12345678"
+        dateCreation:
+          type: string
+          format: date-time
+        dateDerniereModification:
+          type: string
+          format: date-time
+
+    # ========== PAGINATION ==========
+
+    PageResponseCVResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/CVResponse'
+        pageNumber:
+          type: integer
+          example: 0
+        pageSize:
+          type: integer
+          example: 10
+        totalElements:
+          type: integer
+          format: int64
+          example: 100
+        totalPages:
+          type: integer
+          example: 10
+        last:
+          type: boolean
+          example: false
+        first:
+          type: boolean
+          example: true
+
+    # ========== ERROR ==========
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2024-12-13 15:30:00"
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: "Bad Request"
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          example: "Erreur de validation des données"
+        path:
+          type: string
+          example: "/api/cvs"
+        validationErrors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: "titre"
+              message:
+                type: string
+                example: "Le titre doit contenir entre 3 et 100 caractères"

@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
@@ -17,11 +17,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Experience
+ * ExperienceResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:19.435775471Z[Africa/Dakar]")
-public class Experience {
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+public class ExperienceResponse {
 
   private Integer id;
 
@@ -33,17 +33,21 @@ public class Experience {
 
   private String localisation;
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate dateDebut;
+  private String dateDebut;
 
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-  private LocalDate dateFin;
+  private String dateFin;
 
   private Boolean enCours;
 
   private String description;
 
-  public Experience id(Integer id) {
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private OffsetDateTime dateCreation;
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private OffsetDateTime dateDerniereModification;
+
+  public ExperienceResponse id(Integer id) {
     this.id = id;
     return this;
   }
@@ -63,7 +67,7 @@ public class Experience {
     this.id = id;
   }
 
-  public Experience cvId(Integer cvId) {
+  public ExperienceResponse cvId(Integer cvId) {
     this.cvId = cvId;
     return this;
   }
@@ -83,7 +87,7 @@ public class Experience {
     this.cvId = cvId;
   }
 
-  public Experience poste(String poste) {
+  public ExperienceResponse poste(String poste) {
     this.poste = poste;
     return this;
   }
@@ -103,7 +107,7 @@ public class Experience {
     this.poste = poste;
   }
 
-  public Experience entreprise(String entreprise) {
+  public ExperienceResponse entreprise(String entreprise) {
     this.entreprise = entreprise;
     return this;
   }
@@ -113,7 +117,7 @@ public class Experience {
    * @return entreprise
   */
   
-  @Schema(name = "entreprise", example = "Tech Company", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "entreprise", example = "TechCorp SARL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("entreprise")
   public String getEntreprise() {
     return entreprise;
@@ -123,7 +127,7 @@ public class Experience {
     this.entreprise = entreprise;
   }
 
-  public Experience localisation(String localisation) {
+  public ExperienceResponse localisation(String localisation) {
     this.localisation = localisation;
     return this;
   }
@@ -143,7 +147,7 @@ public class Experience {
     this.localisation = localisation;
   }
 
-  public Experience dateDebut(LocalDate dateDebut) {
+  public ExperienceResponse dateDebut(String dateDebut) {
     this.dateDebut = dateDebut;
     return this;
   }
@@ -152,18 +156,18 @@ public class Experience {
    * Get dateDebut
    * @return dateDebut
   */
-  @Valid 
-  @Schema(name = "dateDebut", example = "Wed Jan 15 00:00:00 GMT 2020", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "dateDebut", example = "01/2022", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateDebut")
-  public LocalDate getDateDebut() {
+  public String getDateDebut() {
     return dateDebut;
   }
 
-  public void setDateDebut(LocalDate dateDebut) {
+  public void setDateDebut(String dateDebut) {
     this.dateDebut = dateDebut;
   }
 
-  public Experience dateFin(LocalDate dateFin) {
+  public ExperienceResponse dateFin(String dateFin) {
     this.dateFin = dateFin;
     return this;
   }
@@ -172,18 +176,18 @@ public class Experience {
    * Get dateFin
    * @return dateFin
   */
-  @Valid 
-  @Schema(name = "dateFin", example = "Fri Jun 30 00:00:00 GMT 2023", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "dateFin", example = "12/2023", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateFin")
-  public LocalDate getDateFin() {
+  public String getDateFin() {
     return dateFin;
   }
 
-  public void setDateFin(LocalDate dateFin) {
+  public void setDateFin(String dateFin) {
     this.dateFin = dateFin;
   }
 
-  public Experience enCours(Boolean enCours) {
+  public ExperienceResponse enCours(Boolean enCours) {
     this.enCours = enCours;
     return this;
   }
@@ -203,7 +207,7 @@ public class Experience {
     this.enCours = enCours;
   }
 
-  public Experience description(String description) {
+  public ExperienceResponse description(String description) {
     this.description = description;
     return this;
   }
@@ -213,7 +217,7 @@ public class Experience {
    * @return description
   */
   
-  @Schema(name = "description", example = "- Développement d'applications web - Gestion de bases de données", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public String getDescription() {
     return description;
@@ -221,6 +225,46 @@ public class Experience {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public ExperienceResponse dateCreation(OffsetDateTime dateCreation) {
+    this.dateCreation = dateCreation;
+    return this;
+  }
+
+  /**
+   * Get dateCreation
+   * @return dateCreation
+  */
+  @Valid 
+  @Schema(name = "dateCreation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("dateCreation")
+  public OffsetDateTime getDateCreation() {
+    return dateCreation;
+  }
+
+  public void setDateCreation(OffsetDateTime dateCreation) {
+    this.dateCreation = dateCreation;
+  }
+
+  public ExperienceResponse dateDerniereModification(OffsetDateTime dateDerniereModification) {
+    this.dateDerniereModification = dateDerniereModification;
+    return this;
+  }
+
+  /**
+   * Get dateDerniereModification
+   * @return dateDerniereModification
+  */
+  @Valid 
+  @Schema(name = "dateDerniereModification", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("dateDerniereModification")
+  public OffsetDateTime getDateDerniereModification() {
+    return dateDerniereModification;
+  }
+
+  public void setDateDerniereModification(OffsetDateTime dateDerniereModification) {
+    this.dateDerniereModification = dateDerniereModification;
   }
 
   @Override
@@ -231,27 +275,29 @@ public class Experience {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Experience experience = (Experience) o;
-    return Objects.equals(this.id, experience.id) &&
-        Objects.equals(this.cvId, experience.cvId) &&
-        Objects.equals(this.poste, experience.poste) &&
-        Objects.equals(this.entreprise, experience.entreprise) &&
-        Objects.equals(this.localisation, experience.localisation) &&
-        Objects.equals(this.dateDebut, experience.dateDebut) &&
-        Objects.equals(this.dateFin, experience.dateFin) &&
-        Objects.equals(this.enCours, experience.enCours) &&
-        Objects.equals(this.description, experience.description);
+    ExperienceResponse experienceResponse = (ExperienceResponse) o;
+    return Objects.equals(this.id, experienceResponse.id) &&
+        Objects.equals(this.cvId, experienceResponse.cvId) &&
+        Objects.equals(this.poste, experienceResponse.poste) &&
+        Objects.equals(this.entreprise, experienceResponse.entreprise) &&
+        Objects.equals(this.localisation, experienceResponse.localisation) &&
+        Objects.equals(this.dateDebut, experienceResponse.dateDebut) &&
+        Objects.equals(this.dateFin, experienceResponse.dateFin) &&
+        Objects.equals(this.enCours, experienceResponse.enCours) &&
+        Objects.equals(this.description, experienceResponse.description) &&
+        Objects.equals(this.dateCreation, experienceResponse.dateCreation) &&
+        Objects.equals(this.dateDerniereModification, experienceResponse.dateDerniereModification);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, cvId, poste, entreprise, localisation, dateDebut, dateFin, enCours, description);
+    return Objects.hash(id, cvId, poste, entreprise, localisation, dateDebut, dateFin, enCours, description, dateCreation, dateDerniereModification);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Experience {\n");
+    sb.append("class ExperienceResponse {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    cvId: ").append(toIndentedString(cvId)).append("\n");
     sb.append("    poste: ").append(toIndentedString(poste)).append("\n");
@@ -261,6 +307,8 @@ public class Experience {
     sb.append("    dateFin: ").append(toIndentedString(dateFin)).append("\n");
     sb.append("    enCours: ").append(toIndentedString(enCours)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    dateCreation: ").append(toIndentedString(dateCreation)).append("\n");
+    sb.append("    dateDerniereModification: ").append(toIndentedString(dateDerniereModification)).append("\n");
     sb.append("}");
     return sb.toString();
   }

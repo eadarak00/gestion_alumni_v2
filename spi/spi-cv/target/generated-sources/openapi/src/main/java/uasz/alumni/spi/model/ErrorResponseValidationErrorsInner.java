@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -15,37 +16,38 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * ReponseValidationInvitation
+ * ErrorResponseValidationErrorsInner
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:26:58.951985870Z[Africa/Dakar]")
-public class ReponseValidationInvitation {
+@JsonTypeName("ErrorResponse_validationErrors_inner")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+public class ErrorResponseValidationErrorsInner {
 
-  private Boolean valide;
+  private String field;
 
   private String message;
 
-  public ReponseValidationInvitation valide(Boolean valide) {
-    this.valide = valide;
+  public ErrorResponseValidationErrorsInner field(String field) {
+    this.field = field;
     return this;
   }
 
   /**
-   * Get valide
-   * @return valide
+   * Get field
+   * @return field
   */
   
-  @Schema(name = "valide", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("valide")
-  public Boolean getValide() {
-    return valide;
+  @Schema(name = "field", example = "titre", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("field")
+  public String getField() {
+    return field;
   }
 
-  public void setValide(Boolean valide) {
-    this.valide = valide;
+  public void setField(String field) {
+    this.field = field;
   }
 
-  public ReponseValidationInvitation message(String message) {
+  public ErrorResponseValidationErrorsInner message(String message) {
     this.message = message;
     return this;
   }
@@ -55,7 +57,7 @@ public class ReponseValidationInvitation {
    * @return message
   */
   
-  @Schema(name = "message", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "message", example = "Le titre doit contenir entre 3 et 100 caractères", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("message")
   public String getMessage() {
     return message;
@@ -73,21 +75,21 @@ public class ReponseValidationInvitation {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ReponseValidationInvitation reponseValidationInvitation = (ReponseValidationInvitation) o;
-    return Objects.equals(this.valide, reponseValidationInvitation.valide) &&
-        Objects.equals(this.message, reponseValidationInvitation.message);
+    ErrorResponseValidationErrorsInner errorResponseValidationErrorsInner = (ErrorResponseValidationErrorsInner) o;
+    return Objects.equals(this.field, errorResponseValidationErrorsInner.field) &&
+        Objects.equals(this.message, errorResponseValidationErrorsInner.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(valide, message);
+    return Objects.hash(field, message);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ReponseValidationInvitation {\n");
-    sb.append("    valide: ").append(toIndentedString(valide)).append("\n");
+    sb.append("class ErrorResponseValidationErrorsInner {\n");
+    sb.append("    field: ").append(toIndentedString(field)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
     return sb.toString();

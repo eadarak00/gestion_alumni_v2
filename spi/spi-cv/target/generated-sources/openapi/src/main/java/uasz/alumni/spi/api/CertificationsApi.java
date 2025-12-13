@@ -5,8 +5,9 @@
  */
 package uasz.alumni.spi.api;
 
-import uasz.alumni.spi.model.Certification;
-import uasz.alumni.spi.model.CertificationCreate;
+import uasz.alumni.spi.model.CertificationRequest;
+import uasz.alumni.spi.model.CertificationResponse;
+import uasz.alumni.spi.model.ErrorResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,10 +34,124 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:19.435775471Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
 @Validated
-@Tag(name = "Certifications", description = "the Certifications API")
+@Tag(name = "Certifications", description = "Gestion des certifications")
 public interface CertificationsApi {
+
+    /**
+     * GET /certifications/cv/{cvId}/avec-expiration : Récupérer les certifications avec date d&#39;expiration
+     *
+     * @param cvId  (required)
+     * @return Liste des certifications avec expiration (status code 200)
+     */
+    @Operation(
+        operationId = "certificationsCvCvIdAvecExpirationGet",
+        summary = "Récupérer les certifications avec date d'expiration",
+        tags = { "Certifications" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des certifications avec expiration", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CertificationResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/certifications/cv/{cvId}/avec-expiration",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<CertificationResponse> certificationsCvCvIdAvecExpirationGet(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /certifications/cv/{cvId} : Récupérer toutes les certifications d&#39;un CV
+     *
+     * @param cvId  (required)
+     * @return Liste des certifications (status code 200)
+     */
+    @Operation(
+        operationId = "certificationsCvCvIdGet",
+        summary = "Récupérer toutes les certifications d'un CV",
+        tags = { "Certifications" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des certifications", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CertificationResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/certifications/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<CertificationResponse> certificationsCvCvIdGet(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /certifications/cv/{cvId}/permanentes : Récupérer les certifications permanentes
+     *
+     * @param cvId  (required)
+     * @return Liste des certifications permanentes (status code 200)
+     */
+    @Operation(
+        operationId = "certificationsCvCvIdPermanentesGet",
+        summary = "Récupérer les certifications permanentes",
+        tags = { "Certifications" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des certifications permanentes", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CertificationResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/certifications/cv/{cvId}/permanentes",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<CertificationResponse> certificationsCvCvIdPermanentesGet(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /certifications/{id}/cv/{cvId} : Récupérer une certification par ID et CV ID
+     *
+     * @param id  (required)
+     * @param cvId  (required)
+     * @return Certification trouvée (status code 200)
+     */
+    @Operation(
+        operationId = "certificationsIdCvCvIdGet",
+        summary = "Récupérer une certification par ID et CV ID",
+        tags = { "Certifications" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Certification trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CertificationResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/certifications/{id}/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    CertificationResponse certificationsIdCvCvIdGet(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
 
     /**
      * DELETE /certifications/{id} : Supprimer une certification
@@ -64,46 +179,81 @@ public interface CertificationsApi {
 
 
     /**
-     * PUT /certifications/{id} : Modifier une certification
+     * GET /certifications/{id} : Récupérer une certification par son ID
      *
      * @param id  (required)
-     * @param certificationCreate  (required)
+     * @return Certification trouvée (status code 200)
+     */
+    @Operation(
+        operationId = "certificationsIdGet",
+        summary = "Récupérer une certification par son ID",
+        tags = { "Certifications" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Certification trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CertificationResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/certifications/{id}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    CertificationResponse certificationsIdGet(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
+    );
+
+
+    /**
+     * PUT /certifications/{id} : Mettre à jour une certification
+     *
+     * @param id  (required)
+     * @param certificationRequest  (required)
      * @return Certification mise à jour (status code 200)
      */
     @Operation(
         operationId = "certificationsIdPut",
-        summary = "Modifier une certification",
+        summary = "Mettre à jour une certification",
         tags = { "Certifications" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Certification mise à jour")
+            @ApiResponse(responseCode = "200", description = "Certification mise à jour", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CertificationResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.PUT,
         value = "/certifications/{id}",
+        produces = { "application/json" },
         consumes = { "application/json" }
     )
     @ResponseStatus(HttpStatus.OK)
     
-    void certificationsIdPut(
+    CertificationResponse certificationsIdPut(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "CertificationCreate", description = "", required = true) @Valid @RequestBody CertificationCreate certificationCreate
+        @Parameter(name = "CertificationRequest", description = "", required = true) @Valid @RequestBody CertificationRequest certificationRequest
     );
 
 
     /**
-     * POST /certifications : Ajouter une certification
+     * POST /certifications : Créer une nouvelle certification
      *
-     * @param certificationCreate  (required)
-     * @return Certification ajoutée (status code 201)
+     * @param certificationRequest  (required)
+     * @return Certification créée (status code 201)
+     *         or Certification déjà existante (status code 409)
      */
     @Operation(
         operationId = "certificationsPost",
-        summary = "Ajouter une certification",
+        summary = "Créer une nouvelle certification",
         tags = { "Certifications" },
         responses = {
-            @ApiResponse(responseCode = "201", description = "Certification ajoutée", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Certification.class))
+            @ApiResponse(responseCode = "201", description = "Certification créée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CertificationResponse.class))
+            }),
+            @ApiResponse(responseCode = "409", description = "Certification déjà existante", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
         }
     )
@@ -115,8 +265,8 @@ public interface CertificationsApi {
     )
     @ResponseStatus(HttpStatus.CREATED)
     
-    Certification certificationsPost(
-        @Parameter(name = "CertificationCreate", description = "", required = true) @Valid @RequestBody CertificationCreate certificationCreate
+    CertificationResponse certificationsPost(
+        @Parameter(name = "CertificationRequest", description = "", required = true) @Valid @RequestBody CertificationRequest certificationRequest
     );
 
 }

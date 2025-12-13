@@ -1,12 +1,12 @@
-uasz/alumni/spi/api/ValidationApi.class
 uasz/alumni/spi/model/GetAllUtilisateursFiltered200Response.class
+uasz/alumni/spi/api/ValidationApi.class
 uasz/alumni/spi/model/RefreshRequest.class
 uasz/alumni/spi/api/UtilisateursApi.class
-uasz/alumni/spi/api/AlumniApi.class
 uasz/alumni/spi/api/RolesApi.class
+uasz/alumni/spi/api/AlumniApi.class
 uasz/alumni/spi/model/AlumniResponseDTO.class
-uasz/alumni/spi/model/EtudiantResponseDTO.class
 uasz/alumni/spi/model/EtudiantRequestDTO.class
+uasz/alumni/spi/model/EtudiantResponseDTO.class
 uasz/alumni/spi/model/CodeValidationCheckDTO.class
 uasz/alumni/spi/model/TokenResponse.class
 uasz/alumni/spi/model/UtilisateurRequestDTO.class

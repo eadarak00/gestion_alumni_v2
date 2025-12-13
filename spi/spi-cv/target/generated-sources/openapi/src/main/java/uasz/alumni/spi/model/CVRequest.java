@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import uasz.alumni.spi.model.TypeTemplate;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -16,13 +17,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * CVCreate
+ * CVRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:19.435775471Z[Africa/Dakar]")
-public class CVCreate {
-
-  private Integer utilisateurId;
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+public class CVRequest {
 
   private String titre;
 
@@ -42,60 +41,205 @@ public class CVCreate {
 
   private String adresse;
 
-  /**
-   * Gets or Sets templateUtilise
-   */
-  public enum TemplateUtiliseEnum {
-    MODERNE("MODERNE"),
-    
-    CLASSIQUE("CLASSIQUE"),
-    
-    PROFESSIONNEL("PROFESSIONNEL");
+  private Integer utilisateurId;
 
-    private String value;
+  private TypeTemplate template;
 
-    TemplateUtiliseEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TemplateUtiliseEnum fromValue(String value) {
-      for (TemplateUtiliseEnum b : TemplateUtiliseEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private TemplateUtiliseEnum templateUtilise = TemplateUtiliseEnum.MODERNE;
-
-  public CVCreate() {
+  public CVRequest() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public CVCreate(Integer utilisateurId, String titre, String telephone, String email) {
-    this.utilisateurId = utilisateurId;
+  public CVRequest(String titre, String telephone, String email, Integer utilisateurId) {
     this.titre = titre;
     this.telephone = telephone;
     this.email = email;
+    this.utilisateurId = utilisateurId;
   }
 
-  public CVCreate utilisateurId(Integer utilisateurId) {
+  public CVRequest titre(String titre) {
+    this.titre = titre;
+    return this;
+  }
+
+  /**
+   * Get titre
+   * @return titre
+  */
+  @NotNull @Size(min = 3, max = 100) 
+  @Schema(name = "titre", example = "Développeur Full Stack Java/Angular", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("titre")
+  public String getTitre() {
+    return titre;
+  }
+
+  public void setTitre(String titre) {
+    this.titre = titre;
+  }
+
+  public CVRequest resume(String resume) {
+    this.resume = resume;
+    return this;
+  }
+
+  /**
+   * Get resume
+   * @return resume
+  */
+  @Size(max = 2000) 
+  @Schema(name = "resume", example = "Développeur passionné avec 3 ans d'expérience en développement web et mobile", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("resume")
+  public String getResume() {
+    return resume;
+  }
+
+  public void setResume(String resume) {
+    this.resume = resume;
+  }
+
+  public CVRequest photo(String photo) {
+    this.photo = photo;
+    return this;
+  }
+
+  /**
+   * Get photo
+   * @return photo
+  */
+  
+  @Schema(name = "photo", example = "https://example.com/photo.jpg", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("photo")
+  public String getPhoto() {
+    return photo;
+  }
+
+  public void setPhoto(String photo) {
+    this.photo = photo;
+  }
+
+  public CVRequest linkedin(String linkedin) {
+    this.linkedin = linkedin;
+    return this;
+  }
+
+  /**
+   * Get linkedin
+   * @return linkedin
+  */
+  @Pattern(regexp = "^(https?://)?(www\\.)?linkedin\\.com/.*$") 
+  @Schema(name = "linkedin", example = "https://linkedin.com/in/johndoe", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("linkedin")
+  public String getLinkedin() {
+    return linkedin;
+  }
+
+  public void setLinkedin(String linkedin) {
+    this.linkedin = linkedin;
+  }
+
+  public CVRequest github(String github) {
+    this.github = github;
+    return this;
+  }
+
+  /**
+   * Get github
+   * @return github
+  */
+  @Pattern(regexp = "^(https?://)?(www\\.)?github\\.com/.*$") 
+  @Schema(name = "github", example = "https://github.com/johndoe", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("github")
+  public String getGithub() {
+    return github;
+  }
+
+  public void setGithub(String github) {
+    this.github = github;
+  }
+
+  public CVRequest portfolio(String portfolio) {
+    this.portfolio = portfolio;
+    return this;
+  }
+
+  /**
+   * Get portfolio
+   * @return portfolio
+  */
+  
+  @Schema(name = "portfolio", example = "https://johndoe.com", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("portfolio")
+  public String getPortfolio() {
+    return portfolio;
+  }
+
+  public void setPortfolio(String portfolio) {
+    this.portfolio = portfolio;
+  }
+
+  public CVRequest telephone(String telephone) {
+    this.telephone = telephone;
+    return this;
+  }
+
+  /**
+   * Get telephone
+   * @return telephone
+  */
+  @NotNull @Pattern(regexp = "^\\+221[0-9]{9}$") 
+  @Schema(name = "telephone", example = "+221771234567", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("telephone")
+  public String getTelephone() {
+    return telephone;
+  }
+
+  public void setTelephone(String telephone) {
+    this.telephone = telephone;
+  }
+
+  public CVRequest email(String email) {
+    this.email = email;
+    return this;
+  }
+
+  /**
+   * Get email
+   * @return email
+  */
+  @NotNull @Size(max = 100) @jakarta.validation.constraints.Email 
+  @Schema(name = "email", example = "john.doe@example.com", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("email")
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public CVRequest adresse(String adresse) {
+    this.adresse = adresse;
+    return this;
+  }
+
+  /**
+   * Get adresse
+   * @return adresse
+  */
+  @Size(max = 200) 
+  @Schema(name = "adresse", example = "Dakar, Sénégal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("adresse")
+  public String getAdresse() {
+    return adresse;
+  }
+
+  public void setAdresse(String adresse) {
+    this.adresse = adresse;
+  }
+
+  public CVRequest utilisateurId(Integer utilisateurId) {
     this.utilisateurId = utilisateurId;
     return this;
   }
@@ -115,204 +259,24 @@ public class CVCreate {
     this.utilisateurId = utilisateurId;
   }
 
-  public CVCreate titre(String titre) {
-    this.titre = titre;
+  public CVRequest template(TypeTemplate template) {
+    this.template = template;
     return this;
   }
 
   /**
-   * Get titre
-   * @return titre
+   * Get template
+   * @return template
   */
-  @NotNull 
-  @Schema(name = "titre", example = "Ingénieur Full Stack", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("titre")
-  public String getTitre() {
-    return titre;
+  @Valid 
+  @Schema(name = "template", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("template")
+  public TypeTemplate getTemplate() {
+    return template;
   }
 
-  public void setTitre(String titre) {
-    this.titre = titre;
-  }
-
-  public CVCreate resume(String resume) {
-    this.resume = resume;
-    return this;
-  }
-
-  /**
-   * Get resume
-   * @return resume
-  */
-  
-  @Schema(name = "resume", example = "Développeur passionné...", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("resume")
-  public String getResume() {
-    return resume;
-  }
-
-  public void setResume(String resume) {
-    this.resume = resume;
-  }
-
-  public CVCreate photo(String photo) {
-    this.photo = photo;
-    return this;
-  }
-
-  /**
-   * URL de la photo
-   * @return photo
-  */
-  
-  @Schema(name = "photo", description = "URL de la photo", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("photo")
-  public String getPhoto() {
-    return photo;
-  }
-
-  public void setPhoto(String photo) {
-    this.photo = photo;
-  }
-
-  public CVCreate linkedin(String linkedin) {
-    this.linkedin = linkedin;
-    return this;
-  }
-
-  /**
-   * Get linkedin
-   * @return linkedin
-  */
-  
-  @Schema(name = "linkedin", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("linkedin")
-  public String getLinkedin() {
-    return linkedin;
-  }
-
-  public void setLinkedin(String linkedin) {
-    this.linkedin = linkedin;
-  }
-
-  public CVCreate github(String github) {
-    this.github = github;
-    return this;
-  }
-
-  /**
-   * Get github
-   * @return github
-  */
-  
-  @Schema(name = "github", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("github")
-  public String getGithub() {
-    return github;
-  }
-
-  public void setGithub(String github) {
-    this.github = github;
-  }
-
-  public CVCreate portfolio(String portfolio) {
-    this.portfolio = portfolio;
-    return this;
-  }
-
-  /**
-   * Get portfolio
-   * @return portfolio
-  */
-  
-  @Schema(name = "portfolio", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("portfolio")
-  public String getPortfolio() {
-    return portfolio;
-  }
-
-  public void setPortfolio(String portfolio) {
-    this.portfolio = portfolio;
-  }
-
-  public CVCreate telephone(String telephone) {
-    this.telephone = telephone;
-    return this;
-  }
-
-  /**
-   * Get telephone
-   * @return telephone
-  */
-  @NotNull 
-  @Schema(name = "telephone", example = "+221 77 123 45 67", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("telephone")
-  public String getTelephone() {
-    return telephone;
-  }
-
-  public void setTelephone(String telephone) {
-    this.telephone = telephone;
-  }
-
-  public CVCreate email(String email) {
-    this.email = email;
-    return this;
-  }
-
-  /**
-   * Get email
-   * @return email
-  */
-  @NotNull 
-  @Schema(name = "email", example = "john.doe@uasz.sn", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("email")
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public CVCreate adresse(String adresse) {
-    this.adresse = adresse;
-    return this;
-  }
-
-  /**
-   * Get adresse
-   * @return adresse
-  */
-  
-  @Schema(name = "adresse", example = "Dakar, Sénégal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("adresse")
-  public String getAdresse() {
-    return adresse;
-  }
-
-  public void setAdresse(String adresse) {
-    this.adresse = adresse;
-  }
-
-  public CVCreate templateUtilise(TemplateUtiliseEnum templateUtilise) {
-    this.templateUtilise = templateUtilise;
-    return this;
-  }
-
-  /**
-   * Get templateUtilise
-   * @return templateUtilise
-  */
-  
-  @Schema(name = "templateUtilise", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("templateUtilise")
-  public TemplateUtiliseEnum getTemplateUtilise() {
-    return templateUtilise;
-  }
-
-  public void setTemplateUtilise(TemplateUtiliseEnum templateUtilise) {
-    this.templateUtilise = templateUtilise;
+  public void setTemplate(TypeTemplate template) {
+    this.template = template;
   }
 
   @Override
@@ -323,30 +287,29 @@ public class CVCreate {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CVCreate cvCreate = (CVCreate) o;
-    return Objects.equals(this.utilisateurId, cvCreate.utilisateurId) &&
-        Objects.equals(this.titre, cvCreate.titre) &&
-        Objects.equals(this.resume, cvCreate.resume) &&
-        Objects.equals(this.photo, cvCreate.photo) &&
-        Objects.equals(this.linkedin, cvCreate.linkedin) &&
-        Objects.equals(this.github, cvCreate.github) &&
-        Objects.equals(this.portfolio, cvCreate.portfolio) &&
-        Objects.equals(this.telephone, cvCreate.telephone) &&
-        Objects.equals(this.email, cvCreate.email) &&
-        Objects.equals(this.adresse, cvCreate.adresse) &&
-        Objects.equals(this.templateUtilise, cvCreate.templateUtilise);
+    CVRequest cvRequest = (CVRequest) o;
+    return Objects.equals(this.titre, cvRequest.titre) &&
+        Objects.equals(this.resume, cvRequest.resume) &&
+        Objects.equals(this.photo, cvRequest.photo) &&
+        Objects.equals(this.linkedin, cvRequest.linkedin) &&
+        Objects.equals(this.github, cvRequest.github) &&
+        Objects.equals(this.portfolio, cvRequest.portfolio) &&
+        Objects.equals(this.telephone, cvRequest.telephone) &&
+        Objects.equals(this.email, cvRequest.email) &&
+        Objects.equals(this.adresse, cvRequest.adresse) &&
+        Objects.equals(this.utilisateurId, cvRequest.utilisateurId) &&
+        Objects.equals(this.template, cvRequest.template);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(utilisateurId, titre, resume, photo, linkedin, github, portfolio, telephone, email, adresse, templateUtilise);
+    return Objects.hash(titre, resume, photo, linkedin, github, portfolio, telephone, email, adresse, utilisateurId, template);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CVCreate {\n");
-    sb.append("    utilisateurId: ").append(toIndentedString(utilisateurId)).append("\n");
+    sb.append("class CVRequest {\n");
     sb.append("    titre: ").append(toIndentedString(titre)).append("\n");
     sb.append("    resume: ").append(toIndentedString(resume)).append("\n");
     sb.append("    photo: ").append(toIndentedString(photo)).append("\n");
@@ -356,7 +319,8 @@ public class CVCreate {
     sb.append("    telephone: ").append(toIndentedString(telephone)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    adresse: ").append(toIndentedString(adresse)).append("\n");
-    sb.append("    templateUtilise: ").append(toIndentedString(templateUtilise)).append("\n");
+    sb.append("    utilisateurId: ").append(toIndentedString(utilisateurId)).append("\n");
+    sb.append("    template: ").append(toIndentedString(template)).append("\n");
     sb.append("}");
     return sb.toString();
   }
