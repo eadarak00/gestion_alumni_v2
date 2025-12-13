@@ -44,6 +44,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+        <!-- Tests Spring -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Validation JSON -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -153,6 +166,36 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+            <!-- Plugin pour générer les tests à partir d'OpenAPI -->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.4.0</version>
+
+                <executions>
+                    <execution>
+                        <id>generate-tests</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+
+                        <configuration>
+                            <inputSpec>${project.basedir}/../../contracts/ms-user.yaml</inputSpec>                            <generatorName>spring</generatorName>
+
+                            <generateApiTests>true</generateApiTests>
+                            <generateModelTests>true</generateModelTests>
+
+                            <output>${project.build.directory}/generated-sources/openapi</output>
+
+                            <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -166,6 +209,9 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>
+
+
+
+    </build>
 
 </project>

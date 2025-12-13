@@ -18,6 +18,9 @@ WORKDIR /app
 # Copier le JAR final
 COPY --from=build /app/target/*.jar app.jar
 
+# Copier les configurations
+COPY contracts ./contracts
+
 # Exposer le port
 EXPOSE 8888
 

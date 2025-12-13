@@ -74,7 +74,7 @@ services:
       timeout: 30s
       retries: 20
       start_period: 60s
-    command: 
+    command:
       - --wait-timeout=28800
       - --interactive-timeout=28800
 
@@ -101,7 +101,7 @@ services:
       retries: 10
       start_period: 40s
 
-   # MS-CV Database
+    # MS-CV Database
   ms-cv-db:
     <<: *service-defaults
     image: mariadb:11
@@ -121,7 +121,7 @@ services:
       timeout: 30s
       retries: 20
       start_period: 60s
-    command: 
+    command:
       - --wait-timeout=28800
       - --interactive-timeout=28800
 
@@ -142,7 +142,7 @@ services:
       ms-cv-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081/actuator/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8082/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -168,7 +168,7 @@ services:
       timeout: 30s
       retries: 20
       start_period: 60s
-    command: 
+    command:
       - --wait-timeout=28800
       - --interactive-timeout=28800
 
@@ -209,8 +209,8 @@ services:
     depends_on:
       - ms-user-db
     restart: unless-stopped
-  
-   # phpMyAdmin for MS-CV
+
+    # phpMyAdmin for MS-CV
   phpmyadmin-cv:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin-cv
@@ -240,7 +240,7 @@ services:
       - ms-invitation-db
     restart: unless-stopped
 
-   # FRONTEND REACT + VITE 
+    # FRONTEND REACT + VITE
   frontend:
     build: ./frontend
     container_name: frontend

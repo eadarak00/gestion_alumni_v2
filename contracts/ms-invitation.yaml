@@ -1,12 +1,13 @@
 openapi: 3.0.1
+
 info:
-  title: Microservice Invitation - Contrat API
-  version: 1.0.0
+  title: Microservice Invitation - API Contract
+  version: 2.0.0
   description: >
-    Microservice permettant aux Étudiants, Alumni et Administrateurs
-    de créer des invitations pour de futurs Alumni.
-    Toutes les invitations se font uniquement via un lien de partage.
-    Le service gère le suivi, le parrainage et les statistiques.
+    Microservice de gestion des invitations Alumni.
+    Un utilisateur (Étudiant, Alumni ou Administrateur) peut générer un lien d’invitation unique.
+    Le service assure également la validation, le suivi complet du cycle de vie 
+    et la production de statistiques globales et individuelles.
 
 servers:
   - url: http://localhost:8083/api/v1
@@ -24,16 +25,17 @@ tags:
 paths:
 
   # -------------------------------------------------------
-  # INVITATIONS - Ressource principale
+  # INVITATIONS - Création et consultation
   # -------------------------------------------------------
 
   /invitations:
     post:
-      summary: Créer une invitation
+      summary: Générer une invitation
       tags: [Invitations]
       description: >
-        Crée une invitation pour un futur alumni.
-        Retourne le lien d'invitation à partager.
+        Génère automatiquement une invitation et retourne un lien unique
+        permettant à un futur Alumni de rejoindre la plateforme.
+        L’envoyeur ne fournit que son identifiant et son rôle.
       requestBody:
         required: true
         content:
@@ -42,7 +44,7 @@ paths:
               $ref: '#/components/schemas/DemandeCreationInvitation'
       responses:
         '201':
-          description: Invitation créée
+          description: Invitation générée avec succès
           content:
             application/json:
               schema:
@@ -50,11 +52,11 @@ paths:
         '400':
           description: Données invalides
         '409':
-          description: Invitation déjà existante
+          description: Une invitation similaire est déjà en cours
 
   /invitations/{idInvitation}:
     get:
-      summary: Obtenir les détails d'une invitation
+      summary: Obtenir les détails d’une invitation
       tags: [Invitations]
       parameters:
         - name: idInvitation
@@ -94,12 +96,12 @@ paths:
 
 
   # -------------------------------------------------------
-  # VALIDATION DES INVITATIONS
+  # VALIDATION D'INVITATION
   # -------------------------------------------------------
 
   /validation:
     get:
-      summary: Vérifier la validité d'une invitation
+      summary: Vérifier la validité d’une invitation
       tags: [Validation]
       parameters:
         - name: jeton
@@ -108,7 +110,7 @@ paths:
           schema:
             type: string
       description: >
-        Vérifie si une invitation est valide et non expirée.
+        Vérifie si une invitation est valide, active, et non expirée.
       responses:
         '200':
           description: Invitation valide
@@ -117,18 +119,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/ReponseValidationInvitation'
         '404':
-          description: Jeton introuvable
+          description: Jeton invalide ou introuvable
         '410':
           description: Invitation expirée
 
 
   # -------------------------------------------------------
-  # SUIVI DES INVITATIONS
+  # SUIVI DU CYCLE DE VIE D'UNE INVITATION
   # -------------------------------------------------------
 
   /suivi/{jeton}:
     get:
-      summary: Suivre l'état d'une invitation
+      summary: Suivre l’état d’une invitation
       tags: [Suivi]
       parameters:
         - name: jeton
@@ -175,7 +177,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Statistiques des invitations créées par cet utilisateur
+          description: Statistiques des invitations créées par l’utilisateur
           content:
             application/json:
               schema:
@@ -190,6 +192,7 @@ components:
 
   schemas:
 
+    # Nouveau schéma simplifié
     DemandeCreationInvitation:
       type: object
       required: [idEnvoyeur, roleEnvoyeur]
@@ -199,10 +202,6 @@ components:
         roleEnvoyeur:
           type: string
           enum: [ETUDIANT, ALUMNI, ADMIN]
-        messagePersonnel:
-          type: string
-          nullable: true
-          example: "Je t’invite à rejoindre notre réseau Alumni."
 
     Invitation:
       type: object
@@ -218,7 +217,7 @@ components:
           type: string
         urlInvitation:
           type: string
-          example: "https://alumni.com/invitation/valider?jeton=ABC123"
+          example: "https://alumni.com/invitation/valider?jeton=XYZ123"
         etat:
           type: string
           enum:
@@ -252,9 +251,7 @@ components:
         etat:
           type: string
           enum:
-            - EN_ATTENTE_PARTAGE
-            - OUVERTE
-            - INSCRIPTION_INITIEE
+            - EN_ATTENTE
             - ACCEPTEE
             - EXPIREE
         dateOuverture:
@@ -278,7 +275,6 @@ components:
         tauxConversion:
           type: number
           format: float
-          description: Pourcentage d'invitations acceptées
         topEnvoyeurs:
           type: array
           items:

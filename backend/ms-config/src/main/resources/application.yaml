@@ -5,11 +5,18 @@ spring:
   application:
     name: ms-config
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+
   cloud:
     config:
       server:
         git:
-          uri: https://github.com/eadarak00/gestion-alumni-config   # URL du dépôt distant
+          uri: file:///app/contracts   # Dossier local des configurations
           default-label: main                                        # branche par défaut
           clone-on-start: true                                       # clone au démarrage
           force-pull: true                                           # récupère les dernières modifs
