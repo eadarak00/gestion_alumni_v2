@@ -387,6 +387,10 @@ paths:
       responses:
         '200':
           description: Profil alumni complété avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniResponseDTO'
         '400':
           description: Utilisateur non alumni ou données invalides
         '401':
