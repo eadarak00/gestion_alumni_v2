@@ -6,6 +6,7 @@
 package uasz.alumni.spi.api;
 
 import uasz.alumni.spi.model.AlumniProfilRequestDTO;
+import uasz.alumni.spi.model.AlumniResponseDTO;
 import uasz.alumni.spi.model.EtudiantProfilRequestDTO;
 import uasz.alumni.spi.model.EtudiantResponseDTO;
 import uasz.alumni.spi.model.GetAllUtilisateursFiltered200Response;
@@ -36,7 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-14T12:08:56.581022065Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-14T12:16:44.564048861Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Utilisateurs", description = "API pour gérer les utilisateurs")
 public interface UtilisateursApi {
@@ -57,7 +58,9 @@ public interface UtilisateursApi {
         description = "Permet à l'utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. ",
         tags = { "Utilisateurs" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Profil alumni complété avec succès"),
+            @ApiResponse(responseCode = "200", description = "Profil alumni complété avec succès", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AlumniResponseDTO.class))
+            }),
             @ApiResponse(responseCode = "400", description = "Utilisateur non alumni ou données invalides"),
             @ApiResponse(responseCode = "401", description = "Non authentifié"),
             @ApiResponse(responseCode = "403", description = "Accès interdit")
@@ -69,10 +72,11 @@ public interface UtilisateursApi {
     @RequestMapping(
         method = RequestMethod.PUT,
         value = "/utilisateurs/completer-profil/alumni",
+        produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Void> completerProfilAlumni(
+    ResponseEntity<AlumniResponseDTO> completerProfilAlumni(
         @Parameter(name = "AlumniProfilRequestDTO", description = "", required = true) @Valid @RequestBody AlumniProfilRequestDTO alumniProfilRequestDTO
     );
 

@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import uasz.alumni.ms_user.services.UtilisateurService;
 import uasz.alumni.spi.api.UtilisateursApi;
 import uasz.alumni.spi.model.AlumniProfilRequestDTO;
-import uasz.alumni.spi.model.AlumniResponseDTO;
 import uasz.alumni.spi.model.EtudiantProfilRequestDTO;
 import uasz.alumni.spi.model.EtudiantResponseDTO;
 import uasz.alumni.spi.model.GetAllUtilisateursFiltered200Response;
@@ -49,15 +48,16 @@ public class UtilisateurController implements UtilisateursApi {
     }
 
     @Override
-    public ResponseEntity<AlumniResponseDTO> completerProfilAlumni(Long id, @Valid AlumniProfilRequestDTO dto) {
-        return ResponseEntity.ok(utilisateurService.completerProfilAlumni(id, dto));
+    public ResponseEntity<Void> completerProfilAlumni(@Valid AlumniProfilRequestDTO arg0) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'completerProfilAlumni'");
     }
 
     @Override
-    public ResponseEntity<EtudiantResponseDTO> completerProfilEtudiant(Long id,
-            @Valid EtudiantProfilRequestDTO dto) {
-
-        return ResponseEntity.ok(utilisateurService.completerProfilEtudiant(id, dto));
-
+    public ResponseEntity<EtudiantResponseDTO> completerProfilEtudiant(@Valid EtudiantProfilRequestDTO arg0) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'completerProfilEtudiant'");
     }
+
+
 }
