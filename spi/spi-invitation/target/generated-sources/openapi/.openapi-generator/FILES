@@ -1,0 +1,14 @@
+.openapi-generator-ignore
+README.md
+pom.xml
+src/main/java/uasz/alumni/spi/api/ApiUtil.java
+src/main/java/uasz/alumni/spi/api/InvitationsApi.java
+src/main/java/uasz/alumni/spi/api/StatistiquesApi.java
+src/main/java/uasz/alumni/spi/api/SuiviApi.java
+src/main/java/uasz/alumni/spi/api/ValidationApi.java
+src/main/java/uasz/alumni/spi/model/DemandeCreationInvitation.java
+src/main/java/uasz/alumni/spi/model/Invitation.java
+src/main/java/uasz/alumni/spi/model/ReponseValidationInvitation.java
+src/main/java/uasz/alumni/spi/model/StatistiquesInvitation.java
+src/main/java/uasz/alumni/spi/model/StatistiquesInvitationTopEnvoyeursInner.java
+src/main/java/uasz/alumni/spi/model/SuiviInvitation.java

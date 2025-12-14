@@ -1,31 +1,26 @@
+# backend/ms-gateway/Dockerfile
+
 # Stage 1: Build
-FROM maven:3.9.9-amazoncorretto-17 AS build
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
-# Copy only pom for faster caching
+# Optimisation du cache des dépendances
 COPY pom.xml .
+#RUN mvn dependency:go-offline -B
 
-# Use a stable, retry-enabled offline preparation
-RUN mvn -B -e -U dependency:go-offline \
-    -Dmaven.wagon.http.retryHandler.count=10 \
-    -Dmaven.wagon.http.pool=false \
-    -Dmaven.wagon.httpconnectionManager.ttlSeconds=1200 \
-    -Dmaven.wagon.rto=100000
-
-# Copy project source
+# Copie des sources et build
 COPY src ./src
-
-# Build the application (with retry)
-RUN mvn clean package -DskipTests -B \
-    -Dmaven.wagon.http.retryHandler.count=10 \
-    -Dmaven.wagon.rto=100000
+RUN mvn clean package -DskipTests
 
 # Stage 2: Run
-FROM amazoncorretto:17
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Copy executable JAR
+# Copier le JAR final
 COPY --from=build /app/target/*.jar app.jar
 
+# Exposer le port
 EXPOSE 8088
+
+# Lancer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]

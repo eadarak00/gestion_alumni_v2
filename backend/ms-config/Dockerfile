@@ -6,7 +6,8 @@ WORKDIR /app
 
 # Optimisation du cache des dépendances
 COPY pom.xml .
-RUN mvn dependency:go-offline -B -Dmaven.wagon.http.retryHandler.count=5 -Dmaven.wagon.httpconnectionManager.ttlSeconds=600
+#RUN mvn dependency:go-offline -B
+
 # Copie des sources et build
 COPY src ./src
 RUN mvn clean package -DskipTests
@@ -17,9 +18,6 @@ WORKDIR /app
 
 # Copier le JAR final
 COPY --from=build /app/target/*.jar app.jar
-
-# Copier les configurations
-COPY contracts ./contracts
 
 # Exposer le port
 EXPOSE 8888
