@@ -7,10 +7,17 @@ src/main/java/uasz/alumni/spi/api/AuthApi.java
 src/main/java/uasz/alumni/spi/api/RolesApi.java
 src/main/java/uasz/alumni/spi/api/UtilisateursApi.java
 src/main/java/uasz/alumni/spi/api/ValidationApi.java
+src/main/java/uasz/alumni/spi/model/AlumniProfilRequestDTO.java
 src/main/java/uasz/alumni/spi/model/AlumniRequestDTO.java
 src/main/java/uasz/alumni/spi/model/AlumniResponseDTO.java
 src/main/java/uasz/alumni/spi/model/CodeValidationCheckDTO.java
 src/main/java/uasz/alumni/spi/model/CodeValidationRequestDTO.java
+src/main/java/uasz/alumni/spi/model/CompleterProfilAlumni400Response.java
+src/main/java/uasz/alumni/spi/model/CompleterProfilAlumni404Response.java
+src/main/java/uasz/alumni/spi/model/CompleterProfilAlumni500Response.java
+src/main/java/uasz/alumni/spi/model/CompleterProfilEtudiant400Response.java
+src/main/java/uasz/alumni/spi/model/CompleterProfilEtudiant404Response.java
+src/main/java/uasz/alumni/spi/model/EtudiantProfilRequestDTO.java
 src/main/java/uasz/alumni/spi/model/EtudiantRequestDTO.java
 src/main/java/uasz/alumni/spi/model/EtudiantResponseDTO.java
 src/main/java/uasz/alumni/spi/model/GetAllUtilisateursFiltered200Response.java

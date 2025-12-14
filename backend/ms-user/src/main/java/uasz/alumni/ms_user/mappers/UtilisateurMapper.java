@@ -2,7 +2,11 @@ package uasz.alumni.ms_user.mappers;
 
 import org.springframework.stereotype.Component;
 
+import uasz.alumni.ms_user.entities.Alumni;
+import uasz.alumni.ms_user.entities.Etudiant;
 import uasz.alumni.ms_user.entities.Utilisateur;
+import uasz.alumni.spi.model.AlumniResponseDTO;
+import uasz.alumni.spi.model.EtudiantResponseDTO;
 import uasz.alumni.spi.model.UtilisateurRequestDTO;
 import uasz.alumni.spi.model.UtilisateurResponseDTO;
 
@@ -35,5 +39,45 @@ public class UtilisateurMapper {
         utilisateur.setTelephone(dto.getTelephone());
         utilisateur.setActif(false);
         return utilisateur;
+    }
+
+    // ================= Etudiant =================
+    public EtudiantResponseDTO toEtudiantDto(Etudiant etudiant) {
+        if (etudiant == null) return null;
+
+        EtudiantResponseDTO dto = new EtudiantResponseDTO();
+        dto.setId(etudiant.getId());
+        dto.setNom(etudiant.getNom());
+        dto.setPrenom(etudiant.getPrenom());
+        dto.setEmail(etudiant.getEmail());
+        dto.setUsername(etudiant.getUsername());
+        dto.setTelephone(etudiant.getTelephone());
+        dto.setNumeroCarteEtudiant(etudiant.getNumeroCarteEtudiant());
+        dto.setFiliere(etudiant.getFiliere());
+        dto.setNiveau(etudiant.getNiveau());
+        dto.setActif(etudiant.isActif());
+        dto.setDeleted(etudiant.isDeleted());
+        dto.setRole(etudiant.getRole().getLibelle());
+
+        return dto;
+    }
+
+    public AlumniResponseDTO toAlumniDto(Alumni alumni) {
+        if (alumni == null) return null;
+
+        AlumniResponseDTO dto = new AlumniResponseDTO();
+        dto.setId(alumni.getId());
+        dto.setNom(alumni.getNom());
+        dto.setPrenom(alumni.getPrenom());
+        dto.setEmail(alumni.getEmail());
+        dto.setUsername(alumni.getUsername());
+        dto.setTelephone(alumni.getTelephone());
+        dto.setProfession(alumni.getProfession());
+        dto.setEntreprise(alumni.getEntreprise());
+        dto.setActif(alumni.isActif());
+        dto.setDeleted(alumni.isDeleted());
+        dto.setRole(alumni.getRole().getLibelle());
+
+        return dto;
     }
 }

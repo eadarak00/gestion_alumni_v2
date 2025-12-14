@@ -385,62 +385,173 @@ paths:
       tags:
         - Utilisateurs
       summary: Compléter le profil d’un alumni
-      description: Ajoute les informations spécifiques à un alumni après l'inscription.
+      description: >
+        Permet à un utilisateur inscrit avec le rôle "ALUMNI" de compléter son profil en ajoutant
+        les informations spécifiques à son rôle : `profession` et `entreprise`.
+        Cette opération ne peut être effectuée que par un alumni déjà existant.
       operationId: completerProfilAlumni
       parameters:
         - name: id
           in: path
+          description: Identifiant unique de l'utilisateur à mettre à jour
           required: true
           schema:
             type: integer
+            format: int64
+            example: 124
       requestBody:
+        description: Informations spécifiques à l'alumni à compléter
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AlumniProfilRequestDTO'
+            examples:
+              exemple1:
+                summary: Profil complet pour un alumni
+                value:
+                  profession: "Data Scientist"
+                  entreprise: "Sonatel"
       responses:
         '200':
-          description: Profil alumni complété
+          description: Profil alumni complété avec succès
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AlumniResponseDTO'
+              examples:
+                exemple1:
+                  summary: Alumni mis à jour
+                  value:
+                    id: 124
+                    nom: Sow
+                    prenom: Aïssatou
+                    email: aissatou.sow@alumni.uasz.sn
+                    username: asow
+                    telephone: "+221781234568"
+                    profession: "Data Scientist"
+                    entreprise: "Sonatel"
+                    actif: true
+                    role: "ALUMNI"
+                    deleted: false
         '400':
-          description: Données invalides
+          description: Données invalides ou manquantes dans la requête
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Le champ profession est obligatoire."
         '404':
           description: Utilisateur non trouvé ou n'est pas un alumni
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Utilisateur avec l'id 124 non trouvé ou n'est pas un alumni."
+        '500':
+          description: Erreur serveur inattendue
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Erreur interne du serveur."
 
   /utilisateurs/{id}/completer-profil/etudiant:
     put:
       tags:
         - Utilisateurs
       summary: Compléter le profil d’un étudiant
-      description: Ajoute les informations spécifiques à un étudiant après l'inscription.
+      description: >
+        Permet à un utilisateur inscrit avec le rôle "ETUDIANT" de compléter son profil en ajoutant
+        les informations spécifiques à son rôle : `numeroCarteEtudiant`, `filiere` et `niveau`.
+        Cette opération ne peut être effectuée que par un étudiant déjà existant.
       operationId: completerProfilEtudiant
       parameters:
         - name: id
           in: path
+          description: Identifiant unique de l'utilisateur à mettre à jour
           required: true
           schema:
             type: integer
+            format: int64
+            example: 123
       requestBody:
+        description: Informations spécifiques à l'étudiant à compléter
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/EtudiantProfilRequestDTO'
+            examples:
+              exemple1:
+                summary: Profil complet pour un étudiant
+                value:
+                  numeroCarteEtudiant: "ETU123456"
+                  filiere: "Informatique"
+                  niveau: "MASTER"
       responses:
         '200':
-          description: Profil étudiant complété
+          description: Profil étudiant complété avec succès
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/EtudiantResponseDTO'
+              examples:
+                exemple1:
+                  summary: Étudiant mis à jour
+                  value:
+                    id: 123
+                    nom: Diallo
+                    prenom: Mamadou
+                    email: mamadou.diallo@uasz.sn
+                    username: mdiallo
+                    telephone: "+221781234567"
+                    numeroCarteEtudiant: "ETU123456"
+                    filiere: "Informatique"
+                    niveau: "MASTER"
+                    actif: true
+                    role: "ETUDIANT"
+                    deleted: false
         '400':
-          description: Données invalides
+          description: Données invalides ou manquantes dans la requête
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Le champ numeroCarteEtudiant est obligatoire."
         '404':
           description: Utilisateur non trouvé ou n'est pas un étudiant
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Utilisateur avec l'id 123 non trouvé ou n'est pas un étudiant."
+        '500':
+          description: Erreur serveur inattendue
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Erreur interne du serveur."
+
 
 
   # ==================== VALIDATION ====================
@@ -666,8 +777,9 @@ components:
           example: "+221781234567"
         numeroCarteEtudiant:
           type: string
-          description: Numéro de carte étudiant
-          example: "ETU123456"
+          description: Numéro de carte étudiant (8 à 10 chiffres)
+          pattern: '^\d{8,10}$'
+          example: "12345678"
         niveau:
           type: string
           description: Niveau d'études
@@ -731,10 +843,17 @@ components:
       properties:
         numeroEtudiant:
           type: string
+          description: Numéro de carte étudiant (8 à 10 chiffres)
+          pattern: '^\d{8,10}$'
+          example: "12345678"
         filiere:
           type: string
+          description: Filière d'études
+          example: "Informatique"
         niveau:
           type: string
+          description: Niveau d'études
+          example: "MASTER"
 
 
     # ==================== ALUMNI ====================

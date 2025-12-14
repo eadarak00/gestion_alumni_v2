@@ -4,10 +4,17 @@
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/api/RolesApi.java
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/api/UtilisateursApi.java
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/api/ValidationApi.java
+/home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/AlumniProfilRequestDTO.java
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/AlumniRequestDTO.java
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/AlumniResponseDTO.java
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/CodeValidationCheckDTO.java
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/CodeValidationRequestDTO.java
+/home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/CompleterProfilAlumni400Response.java
+/home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/CompleterProfilAlumni404Response.java
+/home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/CompleterProfilAlumni500Response.java
+/home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/CompleterProfilEtudiant400Response.java
+/home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/CompleterProfilEtudiant404Response.java
+/home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/EtudiantProfilRequestDTO.java
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/EtudiantRequestDTO.java
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/EtudiantResponseDTO.java
 /home/eadarak/projets/gestion_alumni/spi/spi-user/target/generated-sources/openapi/src/main/java/uasz/alumni/spi/model/GetAllUtilisateursFiltered200Response.java
