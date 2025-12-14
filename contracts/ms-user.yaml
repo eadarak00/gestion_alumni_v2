@@ -121,7 +121,6 @@ paths:
           description: Données invalides
         '409':
           description: Email, username ou numéro de carte déjà utilisé
-    
 
   # ==================== RÔLES ====================
   /roles:
@@ -140,7 +139,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RoleResponseDTO'
-
     post:
       tags:
         - Rôles
@@ -188,7 +186,6 @@ paths:
                 $ref: '#/components/schemas/RoleResponseDTO'
         '404':
           description: Rôle non trouvé
-
     put:
       tags:
         - Rôles
@@ -219,7 +216,6 @@ paths:
           description: Données invalides
         '404':
           description: Rôle non trouvé
-
     delete:
       tags:
         - Rôles
@@ -245,11 +241,10 @@ paths:
       tags:
         - Utilisateurs
       summary: Lister et filtrer les utilisateurs
-      description: >
+      description: |
         Permet de lister les utilisateurs avec pagination, filtre par actif et filtre par suppression (soft delete).
       operationId: getAllUtilisateursFiltered
       parameters:
-
         - name: actif
           in: query
           description: Filtre sur l'état d'activation du compte
@@ -257,7 +252,6 @@ paths:
           schema:
             type: boolean
           example: true
-
         - name: deleted
           in: query
           description: Filtre sur l'état de suppression logique (soft delete)
@@ -265,7 +259,6 @@ paths:
           schema:
             type: boolean
           example: false
-
         - name: page
           in: query
           required: false
@@ -273,7 +266,6 @@ paths:
             type: integer
             minimum: 0
           example: 0
-
         - name: size
           in: query
           required: false
@@ -281,15 +273,13 @@ paths:
             type: integer
             minimum: 1
           example: 10
-
         - name: sort
           in: query
-          description: "Format: champ,ordre (asc|desc)"
+          description: 'Format: champ,ordre (asc|desc)'
           required: false
           schema:
             type: string
           example: nom,asc
-
       responses:
         '200':
           description: Résultats de la recherche filtrée
@@ -301,7 +291,7 @@ paths:
                   content:
                     type: array
                     items:
-                      $ref: "#/components/schemas/UtilisateurResponseDTO"
+                      $ref: '#/components/schemas/UtilisateurResponseDTO'
                   totalElements:
                     type: integer
                   totalPages:
@@ -310,8 +300,6 @@ paths:
                     type: integer
                   number:
                     type: integer
-
-
 
   /utilisateurs/email/{email}:
     get:
@@ -380,112 +368,43 @@ paths:
               schema:
                 type: boolean
 
-  /utilisateurs/{id}/completer-profil/alumni:
+  /utilisateurs/completer-profil/alumni:
     put:
       tags:
         - Utilisateurs
-      summary: Compléter le profil d’un alumni
-      description: >
-        Permet à un utilisateur inscrit avec le rôle "ALUMNI" de compléter son profil en ajoutant
-        les informations spécifiques à son rôle : `profession` et `entreprise`.
-        Cette opération ne peut être effectuée que par un alumni déjà existant.
+      summary: Compléter son profil alumni
+      description: |
+        Permet à l'utilisateur connecté ayant le rôle ALUMNI
+        de compléter son profil avec les informations spécifiques :
+        profession et entreprise.
       operationId: completerProfilAlumni
-      parameters:
-        - name: id
-          in: path
-          description: Identifiant unique de l'utilisateur à mettre à jour
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 124
       requestBody:
-        description: Informations spécifiques à l'alumni à compléter
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AlumniProfilRequestDTO'
-            examples:
-              exemple1:
-                summary: Profil complet pour un alumni
-                value:
-                  profession: "Data Scientist"
-                  entreprise: "Sonatel"
       responses:
         '200':
           description: Profil alumni complété avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AlumniResponseDTO'
-              examples:
-                exemple1:
-                  summary: Alumni mis à jour
-                  value:
-                    id: 124
-                    nom: Sow
-                    prenom: Aïssatou
-                    email: aissatou.sow@alumni.uasz.sn
-                    username: asow
-                    telephone: "+221781234568"
-                    profession: "Data Scientist"
-                    entreprise: "Sonatel"
-                    actif: true
-                    role: "ALUMNI"
-                    deleted: false
         '400':
-          description: Données invalides ou manquantes dans la requête
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Le champ profession est obligatoire."
-        '404':
-          description: Utilisateur non trouvé ou n'est pas un alumni
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Utilisateur avec l'id 124 non trouvé ou n'est pas un alumni."
-        '500':
-          description: Erreur serveur inattendue
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Erreur interne du serveur."
+          description: Utilisateur non alumni ou données invalides
+        '401':
+          description: Non authentifié
+        '403':
+          description: Accès interdit
 
-  /utilisateurs/{id}/completer-profil/etudiant:
+  /utilisateurs/completer-profil/etudiant:
     put:
       tags:
         - Utilisateurs
-      summary: Compléter le profil d’un étudiant
-      description: >
-        Permet à un utilisateur inscrit avec le rôle "ETUDIANT" de compléter son profil en ajoutant
-        les informations spécifiques à son rôle : `numeroCarteEtudiant`, `filiere` et `niveau`.
-        Cette opération ne peut être effectuée que par un étudiant déjà existant.
+      summary: Compléter son profil étudiant
+      description: |
+        Permet à l'utilisateur connecté ayant le rôle ETUDIANT
+        de compléter son profil avec les informations spécifiques :
+        numeroCarteEtudiant, filiere et niveau.
       operationId: completerProfilEtudiant
-      parameters:
-        - name: id
-          in: path
-          description: Identifiant unique de l'utilisateur à mettre à jour
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 123
       requestBody:
-        description: Informations spécifiques à l'étudiant à compléter
         required: true
         content:
           application/json:
@@ -495,9 +414,9 @@ paths:
               exemple1:
                 summary: Profil complet pour un étudiant
                 value:
-                  numeroCarteEtudiant: "ETU123456"
-                  filiere: "Informatique"
-                  niveau: "MASTER"
+                  numeroCarteEtudiant: 'ETU123456'
+                  filiere: Informatique
+                  niveau: MASTER
       responses:
         '200':
           description: Profil étudiant complété avec succès
@@ -505,54 +424,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EtudiantResponseDTO'
-              examples:
-                exemple1:
-                  summary: Étudiant mis à jour
-                  value:
-                    id: 123
-                    nom: Diallo
-                    prenom: Mamadou
-                    email: mamadou.diallo@uasz.sn
-                    username: mdiallo
-                    telephone: "+221781234567"
-                    numeroCarteEtudiant: "ETU123456"
-                    filiere: "Informatique"
-                    niveau: "MASTER"
-                    actif: true
-                    role: "ETUDIANT"
-                    deleted: false
         '400':
-          description: Données invalides ou manquantes dans la requête
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Le champ numeroCarteEtudiant est obligatoire."
-        '404':
-          description: Utilisateur non trouvé ou n'est pas un étudiant
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Utilisateur avec l'id 123 non trouvé ou n'est pas un étudiant."
-        '500':
-          description: Erreur serveur inattendue
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Erreur interne du serveur."
-
-
+          description: Utilisateur non étudiant ou données invalides
+        '401':
+          description: Non authentifié
+        '403':
+          description: Accès interdit
 
   # ==================== VALIDATION ====================
   /validation/envoyer:
@@ -602,13 +479,14 @@ paths:
             application/json:
               schema:
                 type: string
+
   # ==================== RECHERCHE ====================
   /alumni/search:
     get:
       tags:
         - Alumnis
       summary: Recherche avancée des alumni
-      description: >
+      description: |
         Permet de rechercher des alumni à l'aide de filtres optionnels
         par entreprise et profession.
       operationId: searchAlumni
@@ -621,7 +499,7 @@ paths:
             type: string
         - name: profession
           in: query
-          description: "Profession actuelle de l'alumni (ex: Data Scientist, Médecin...)"
+          description: 'Profession actuelle de l''alumni (ex: Data Scientist, Médecin...)'
           required: false
           schema:
             type: string
@@ -638,7 +516,6 @@ paths:
           description: Requête invalide
         '500':
           description: Erreur interne du serveur
-
 
 components:
   schemas:
@@ -729,12 +606,11 @@ components:
           type: string
           description: Numéro de téléphone (format Sénégal)
           pattern: '^(\+221|00221)?7[015678]\d{7}$'
-          example: "+221781234567"
+          example: '+221781234567'
         role:
           type: string
           description: Rôle de l'utilisateur
-          example: "ETUDIANT"
-    
+          example: ETUDIANT
 
     # ==================== ÉTUDIANT ====================
     EtudiantRequestDTO:
@@ -774,20 +650,20 @@ components:
           type: string
           description: Numéro de téléphone (format Sénégal)
           pattern: '^(\+221|00221)?7[015678]\d{7}$'
-          example: "+221781234567"
+          example: '+221781234567'
         numeroCarteEtudiant:
           type: string
           description: Numéro de carte étudiant (8 à 10 chiffres)
           pattern: '^\d{8,10}$'
-          example: "12345678"
+          example: '12345678'
         niveau:
           type: string
           description: Niveau d'études
-          example: "MASTER"
+          example: MASTER
         filiere:
           type: string
           description: Filière d'études
-          example: "Informatique"
+          example: Informatique
 
     EtudiantResponseDTO:
       type: object
@@ -811,16 +687,16 @@ components:
           example: mdiallo
         telephone:
           type: string
-          example: "+221781234567"
+          example: '+221781234567'
         numeroCarteEtudiant:
           type: string
-          example: "ETU123456"
+          example: ETU123456
         niveau:
           type: string
-          example: "MASTER"
+          example: MASTER
         filiere:
           type: string
-          example: "Informatique"
+          example: Informatique
         actif:
           type: boolean
           description: Indique si le compte est actif
@@ -828,12 +704,12 @@ components:
         role:
           type: string
           description: Rôle de l'utilisateur
-          example: "ETUDIANT"
+          example: ETUDIANT
         deleted:
           type: boolean
           description: Indique si le compte est supprimé
           example: false
-    
+
     EtudiantProfilRequestDTO:
       type: object
       required:
@@ -845,16 +721,15 @@ components:
           type: string
           description: Numéro de carte étudiant (8 à 10 chiffres)
           pattern: '^\d{8,10}$'
-          example: "12345678"
+          example: '12345678'
         filiere:
           type: string
           description: Filière d'études
-          example: "Informatique"
+          example: Informatique
         niveau:
           type: string
           description: Niveau d'études
-          example: "MASTER"
-
+          example: MASTER
 
     # ==================== ALUMNI ====================
     AlumniRequestDTO:
@@ -892,15 +767,15 @@ components:
           type: string
           description: Numéro de téléphone (format Sénégal)
           pattern: '^(\+221|00221)?7[015678]\d{7}$'
-          example: "+221781234568"
+          example: '+221781234568'
         profession:
           type: string
           description: Profession actuelle
-          example: "Data Scientist"
+          example: Data Scientist
         entreprise:
           type: string
           description: Entreprise actuelle
-          example: "Sonatel"
+          example: Sonatel
 
     AlumniResponseDTO:
       type: object
@@ -924,13 +799,13 @@ components:
           example: asow
         telephone:
           type: string
-          example: "+221781234568"
+          example: '+221781234568'
         profession:
           type: string
-          example: "Data Scientist"
+          example: Data Scientist
         entreprise:
           type: string
-          example: "Sonatel"
+          example: Sonatel
         actif:
           type: boolean
           description: Indique si le compte est actif
@@ -938,7 +813,7 @@ components:
         role:
           type: string
           description: Rôle de l'utilisateur
-          example: "ALUMNI"
+          example: ALUMNI
         deleted:
           type: boolean
           description: Indique si le compte est supprimé
@@ -1003,7 +878,7 @@ components:
           example: mamadou.diallo@uasz.sn
         telephone:
           type: string
-          example: "+221781234567"
+          example: '+221781234567'
         username:
           type: string
           example: mdiallo
@@ -1046,7 +921,7 @@ components:
         code:
           type: string
           description: Code de validation reçu par email
-          example: "123456"
+          example: '123456'
 
   securitySchemes:
     bearerAuth:
