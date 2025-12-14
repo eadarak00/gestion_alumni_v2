@@ -6,12 +6,6 @@
 package uasz.alumni.spi.api;
 
 import uasz.alumni.spi.model.AlumniProfilRequestDTO;
-import uasz.alumni.spi.model.AlumniResponseDTO;
-import uasz.alumni.spi.model.CompleterProfilAlumni400Response;
-import uasz.alumni.spi.model.CompleterProfilAlumni404Response;
-import uasz.alumni.spi.model.CompleterProfilAlumni500Response;
-import uasz.alumni.spi.model.CompleterProfilEtudiant400Response;
-import uasz.alumni.spi.model.CompleterProfilEtudiant404Response;
 import uasz.alumni.spi.model.EtudiantProfilRequestDTO;
 import uasz.alumni.spi.model.EtudiantResponseDTO;
 import uasz.alumni.spi.model.GetAllUtilisateursFiltered200Response;
@@ -42,40 +36,31 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-08T16:20:02.280897137Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-14T12:08:56.581022065Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Utilisateurs", description = "API pour gérer les utilisateurs")
 public interface UtilisateursApi {
 
     /**
-     * PUT /utilisateurs/{id}/completer-profil/alumni : Compléter le profil d’un alumni
-     * Permet à un utilisateur inscrit avec le rôle \&quot;ALUMNI\&quot; de compléter son profil en ajoutant les informations spécifiques à son rôle : &#x60;profession&#x60; et &#x60;entreprise&#x60;. Cette opération ne peut être effectuée que par un alumni déjà existant. 
+     * PUT /utilisateurs/completer-profil/alumni : Compléter son profil alumni
+     * Permet à l&#39;utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. 
      *
-     * @param id Identifiant unique de l&#39;utilisateur à mettre à jour (required)
-     * @param alumniProfilRequestDTO Informations spécifiques à l&#39;alumni à compléter (required)
+     * @param alumniProfilRequestDTO  (required)
      * @return Profil alumni complété avec succès (status code 200)
-     *         or Données invalides ou manquantes dans la requête (status code 400)
-     *         or Utilisateur non trouvé ou n&#39;est pas un alumni (status code 404)
-     *         or Erreur serveur inattendue (status code 500)
+     *         or Utilisateur non alumni ou données invalides (status code 400)
+     *         or Non authentifié (status code 401)
+     *         or Accès interdit (status code 403)
      */
     @Operation(
         operationId = "completerProfilAlumni",
-        summary = "Compléter le profil d’un alumni",
-        description = "Permet à un utilisateur inscrit avec le rôle \"ALUMNI\" de compléter son profil en ajoutant les informations spécifiques à son rôle : `profession` et `entreprise`. Cette opération ne peut être effectuée que par un alumni déjà existant. ",
+        summary = "Compléter son profil alumni",
+        description = "Permet à l'utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. ",
         tags = { "Utilisateurs" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Profil alumni complété avec succès", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = AlumniResponseDTO.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Données invalides ou manquantes dans la requête", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CompleterProfilAlumni400Response.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé ou n'est pas un alumni", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CompleterProfilAlumni404Response.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Erreur serveur inattendue", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CompleterProfilAlumni500Response.class))
-            })
+            @ApiResponse(responseCode = "200", description = "Profil alumni complété avec succès"),
+            @ApiResponse(responseCode = "400", description = "Utilisateur non alumni ou données invalides"),
+            @ApiResponse(responseCode = "401", description = "Non authentifié"),
+            @ApiResponse(responseCode = "403", description = "Accès interdit")
         },
         security = {
             @SecurityRequirement(name = "bearerAuth")
@@ -83,46 +68,37 @@ public interface UtilisateursApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/utilisateurs/{id}/completer-profil/alumni",
-        produces = { "application/json" },
+        value = "/utilisateurs/completer-profil/alumni",
         consumes = { "application/json" }
     )
     
-    ResponseEntity<AlumniResponseDTO> completerProfilAlumni(
-        @Parameter(name = "id", description = "Identifiant unique de l'utilisateur à mettre à jour", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id,
-        @Parameter(name = "AlumniProfilRequestDTO", description = "Informations spécifiques à l'alumni à compléter", required = true) @Valid @RequestBody AlumniProfilRequestDTO alumniProfilRequestDTO
+    ResponseEntity<Void> completerProfilAlumni(
+        @Parameter(name = "AlumniProfilRequestDTO", description = "", required = true) @Valid @RequestBody AlumniProfilRequestDTO alumniProfilRequestDTO
     );
 
 
     /**
-     * PUT /utilisateurs/{id}/completer-profil/etudiant : Compléter le profil d’un étudiant
-     * Permet à un utilisateur inscrit avec le rôle \&quot;ETUDIANT\&quot; de compléter son profil en ajoutant les informations spécifiques à son rôle : &#x60;numeroCarteEtudiant&#x60;, &#x60;filiere&#x60; et &#x60;niveau&#x60;. Cette opération ne peut être effectuée que par un étudiant déjà existant. 
+     * PUT /utilisateurs/completer-profil/etudiant : Compléter son profil étudiant
+     * Permet à l&#39;utilisateur connecté ayant le rôle ETUDIANT de compléter son profil avec les informations spécifiques : numeroCarteEtudiant, filiere et niveau. 
      *
-     * @param id Identifiant unique de l&#39;utilisateur à mettre à jour (required)
-     * @param etudiantProfilRequestDTO Informations spécifiques à l&#39;étudiant à compléter (required)
+     * @param etudiantProfilRequestDTO  (required)
      * @return Profil étudiant complété avec succès (status code 200)
-     *         or Données invalides ou manquantes dans la requête (status code 400)
-     *         or Utilisateur non trouvé ou n&#39;est pas un étudiant (status code 404)
-     *         or Erreur serveur inattendue (status code 500)
+     *         or Utilisateur non étudiant ou données invalides (status code 400)
+     *         or Non authentifié (status code 401)
+     *         or Accès interdit (status code 403)
      */
     @Operation(
         operationId = "completerProfilEtudiant",
-        summary = "Compléter le profil d’un étudiant",
-        description = "Permet à un utilisateur inscrit avec le rôle \"ETUDIANT\" de compléter son profil en ajoutant les informations spécifiques à son rôle : `numeroCarteEtudiant`, `filiere` et `niveau`. Cette opération ne peut être effectuée que par un étudiant déjà existant. ",
+        summary = "Compléter son profil étudiant",
+        description = "Permet à l'utilisateur connecté ayant le rôle ETUDIANT de compléter son profil avec les informations spécifiques : numeroCarteEtudiant, filiere et niveau. ",
         tags = { "Utilisateurs" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Profil étudiant complété avec succès", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = EtudiantResponseDTO.class))
             }),
-            @ApiResponse(responseCode = "400", description = "Données invalides ou manquantes dans la requête", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CompleterProfilEtudiant400Response.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé ou n'est pas un étudiant", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CompleterProfilEtudiant404Response.class))
-            }),
-            @ApiResponse(responseCode = "500", description = "Erreur serveur inattendue", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CompleterProfilAlumni500Response.class))
-            })
+            @ApiResponse(responseCode = "400", description = "Utilisateur non étudiant ou données invalides"),
+            @ApiResponse(responseCode = "401", description = "Non authentifié"),
+            @ApiResponse(responseCode = "403", description = "Accès interdit")
         },
         security = {
             @SecurityRequirement(name = "bearerAuth")
@@ -130,14 +106,13 @@ public interface UtilisateursApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/utilisateurs/{id}/completer-profil/etudiant",
+        value = "/utilisateurs/completer-profil/etudiant",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
     ResponseEntity<EtudiantResponseDTO> completerProfilEtudiant(
-        @Parameter(name = "id", description = "Identifiant unique de l'utilisateur à mettre à jour", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id,
-        @Parameter(name = "EtudiantProfilRequestDTO", description = "Informations spécifiques à l'étudiant à compléter", required = true) @Valid @RequestBody EtudiantProfilRequestDTO etudiantProfilRequestDTO
+        @Parameter(name = "EtudiantProfilRequestDTO", description = "", required = true) @Valid @RequestBody EtudiantProfilRequestDTO etudiantProfilRequestDTO
     );
 
 
