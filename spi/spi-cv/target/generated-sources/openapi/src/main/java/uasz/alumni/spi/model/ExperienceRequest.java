@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * ExperienceRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class ExperienceRequest {
 
   private Integer cvId;
@@ -61,7 +61,7 @@ public class ExperienceRequest {
    * @return cvId
   */
   @NotNull 
-  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;
@@ -81,7 +81,7 @@ public class ExperienceRequest {
    * @return poste
   */
   @NotNull @Size(min = 2, max = 100) 
-  @Schema(name = "poste", example = "Développeur Full Stack", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "poste", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("poste")
   public String getPoste() {
     return poste;
@@ -101,7 +101,7 @@ public class ExperienceRequest {
    * @return entreprise
   */
   @NotNull @Size(min = 2, max = 100) 
-  @Schema(name = "entreprise", example = "TechCorp SARL", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "entreprise", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("entreprise")
   public String getEntreprise() {
     return entreprise;
@@ -121,7 +121,7 @@ public class ExperienceRequest {
    * @return localisation
   */
   @Size(max = 100) 
-  @Schema(name = "localisation", example = "Dakar, Sénégal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "localisation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("localisation")
   public String getLocalisation() {
     return localisation;
@@ -140,8 +140,8 @@ public class ExperienceRequest {
    * Get dateDebut
    * @return dateDebut
   */
-  @NotNull @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
-  @Schema(name = "dateDebut", example = "01/2022", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "dateDebut", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("dateDebut")
   public String getDateDebut() {
     return dateDebut;
@@ -160,8 +160,8 @@ public class ExperienceRequest {
    * Get dateFin
    * @return dateFin
   */
-  @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
-  @Schema(name = "dateFin", example = "12/2023", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "dateFin", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateFin")
   public String getDateFin() {
     return dateFin;
@@ -181,7 +181,7 @@ public class ExperienceRequest {
    * @return enCours
   */
   
-  @Schema(name = "enCours", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "enCours", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("enCours")
   public Boolean getEnCours() {
     return enCours;
@@ -201,7 +201,7 @@ public class ExperienceRequest {
    * @return description
   */
   @Size(max = 2000) 
-  @Schema(name = "description", example = "Développement d'applications web avec Spring Boot et Angular", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public String getDescription() {
     return description;

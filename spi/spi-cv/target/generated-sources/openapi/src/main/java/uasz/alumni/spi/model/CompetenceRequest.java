@@ -21,7 +21,7 @@ import jakarta.annotation.Generated;
  * CompetenceRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class CompetenceRequest {
 
   private Integer cvId;
@@ -55,7 +55,7 @@ public class CompetenceRequest {
    * @return cvId
   */
   @NotNull 
-  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;
@@ -75,7 +75,7 @@ public class CompetenceRequest {
    * @return nom
   */
   @NotNull @Size(min = 2, max = 100) 
-  @Schema(name = "nom", example = "Java", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "nom", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("nom")
   public String getNom() {
     return nom;

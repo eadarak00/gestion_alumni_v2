@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * FormationResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class FormationResponse {
 
   private Integer id;
@@ -57,7 +57,7 @@ public class FormationResponse {
    * @return id
   */
   
-  @Schema(name = "id", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public Integer getId() {
     return id;
@@ -77,7 +77,7 @@ public class FormationResponse {
    * @return cvId
   */
   
-  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;
@@ -97,7 +97,7 @@ public class FormationResponse {
    * @return diplome
   */
   
-  @Schema(name = "diplome", example = "Master en Génie Logiciel", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "diplome", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("diplome")
   public String getDiplome() {
     return diplome;
@@ -117,7 +117,7 @@ public class FormationResponse {
    * @return etablissement
   */
   
-  @Schema(name = "etablissement", example = "Université Assane Seck de Ziguinchor", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "etablissement", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("etablissement")
   public String getEtablissement() {
     return etablissement;
@@ -137,7 +137,7 @@ public class FormationResponse {
    * @return localisation
   */
   
-  @Schema(name = "localisation", example = "Ziguinchor, Sénégal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "localisation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("localisation")
   public String getLocalisation() {
     return localisation;
@@ -157,7 +157,7 @@ public class FormationResponse {
    * @return dateDebut
   */
   
-  @Schema(name = "dateDebut", example = "10/2020", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateDebut", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateDebut")
   public String getDateDebut() {
     return dateDebut;
@@ -177,7 +177,7 @@ public class FormationResponse {
    * @return dateFin
   */
   
-  @Schema(name = "dateFin", example = "07/2022", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateFin", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateFin")
   public String getDateFin() {
     return dateFin;
@@ -197,7 +197,7 @@ public class FormationResponse {
    * @return enCours
   */
   
-  @Schema(name = "enCours", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "enCours", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("enCours")
   public Boolean getEnCours() {
     return enCours;

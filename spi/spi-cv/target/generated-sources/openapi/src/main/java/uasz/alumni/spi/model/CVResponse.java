@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
  * CVResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class CVResponse {
 
   private Integer id;
@@ -65,7 +65,7 @@ public class CVResponse {
    * @return id
   */
   
-  @Schema(name = "id", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public Integer getId() {
     return id;
@@ -85,7 +85,7 @@ public class CVResponse {
    * @return titre
   */
   
-  @Schema(name = "titre", example = "Développeur Full Stack Java/Angular", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "titre", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("titre")
   public String getTitre() {
     return titre;
@@ -205,7 +205,7 @@ public class CVResponse {
    * @return telephone
   */
   
-  @Schema(name = "telephone", example = "+221771234567", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "telephone", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("telephone")
   public String getTelephone() {
     return telephone;
@@ -225,7 +225,7 @@ public class CVResponse {
    * @return email
   */
   
-  @Schema(name = "email", example = "john.doe@example.com", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("email")
   public String getEmail() {
     return email;
@@ -265,7 +265,7 @@ public class CVResponse {
    * @return utilisateurId
   */
   
-  @Schema(name = "utilisateurId", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "utilisateurId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("utilisateurId")
   public Integer getUtilisateurId() {
     return utilisateurId;

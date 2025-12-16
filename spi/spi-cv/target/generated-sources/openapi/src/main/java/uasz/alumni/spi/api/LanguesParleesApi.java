@@ -35,121 +35,41 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Langues Parlées", description = "Gestion des langues parlées")
 public interface LanguesParleesApi {
 
     /**
-     * GET /langues-parlees/cv/{cvId} : Récupérer toutes les langues parlées d&#39;un CV
+     * POST /langues-parlees : Créer une nouvelle langue parlée
      *
-     * @param cvId  (required)
-     * @return Liste des langues parlées (status code 200)
+     * @param langueParleesRequest  (required)
+     * @return Langue parlée créée (status code 201)
+     *         or Conflit - Ressource déjà existante (status code 409)
      */
     @Operation(
-        operationId = "languesParleesCvCvIdGet",
-        summary = "Récupérer toutes les langues parlées d'un CV",
+        operationId = "creerLangueParlees",
+        summary = "Créer une nouvelle langue parlée",
         tags = { "Langues Parlées" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Liste des langues parlées", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LangueParleesResponse.class)))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/langues-parlees/cv/{cvId}",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    List<LangueParleesResponse> languesParleesCvCvIdGet(
-        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
-    );
-
-
-    /**
-     * GET /langues-parlees/cv/{cvId}/niveau/{niveau} : Récupérer les langues parlées par niveau
-     *
-     * @param cvId  (required)
-     * @param niveau  (required)
-     * @return Liste des langues parlées (status code 200)
-     */
-    @Operation(
-        operationId = "languesParleesCvCvIdNiveauNiveauGet",
-        summary = "Récupérer les langues parlées par niveau",
-        tags = { "Langues Parlées" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Liste des langues parlées", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LangueParleesResponse.class)))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/langues-parlees/cv/{cvId}/niveau/{niveau}",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    List<LangueParleesResponse> languesParleesCvCvIdNiveauNiveauGet(
-        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId,
-        @Parameter(name = "niveau", description = "", required = true, in = ParameterIn.PATH) @PathVariable("niveau") NiveauLangue niveau
-    );
-
-
-    /**
-     * GET /langues-parlees/{id}/cv/{cvId} : Récupérer une langue parlée par ID et CV ID
-     *
-     * @param id  (required)
-     * @param cvId  (required)
-     * @return Langue parlée trouvée (status code 200)
-     */
-    @Operation(
-        operationId = "languesParleesIdCvCvIdGet",
-        summary = "Récupérer une langue parlée par ID et CV ID",
-        tags = { "Langues Parlées" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Langue parlée trouvée", content = {
+            @ApiResponse(responseCode = "201", description = "Langue parlée créée", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = LangueParleesResponse.class))
+            }),
+            @ApiResponse(responseCode = "409", description = "Conflit - Ressource déjà existante", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
         }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/langues-parlees/{id}/cv/{cvId}",
-        produces = { "application/json" }
+        method = RequestMethod.POST,
+        value = "/langues-parlees",
+        produces = { "application/json" },
+        consumes = { "application/json" }
     )
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     
-    LangueParleesResponse languesParleesIdCvCvIdGet(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
-    );
-
-
-    /**
-     * DELETE /langues-parlees/{id} : Supprimer une langue parlée
-     *
-     * @param id  (required)
-     * @return Langue parlée supprimée (status code 204)
-     */
-    @Operation(
-        operationId = "languesParleesIdDelete",
-        summary = "Supprimer une langue parlée",
-        tags = { "Langues Parlées" },
-        responses = {
-            @ApiResponse(responseCode = "204", description = "Langue parlée supprimée")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.DELETE,
-        value = "/langues-parlees/{id}"
-    )
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    
-    void languesParleesIdDelete(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
+    LangueParleesResponse creerLangueParlees(
+        @Parameter(name = "LangueParleesRequest", description = "", required = true) @Valid @RequestBody LangueParleesRequest langueParleesRequest
     );
 
 
@@ -160,7 +80,7 @@ public interface LanguesParleesApi {
      * @return Langue parlée trouvée (status code 200)
      */
     @Operation(
-        operationId = "languesParleesIdGet",
+        operationId = "getLangueParleesById",
         summary = "Récupérer une langue parlée par son ID",
         tags = { "Langues Parlées" },
         responses = {
@@ -176,7 +96,120 @@ public interface LanguesParleesApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    LangueParleesResponse languesParleesIdGet(
+    LangueParleesResponse getLangueParleesById(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
+    );
+
+
+    /**
+     * GET /langues-parlees/{id}/cv/{cvId} : Récupérer une langue parlée par ID et CV ID
+     *
+     * @param id  (required)
+     * @param cvId  (required)
+     * @return Langue parlée trouvée (status code 200)
+     */
+    @Operation(
+        operationId = "getLangueParleesByIdAndCvId",
+        summary = "Récupérer une langue parlée par ID et CV ID",
+        tags = { "Langues Parlées" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Langue parlée trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = LangueParleesResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/langues-parlees/{id}/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    LangueParleesResponse getLangueParleesByIdAndCvId(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /langues-parlees/cv/{cvId} : Récupérer toutes les langues parlées d&#39;un CV
+     *
+     * @param cvId  (required)
+     * @return Liste des langues parlées (status code 200)
+     */
+    @Operation(
+        operationId = "getLanguesParleesByCvId",
+        summary = "Récupérer toutes les langues parlées d'un CV",
+        tags = { "Langues Parlées" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des langues parlées", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LangueParleesResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/langues-parlees/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<LangueParleesResponse> getLanguesParleesByCvId(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /langues-parlees/cv/{cvId}/niveau/{niveau} : Récupérer les langues parlées par niveau
+     *
+     * @param cvId  (required)
+     * @param niveau  (required)
+     * @return Liste des langues parlées (status code 200)
+     */
+    @Operation(
+        operationId = "getLanguesParleesByNiveau",
+        summary = "Récupérer les langues parlées par niveau",
+        tags = { "Langues Parlées" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des langues parlées", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LangueParleesResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/langues-parlees/cv/{cvId}/niveau/{niveau}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<LangueParleesResponse> getLanguesParleesByNiveau(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId,
+        @Parameter(name = "niveau", description = "", required = true, in = ParameterIn.PATH) @PathVariable("niveau") NiveauLangue niveau
+    );
+
+
+    /**
+     * DELETE /langues-parlees/{id} : Supprimer une langue parlée
+     *
+     * @param id  (required)
+     * @return Langue parlée supprimée (status code 204)
+     */
+    @Operation(
+        operationId = "supprimerLangueParlees",
+        summary = "Supprimer une langue parlée",
+        tags = { "Langues Parlées" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "Langue parlée supprimée")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/langues-parlees/{id}"
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    
+    void supprimerLangueParlees(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
     );
 
@@ -189,7 +222,7 @@ public interface LanguesParleesApi {
      * @return Langue parlée mise à jour (status code 200)
      */
     @Operation(
-        operationId = "languesParleesIdPut",
+        operationId = "updateLangueParlees",
         summary = "Mettre à jour une langue parlée",
         tags = { "Langues Parlées" },
         responses = {
@@ -206,41 +239,8 @@ public interface LanguesParleesApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    LangueParleesResponse languesParleesIdPut(
+    LangueParleesResponse updateLangueParlees(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "LangueParleesRequest", description = "", required = true) @Valid @RequestBody LangueParleesRequest langueParleesRequest
-    );
-
-
-    /**
-     * POST /langues-parlees : Créer une nouvelle langue parlée
-     *
-     * @param langueParleesRequest  (required)
-     * @return Langue parlée créée (status code 201)
-     *         or Langue déjà existante (status code 409)
-     */
-    @Operation(
-        operationId = "languesParleesPost",
-        summary = "Créer une nouvelle langue parlée",
-        tags = { "Langues Parlées" },
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Langue parlée créée", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = LangueParleesResponse.class))
-            }),
-            @ApiResponse(responseCode = "409", description = "Langue déjà existante", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/langues-parlees",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.CREATED)
-    
-    LangueParleesResponse languesParleesPost(
         @Parameter(name = "LangueParleesRequest", description = "", required = true) @Valid @RequestBody LangueParleesRequest langueParleesRequest
     );
 

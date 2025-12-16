@@ -21,7 +21,7 @@ import jakarta.annotation.Generated;
  * LangueParleesRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class LangueParleesRequest {
 
   private Integer cvId;
@@ -53,7 +53,7 @@ public class LangueParleesRequest {
    * @return cvId
   */
   @NotNull 
-  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;

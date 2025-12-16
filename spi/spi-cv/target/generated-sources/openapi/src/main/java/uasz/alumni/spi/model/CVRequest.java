@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * CVRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class CVRequest {
 
   private String titre;
@@ -69,7 +69,7 @@ public class CVRequest {
    * @return titre
   */
   @NotNull @Size(min = 3, max = 100) 
-  @Schema(name = "titre", example = "Développeur Full Stack Java/Angular", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "titre", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("titre")
   public String getTitre() {
     return titre;
@@ -89,7 +89,7 @@ public class CVRequest {
    * @return resume
   */
   @Size(max = 2000) 
-  @Schema(name = "resume", example = "Développeur passionné avec 3 ans d'expérience en développement web et mobile", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "resume", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("resume")
   public String getResume() {
     return resume;
@@ -109,7 +109,7 @@ public class CVRequest {
    * @return photo
   */
   
-  @Schema(name = "photo", example = "https://example.com/photo.jpg", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "photo", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("photo")
   public String getPhoto() {
     return photo;
@@ -128,8 +128,8 @@ public class CVRequest {
    * Get linkedin
    * @return linkedin
   */
-  @Pattern(regexp = "^(https?://)?(www\\.)?linkedin\\.com/.*$") 
-  @Schema(name = "linkedin", example = "https://linkedin.com/in/johndoe", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "linkedin", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("linkedin")
   public String getLinkedin() {
     return linkedin;
@@ -148,8 +148,8 @@ public class CVRequest {
    * Get github
    * @return github
   */
-  @Pattern(regexp = "^(https?://)?(www\\.)?github\\.com/.*$") 
-  @Schema(name = "github", example = "https://github.com/johndoe", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "github", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("github")
   public String getGithub() {
     return github;
@@ -169,7 +169,7 @@ public class CVRequest {
    * @return portfolio
   */
   
-  @Schema(name = "portfolio", example = "https://johndoe.com", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "portfolio", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("portfolio")
   public String getPortfolio() {
     return portfolio;
@@ -188,8 +188,8 @@ public class CVRequest {
    * Get telephone
    * @return telephone
   */
-  @NotNull @Pattern(regexp = "^\\+221[0-9]{9}$") 
-  @Schema(name = "telephone", example = "+221771234567", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "telephone", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("telephone")
   public String getTelephone() {
     return telephone;
@@ -209,7 +209,7 @@ public class CVRequest {
    * @return email
   */
   @NotNull @Size(max = 100) @jakarta.validation.constraints.Email 
-  @Schema(name = "email", example = "john.doe@example.com", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "email", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("email")
   public String getEmail() {
     return email;
@@ -229,7 +229,7 @@ public class CVRequest {
    * @return adresse
   */
   @Size(max = 200) 
-  @Schema(name = "adresse", example = "Dakar, Sénégal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "adresse", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("adresse")
   public String getAdresse() {
     return adresse;
@@ -249,7 +249,7 @@ public class CVRequest {
    * @return utilisateurId
   */
   @NotNull 
-  @Schema(name = "utilisateurId", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "utilisateurId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("utilisateurId")
   public Integer getUtilisateurId() {
     return utilisateurId;

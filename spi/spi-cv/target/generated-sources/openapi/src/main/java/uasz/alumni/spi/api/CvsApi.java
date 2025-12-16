@@ -36,21 +36,56 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 @Validated
 @Tag(name = "CVs", description = "Gestion des CVs")
 public interface CvsApi {
 
     /**
+     * POST /cvs : Créer un nouveau CV
+     *
+     * @param cvRequest  (required)
+     * @return CV créé avec succès (status code 201)
+     *         or Données invalides (status code 400)
+     *         or Conflit - Ressource déjà existante (status code 409)
+     */
+    @Operation(
+        operationId = "creerCV",
+        summary = "Créer un nouveau CV",
+        tags = { "CVs" },
+        responses = {
+            @ApiResponse(responseCode = "201", description = "CV créé avec succès", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CVResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Données invalides", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "409", description = "Conflit - Ressource déjà existante", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/cvs",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    
+    CVResponse creerCV(
+        @Parameter(name = "CVRequest", description = "", required = true) @Valid @RequestBody CVRequest cvRequest
+    );
+
+
+    /**
      * GET /cvs : Récupérer tous les CVs
-     * Liste de tous les CVs
      *
      * @return Liste des CVs (status code 200)
      */
     @Operation(
-        operationId = "cvsGet",
+        operationId = "getAllCVs",
         summary = "Récupérer tous les CVs",
-        description = "Liste de tous les CVs",
         tags = { "CVs" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Liste des CVs", content = {
@@ -65,190 +100,23 @@ public interface CvsApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    List<CVResponse> cvsGet(
+    List<CVResponse> getAllCVs(
         
     );
 
 
     /**
-     * GET /cvs/{id}/complet : Récupérer un CV complet avec toutes ses sections
-     * Retourne un CV avec expériences, formations, compétences, langues et certifications
-     *
-     * @param id  (required)
-     * @return CV complet trouvé (status code 200)
-     *         or CV non trouvé (status code 404)
-     */
-    @Operation(
-        operationId = "cvsIdCompletGet",
-        summary = "Récupérer un CV complet avec toutes ses sections",
-        description = "Retourne un CV avec expériences, formations, compétences, langues et certifications",
-        tags = { "CVs" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "CV complet trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CVCompletResponse.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "CV non trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/cvs/{id}/complet",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    CVCompletResponse cvsIdCompletGet(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
-    );
-
-
-    /**
-     * DELETE /cvs/{id} : Supprimer un CV
-     *
-     * @param id  (required)
-     * @return CV supprimé (status code 204)
-     *         or CV non trouvé (status code 404)
-     */
-    @Operation(
-        operationId = "cvsIdDelete",
-        summary = "Supprimer un CV",
-        tags = { "CVs" },
-        responses = {
-            @ApiResponse(responseCode = "204", description = "CV supprimé"),
-            @ApiResponse(responseCode = "404", description = "CV non trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.DELETE,
-        value = "/cvs/{id}",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    
-    void cvsIdDelete(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
-    );
-
-
-    /**
-     * GET /cvs/{id} : Récupérer un CV par son ID
-     *
-     * @param id  (required)
-     * @return CV trouvé (status code 200)
-     *         or CV non trouvé (status code 404)
-     */
-    @Operation(
-        operationId = "cvsIdGet",
-        summary = "Récupérer un CV par son ID",
-        tags = { "CVs" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "CV trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CVResponse.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "CV non trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/cvs/{id}",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    CVResponse cvsIdGet(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
-    );
-
-
-    /**
-     * PUT /cvs/{id} : Mettre à jour un CV
-     *
-     * @param id  (required)
-     * @param cvRequest  (required)
-     * @return CV mis à jour (status code 200)
-     *         or CV non trouvé (status code 404)
-     */
-    @Operation(
-        operationId = "cvsIdPut",
-        summary = "Mettre à jour un CV",
-        tags = { "CVs" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "CV mis à jour", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CVResponse.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "CV non trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.PUT,
-        value = "/cvs/{id}",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    CVResponse cvsIdPut(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "CVRequest", description = "", required = true) @Valid @RequestBody CVRequest cvRequest
-    );
-
-
-    /**
-     * GET /cvs/{id}/utilisateur/{utilisateurId} : Récupérer un CV par ID et utilisateur (sécurité)
-     *
-     * @param id  (required)
-     * @param utilisateurId  (required)
-     * @return CV trouvé (status code 200)
-     *         or CV non trouvé (status code 404)
-     */
-    @Operation(
-        operationId = "cvsIdUtilisateurUtilisateurIdGet",
-        summary = "Récupérer un CV par ID et utilisateur (sécurité)",
-        tags = { "CVs" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "CV trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CVResponse.class))
-            }),
-            @ApiResponse(responseCode = "404", description = "CV non trouvé", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/cvs/{id}/utilisateur/{utilisateurId}",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    CVResponse cvsIdUtilisateurUtilisateurIdGet(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "utilisateurId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("utilisateurId") Integer utilisateurId
-    );
-
-
-    /**
      * GET /cvs/page : Récupérer les CVs avec pagination
-     * Liste paginée des CVs
      *
-     * @param page Numéro de la page (optional, default to 0)
-     * @param size Taille de la page (optional, default to 10)
-     * @param sortBy Champ de tri (optional, default to id)
-     * @param direction Direction du tri (optional, default to DESC)
+     * @param page  (optional, default to 0)
+     * @param size  (optional, default to 10)
+     * @param sortBy  (optional, default to id)
+     * @param direction  (optional, default to DESC)
      * @return Page de CVs (status code 200)
      */
     @Operation(
-        operationId = "cvsPageGet",
+        operationId = "getAllCVsPage",
         summary = "Récupérer les CVs avec pagination",
-        description = "Liste paginée des CVs",
         tags = { "CVs" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Page de CVs", content = {
@@ -263,50 +131,109 @@ public interface CvsApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    PageResponseCVResponse cvsPageGet(
-        @Parameter(name = "page", description = "Numéro de la page", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-        @Parameter(name = "size", description = "Taille de la page", in = ParameterIn.QUERY) @Valid @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-        @Parameter(name = "sortBy", description = "Champ de tri", in = ParameterIn.QUERY) @Valid @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
-        @Parameter(name = "direction", description = "Direction du tri", in = ParameterIn.QUERY) @Valid @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction
+    PageResponseCVResponse getAllCVsPage(
+        @Parameter(name = "page", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+        @Parameter(name = "size", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+        @Parameter(name = "sortBy", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
+        @Parameter(name = "direction", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction
     );
 
 
     /**
-     * POST /cvs : Créer un nouveau CV
-     * Crée un CV pour un utilisateur
+     * GET /cvs/{id} : Récupérer un CV par son ID
      *
-     * @param cvRequest  (required)
-     * @return CV créé avec succès (status code 201)
-     *         or Données invalides (status code 400)
-     *         or CV déjà existant pour cet utilisateur (status code 409)
+     * @param id  (required)
+     * @return CV trouvé (status code 200)
+     *         or Ressource non trouvée (status code 404)
      */
     @Operation(
-        operationId = "cvsPost",
-        summary = "Créer un nouveau CV",
-        description = "Crée un CV pour un utilisateur",
+        operationId = "getCVById",
+        summary = "Récupérer un CV par son ID",
         tags = { "CVs" },
         responses = {
-            @ApiResponse(responseCode = "201", description = "CV créé avec succès", content = {
+            @ApiResponse(responseCode = "200", description = "CV trouvé", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = CVResponse.class))
             }),
-            @ApiResponse(responseCode = "400", description = "Données invalides", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            }),
-            @ApiResponse(responseCode = "409", description = "CV déjà existant pour cet utilisateur", content = {
+            @ApiResponse(responseCode = "404", description = "Ressource non trouvée", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
         }
     )
     @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/cvs",
-        produces = { "application/json" },
-        consumes = { "application/json" }
+        method = RequestMethod.GET,
+        value = "/cvs/{id}",
+        produces = { "application/json" }
     )
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     
-    CVResponse cvsPost(
-        @Parameter(name = "CVRequest", description = "", required = true) @Valid @RequestBody CVRequest cvRequest
+    CVResponse getCVById(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
+    );
+
+
+    /**
+     * GET /cvs/{id}/utilisateur/{utilisateurId} : Récupérer un CV par ID et utilisateur
+     *
+     * @param id  (required)
+     * @param utilisateurId  (required)
+     * @return CV trouvé (status code 200)
+     *         or Ressource non trouvée (status code 404)
+     */
+    @Operation(
+        operationId = "getCVByIdAndUtilisateur",
+        summary = "Récupérer un CV par ID et utilisateur",
+        tags = { "CVs" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "CV trouvé", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CVResponse.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Ressource non trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/cvs/{id}/utilisateur/{utilisateurId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    CVResponse getCVByIdAndUtilisateur(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
+        @Parameter(name = "utilisateurId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("utilisateurId") Integer utilisateurId
+    );
+
+
+    /**
+     * GET /cvs/{id}/complet : Récupérer un CV complet avec toutes ses sections
+     *
+     * @param id  (required)
+     * @return CV complet trouvé (status code 200)
+     *         or Ressource non trouvée (status code 404)
+     */
+    @Operation(
+        operationId = "getCVComplet",
+        summary = "Récupérer un CV complet avec toutes ses sections",
+        tags = { "CVs" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "CV complet trouvé", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CVCompletResponse.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Ressource non trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/cvs/{id}/complet",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    CVCompletResponse getCVComplet(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
     );
 
 
@@ -317,7 +244,7 @@ public interface CvsApi {
      * @return Liste des CVs de l&#39;utilisateur (status code 200)
      */
     @Operation(
-        operationId = "cvsUtilisateurUtilisateurIdGet",
+        operationId = "getCVsByUtilisateur",
         summary = "Récupérer tous les CVs d'un utilisateur",
         tags = { "CVs" },
         responses = {
@@ -333,8 +260,73 @@ public interface CvsApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    List<CVResponse> cvsUtilisateurUtilisateurIdGet(
+    List<CVResponse> getCVsByUtilisateur(
         @Parameter(name = "utilisateurId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("utilisateurId") Integer utilisateurId
+    );
+
+
+    /**
+     * DELETE /cvs/{id} : Supprimer un CV
+     *
+     * @param id  (required)
+     * @return CV supprimé (status code 204)
+     *         or Ressource non trouvée (status code 404)
+     */
+    @Operation(
+        operationId = "supprimerCV",
+        summary = "Supprimer un CV",
+        tags = { "CVs" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "CV supprimé"),
+            @ApiResponse(responseCode = "404", description = "Ressource non trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/cvs/{id}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    
+    void supprimerCV(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
+    );
+
+
+    /**
+     * PUT /cvs/{id} : Mettre à jour un CV
+     *
+     * @param id  (required)
+     * @param cvRequest  (required)
+     * @return CV mis à jour (status code 200)
+     *         or Ressource non trouvée (status code 404)
+     */
+    @Operation(
+        operationId = "updateCV",
+        summary = "Mettre à jour un CV",
+        tags = { "CVs" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "CV mis à jour", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CVResponse.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Ressource non trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/cvs/{id}",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    CVResponse updateCV(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
+        @Parameter(name = "CVRequest", description = "", required = true) @Valid @RequestBody CVRequest cvRequest
     );
 
 }

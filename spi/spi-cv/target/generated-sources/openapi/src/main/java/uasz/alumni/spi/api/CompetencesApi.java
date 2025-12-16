@@ -36,151 +36,41 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Compétences", description = "Gestion des compétences")
 public interface CompetencesApi {
 
     /**
-     * GET /competences/cv/{cvId}/categorie/{categorie} : Récupérer les compétences par catégorie
+     * POST /competences : Créer une nouvelle compétence
      *
-     * @param cvId  (required)
-     * @param categorie  (required)
-     * @return Liste des compétences (status code 200)
+     * @param competenceRequest  (required)
+     * @return Compétence créée (status code 201)
+     *         or Conflit - Ressource déjà existante (status code 409)
      */
     @Operation(
-        operationId = "competencesCvCvIdCategorieCategorieGet",
-        summary = "Récupérer les compétences par catégorie",
+        operationId = "creerCompetence",
+        summary = "Créer une nouvelle compétence",
         tags = { "Compétences" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Liste des compétences", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CompetenceResponse.class)))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/competences/cv/{cvId}/categorie/{categorie}",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    List<CompetenceResponse> competencesCvCvIdCategorieCategorieGet(
-        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId,
-        @Parameter(name = "categorie", description = "", required = true, in = ParameterIn.PATH) @PathVariable("categorie") CategorieCompetence categorie
-    );
-
-
-    /**
-     * GET /competences/cv/{cvId} : Récupérer toutes les compétences d&#39;un CV
-     *
-     * @param cvId  (required)
-     * @return Liste des compétences (status code 200)
-     */
-    @Operation(
-        operationId = "competencesCvCvIdGet",
-        summary = "Récupérer toutes les compétences d'un CV",
-        tags = { "Compétences" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Liste des compétences", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CompetenceResponse.class)))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/competences/cv/{cvId}",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    List<CompetenceResponse> competencesCvCvIdGet(
-        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
-    );
-
-
-    /**
-     * GET /competences/cv/{cvId}/niveau/{niveau} : Récupérer les compétences par niveau
-     *
-     * @param cvId  (required)
-     * @param niveau  (required)
-     * @return Liste des compétences (status code 200)
-     */
-    @Operation(
-        operationId = "competencesCvCvIdNiveauNiveauGet",
-        summary = "Récupérer les compétences par niveau",
-        tags = { "Compétences" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Liste des compétences", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CompetenceResponse.class)))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/competences/cv/{cvId}/niveau/{niveau}",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    List<CompetenceResponse> competencesCvCvIdNiveauNiveauGet(
-        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId,
-        @Parameter(name = "niveau", description = "", required = true, in = ParameterIn.PATH) @PathVariable("niveau") NiveauCompetence niveau
-    );
-
-
-    /**
-     * GET /competences/{id}/cv/{cvId} : Récupérer une compétence par ID et CV ID
-     *
-     * @param id  (required)
-     * @param cvId  (required)
-     * @return Compétence trouvée (status code 200)
-     */
-    @Operation(
-        operationId = "competencesIdCvCvIdGet",
-        summary = "Récupérer une compétence par ID et CV ID",
-        tags = { "Compétences" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Compétence trouvée", content = {
+            @ApiResponse(responseCode = "201", description = "Compétence créée", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = CompetenceResponse.class))
+            }),
+            @ApiResponse(responseCode = "409", description = "Conflit - Ressource déjà existante", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
         }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/competences/{id}/cv/{cvId}",
-        produces = { "application/json" }
+        method = RequestMethod.POST,
+        value = "/competences",
+        produces = { "application/json" },
+        consumes = { "application/json" }
     )
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     
-    CompetenceResponse competencesIdCvCvIdGet(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
-    );
-
-
-    /**
-     * DELETE /competences/{id} : Supprimer une compétence
-     *
-     * @param id  (required)
-     * @return Compétence supprimée (status code 204)
-     */
-    @Operation(
-        operationId = "competencesIdDelete",
-        summary = "Supprimer une compétence",
-        tags = { "Compétences" },
-        responses = {
-            @ApiResponse(responseCode = "204", description = "Compétence supprimée")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.DELETE,
-        value = "/competences/{id}"
-    )
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    
-    void competencesIdDelete(
-        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
+    CompetenceResponse creerCompetence(
+        @Parameter(name = "CompetenceRequest", description = "", required = true) @Valid @RequestBody CompetenceRequest competenceRequest
     );
 
 
@@ -191,7 +81,7 @@ public interface CompetencesApi {
      * @return Compétence trouvée (status code 200)
      */
     @Operation(
-        operationId = "competencesIdGet",
+        operationId = "getCompetenceById",
         summary = "Récupérer une compétence par son ID",
         tags = { "Compétences" },
         responses = {
@@ -207,7 +97,150 @@ public interface CompetencesApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    CompetenceResponse competencesIdGet(
+    CompetenceResponse getCompetenceById(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
+    );
+
+
+    /**
+     * GET /competences/{id}/cv/{cvId} : Récupérer une compétence par ID et CV ID
+     *
+     * @param id  (required)
+     * @param cvId  (required)
+     * @return Compétence trouvée (status code 200)
+     */
+    @Operation(
+        operationId = "getCompetenceByIdAndCvId",
+        summary = "Récupérer une compétence par ID et CV ID",
+        tags = { "Compétences" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Compétence trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CompetenceResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/competences/{id}/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    CompetenceResponse getCompetenceByIdAndCvId(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /competences/cv/{cvId}/categorie/{categorie} : Récupérer les compétences par catégorie
+     *
+     * @param cvId  (required)
+     * @param categorie  (required)
+     * @return Liste des compétences (status code 200)
+     */
+    @Operation(
+        operationId = "getCompetencesByCategorie",
+        summary = "Récupérer les compétences par catégorie",
+        tags = { "Compétences" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des compétences", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CompetenceResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/competences/cv/{cvId}/categorie/{categorie}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<CompetenceResponse> getCompetencesByCategorie(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId,
+        @Parameter(name = "categorie", description = "", required = true, in = ParameterIn.PATH) @PathVariable("categorie") CategorieCompetence categorie
+    );
+
+
+    /**
+     * GET /competences/cv/{cvId} : Récupérer toutes les compétences d&#39;un CV
+     *
+     * @param cvId  (required)
+     * @return Liste des compétences (status code 200)
+     */
+    @Operation(
+        operationId = "getCompetencesByCvId",
+        summary = "Récupérer toutes les compétences d'un CV",
+        tags = { "Compétences" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des compétences", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CompetenceResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/competences/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<CompetenceResponse> getCompetencesByCvId(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /competences/cv/{cvId}/niveau/{niveau} : Récupérer les compétences par niveau
+     *
+     * @param cvId  (required)
+     * @param niveau  (required)
+     * @return Liste des compétences (status code 200)
+     */
+    @Operation(
+        operationId = "getCompetencesByNiveau",
+        summary = "Récupérer les compétences par niveau",
+        tags = { "Compétences" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des compétences", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CompetenceResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/competences/cv/{cvId}/niveau/{niveau}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<CompetenceResponse> getCompetencesByNiveau(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId,
+        @Parameter(name = "niveau", description = "", required = true, in = ParameterIn.PATH) @PathVariable("niveau") NiveauCompetence niveau
+    );
+
+
+    /**
+     * DELETE /competences/{id} : Supprimer une compétence
+     *
+     * @param id  (required)
+     * @return Compétence supprimée (status code 204)
+     */
+    @Operation(
+        operationId = "supprimerCompetence",
+        summary = "Supprimer une compétence",
+        tags = { "Compétences" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "Compétence supprimée")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/competences/{id}"
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    
+    void supprimerCompetence(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
     );
 
@@ -220,7 +253,7 @@ public interface CompetencesApi {
      * @return Compétence mise à jour (status code 200)
      */
     @Operation(
-        operationId = "competencesIdPut",
+        operationId = "updateCompetence",
         summary = "Mettre à jour une compétence",
         tags = { "Compétences" },
         responses = {
@@ -237,41 +270,8 @@ public interface CompetencesApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    CompetenceResponse competencesIdPut(
+    CompetenceResponse updateCompetence(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "CompetenceRequest", description = "", required = true) @Valid @RequestBody CompetenceRequest competenceRequest
-    );
-
-
-    /**
-     * POST /competences : Créer une nouvelle compétence
-     *
-     * @param competenceRequest  (required)
-     * @return Compétence créée (status code 201)
-     *         or Compétence déjà existante (status code 409)
-     */
-    @Operation(
-        operationId = "competencesPost",
-        summary = "Créer une nouvelle compétence",
-        tags = { "Compétences" },
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Compétence créée", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CompetenceResponse.class))
-            }),
-            @ApiResponse(responseCode = "409", description = "Compétence déjà existante", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/competences",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.CREATED)
-    
-    CompetenceResponse competencesPost(
         @Parameter(name = "CompetenceRequest", description = "", required = true) @Valid @RequestBody CompetenceRequest competenceRequest
     );
 

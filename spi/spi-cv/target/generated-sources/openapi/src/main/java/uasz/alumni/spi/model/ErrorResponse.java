@@ -24,7 +24,7 @@ import jakarta.annotation.Generated;
  * ErrorResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class ErrorResponse {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -73,7 +73,7 @@ public class ErrorResponse {
    * @return status
   */
   
-  @Schema(name = "status", example = "400", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "status", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("status")
   public Integer getStatus() {
     return status;
@@ -93,7 +93,7 @@ public class ErrorResponse {
    * @return error
   */
   
-  @Schema(name = "error", example = "Bad Request", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "error", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("error")
   public String getError() {
     return error;
@@ -113,7 +113,7 @@ public class ErrorResponse {
    * @return code
   */
   
-  @Schema(name = "code", example = "VALIDATION_ERROR", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "code", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("code")
   public String getCode() {
     return code;
@@ -133,7 +133,7 @@ public class ErrorResponse {
    * @return message
   */
   
-  @Schema(name = "message", example = "Erreur de validation des données", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "message", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("message")
   public String getMessage() {
     return message;
@@ -153,7 +153,7 @@ public class ErrorResponse {
    * @return path
   */
   
-  @Schema(name = "path", example = "/api/cvs", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("path")
   public String getPath() {
     return path;

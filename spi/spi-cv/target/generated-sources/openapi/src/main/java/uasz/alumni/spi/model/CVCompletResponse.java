@@ -30,7 +30,7 @@ import jakarta.annotation.Generated;
  * CVCompletResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class CVCompletResponse {
 
   private Integer id;
@@ -88,7 +88,7 @@ public class CVCompletResponse {
    * @return id
   */
   
-  @Schema(name = "id", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public Integer getId() {
     return id;
@@ -108,7 +108,7 @@ public class CVCompletResponse {
    * @return titre
   */
   
-  @Schema(name = "titre", example = "Développeur Full Stack Java/Angular", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "titre", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("titre")
   public String getTitre() {
     return titre;
@@ -228,7 +228,7 @@ public class CVCompletResponse {
    * @return telephone
   */
   
-  @Schema(name = "telephone", example = "+221771234567", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "telephone", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("telephone")
   public String getTelephone() {
     return telephone;
@@ -248,7 +248,7 @@ public class CVCompletResponse {
    * @return email
   */
   
-  @Schema(name = "email", example = "john.doe@example.com", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("email")
   public String getEmail() {
     return email;
@@ -288,7 +288,7 @@ public class CVCompletResponse {
    * @return utilisateurId
   */
   
-  @Schema(name = "utilisateurId", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "utilisateurId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("utilisateurId")
   public Integer getUtilisateurId() {
     return utilisateurId;

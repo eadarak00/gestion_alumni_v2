@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * FormationRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class FormationRequest {
 
   private Integer cvId;
@@ -61,7 +61,7 @@ public class FormationRequest {
    * @return cvId
   */
   @NotNull 
-  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;
@@ -81,7 +81,7 @@ public class FormationRequest {
    * @return diplome
   */
   @NotNull @Size(min = 2, max = 150) 
-  @Schema(name = "diplome", example = "Master en Génie Logiciel", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "diplome", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("diplome")
   public String getDiplome() {
     return diplome;
@@ -101,7 +101,7 @@ public class FormationRequest {
    * @return etablissement
   */
   @NotNull @Size(min = 2, max = 150) 
-  @Schema(name = "etablissement", example = "Université Assane Seck de Ziguinchor", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "etablissement", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("etablissement")
   public String getEtablissement() {
     return etablissement;
@@ -121,7 +121,7 @@ public class FormationRequest {
    * @return localisation
   */
   @Size(max = 100) 
-  @Schema(name = "localisation", example = "Ziguinchor, Sénégal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "localisation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("localisation")
   public String getLocalisation() {
     return localisation;
@@ -140,8 +140,8 @@ public class FormationRequest {
    * Get dateDebut
    * @return dateDebut
   */
-  @NotNull @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
-  @Schema(name = "dateDebut", example = "10/2020", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "dateDebut", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("dateDebut")
   public String getDateDebut() {
     return dateDebut;
@@ -160,8 +160,8 @@ public class FormationRequest {
    * Get dateFin
    * @return dateFin
   */
-  @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
-  @Schema(name = "dateFin", example = "07/2022", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "dateFin", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateFin")
   public String getDateFin() {
     return dateFin;
@@ -181,7 +181,7 @@ public class FormationRequest {
    * @return enCours
   */
   
-  @Schema(name = "enCours", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "enCours", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("enCours")
   public Boolean getEnCours() {
     return enCours;
@@ -201,7 +201,7 @@ public class FormationRequest {
    * @return description
   */
   @Size(max = 2000) 
-  @Schema(name = "description", example = "Formation approfondie en développement logiciel et architecture des systèmes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public String getDescription() {
     return description;

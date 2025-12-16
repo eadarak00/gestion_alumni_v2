@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
  * PageResponseCVResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class PageResponseCVResponse {
 
   @Valid
@@ -78,7 +78,7 @@ public class PageResponseCVResponse {
    * @return pageNumber
   */
   
-  @Schema(name = "pageNumber", example = "0", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "pageNumber", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("pageNumber")
   public Integer getPageNumber() {
     return pageNumber;
@@ -98,7 +98,7 @@ public class PageResponseCVResponse {
    * @return pageSize
   */
   
-  @Schema(name = "pageSize", example = "10", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "pageSize", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("pageSize")
   public Integer getPageSize() {
     return pageSize;
@@ -118,7 +118,7 @@ public class PageResponseCVResponse {
    * @return totalElements
   */
   
-  @Schema(name = "totalElements", example = "100", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "totalElements", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("totalElements")
   public Long getTotalElements() {
     return totalElements;
@@ -138,7 +138,7 @@ public class PageResponseCVResponse {
    * @return totalPages
   */
   
-  @Schema(name = "totalPages", example = "10", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "totalPages", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("totalPages")
   public Integer getTotalPages() {
     return totalPages;
@@ -158,7 +158,7 @@ public class PageResponseCVResponse {
    * @return last
   */
   
-  @Schema(name = "last", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "last", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("last")
   public Boolean getLast() {
     return last;
@@ -178,7 +178,7 @@ public class PageResponseCVResponse {
    * @return first
   */
   
-  @Schema(name = "first", example = "true", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "first", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("first")
   public Boolean getFirst() {
     return first;

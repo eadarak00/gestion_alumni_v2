@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * CertificationRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class CertificationRequest {
 
   private Integer cvId;
@@ -59,7 +59,7 @@ public class CertificationRequest {
    * @return cvId
   */
   @NotNull 
-  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;
@@ -79,7 +79,7 @@ public class CertificationRequest {
    * @return nom
   */
   @NotNull @Size(min = 2, max = 150) 
-  @Schema(name = "nom", example = "Oracle Certified Professional Java SE 11", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "nom", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("nom")
   public String getNom() {
     return nom;
@@ -99,7 +99,7 @@ public class CertificationRequest {
    * @return organisme
   */
   @NotNull @Size(min = 2, max = 150) 
-  @Schema(name = "organisme", example = "Oracle", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "organisme", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("organisme")
   public String getOrganisme() {
     return organisme;
@@ -118,8 +118,8 @@ public class CertificationRequest {
    * Get dateObtention
    * @return dateObtention
   */
-  @NotNull @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
-  @Schema(name = "dateObtention", example = "06/2023", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull 
+  @Schema(name = "dateObtention", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("dateObtention")
   public String getDateObtention() {
     return dateObtention;
@@ -138,8 +138,8 @@ public class CertificationRequest {
    * Get dateExpiration
    * @return dateExpiration
   */
-  @Pattern(regexp = "^(0[1-9]|1[0-2])/[0-9]{4}$") 
-  @Schema(name = "dateExpiration", example = "06/2026", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  
+  @Schema(name = "dateExpiration", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateExpiration")
   public String getDateExpiration() {
     return dateExpiration;
@@ -159,7 +159,7 @@ public class CertificationRequest {
    * @return numeroCredential
   */
   @Size(max = 100) 
-  @Schema(name = "numeroCredential", example = "OCP-12345678", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "numeroCredential", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("numeroCredential")
   public String getNumeroCredential() {
     return numeroCredential;
@@ -179,7 +179,7 @@ public class CertificationRequest {
    * @return urlVerification
   */
   
-  @Schema(name = "urlVerification", example = "https://education.oracle.com/verify/credential/12345678", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "urlVerification", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("urlVerification")
   public String getUrlVerification() {
     return urlVerification;

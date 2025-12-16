@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * ExperienceResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class ExperienceResponse {
 
   private Integer id;
@@ -57,7 +57,7 @@ public class ExperienceResponse {
    * @return id
   */
   
-  @Schema(name = "id", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public Integer getId() {
     return id;
@@ -77,7 +77,7 @@ public class ExperienceResponse {
    * @return cvId
   */
   
-  @Schema(name = "cvId", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "cvId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("cvId")
   public Integer getCvId() {
     return cvId;
@@ -97,7 +97,7 @@ public class ExperienceResponse {
    * @return poste
   */
   
-  @Schema(name = "poste", example = "Développeur Full Stack", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "poste", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("poste")
   public String getPoste() {
     return poste;
@@ -117,7 +117,7 @@ public class ExperienceResponse {
    * @return entreprise
   */
   
-  @Schema(name = "entreprise", example = "TechCorp SARL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "entreprise", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("entreprise")
   public String getEntreprise() {
     return entreprise;
@@ -137,7 +137,7 @@ public class ExperienceResponse {
    * @return localisation
   */
   
-  @Schema(name = "localisation", example = "Dakar, Sénégal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "localisation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("localisation")
   public String getLocalisation() {
     return localisation;
@@ -157,7 +157,7 @@ public class ExperienceResponse {
    * @return dateDebut
   */
   
-  @Schema(name = "dateDebut", example = "01/2022", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateDebut", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateDebut")
   public String getDateDebut() {
     return dateDebut;
@@ -177,7 +177,7 @@ public class ExperienceResponse {
    * @return dateFin
   */
   
-  @Schema(name = "dateFin", example = "12/2023", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "dateFin", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateFin")
   public String getDateFin() {
     return dateFin;
@@ -197,7 +197,7 @@ public class ExperienceResponse {
    * @return enCours
   */
   
-  @Schema(name = "enCours", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "enCours", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("enCours")
   public Boolean getEnCours() {
     return enCours;

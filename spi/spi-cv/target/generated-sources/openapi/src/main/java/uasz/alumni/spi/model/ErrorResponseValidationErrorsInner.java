@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("ErrorResponse_validationErrors_inner")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:25:13.235267236Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
 public class ErrorResponseValidationErrorsInner {
 
   private String field;
@@ -37,7 +37,7 @@ public class ErrorResponseValidationErrorsInner {
    * @return field
   */
   
-  @Schema(name = "field", example = "titre", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "field", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("field")
   public String getField() {
     return field;
@@ -57,7 +57,7 @@ public class ErrorResponseValidationErrorsInner {
    * @return message
   */
   
-  @Schema(name = "message", example = "Le titre doit contenir entre 3 et 100 caractères", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "message", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("message")
   public String getMessage() {
     return message;

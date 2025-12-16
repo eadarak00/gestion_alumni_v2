@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: CV Service API
   version: 1.0.0
-  description: API de gestion des CVs pour les alumni et étudiants de l'UASZ - Création, modification et consultation des CVs avec leurs différentes sections (expériences, formations, compétences, langues, certifications)
+  description: API de gestion des CVs pour les alumni et étudiants de l'UASZ
 
 servers:
   - url: http://localhost:8082/api
@@ -31,7 +31,7 @@ paths:
       tags:
         - CVs
       summary: Créer un nouveau CV
-      description: Crée un CV pour un utilisateur
+      operationId: creerCV
       requestBody:
         required: true
         content:
@@ -46,23 +46,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/CVResponse'
         '400':
-          description: Données invalides
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequest'
         '409':
-          description: CV déjà existant pour cet utilisateur
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Conflict'
 
     get:
       tags:
         - CVs
       summary: Récupérer tous les CVs
-      description: Liste de tous les CVs
+      operationId: getAllCVs
       responses:
         '200':
           description: Liste des CVs
@@ -78,29 +70,29 @@ paths:
       tags:
         - CVs
       summary: Récupérer les CVs avec pagination
-      description: Liste paginée des CVs
+      operationId: getAllCVsPage
       parameters:
         - name: page
           in: query
-          description: Numéro de la page
+          required: false
           schema:
             type: integer
             default: 0
         - name: size
           in: query
-          description: Taille de la page
+          required: false
           schema:
             type: integer
             default: 10
         - name: sortBy
           in: query
-          description: Champ de tri
+          required: false
           schema:
             type: string
             default: id
         - name: direction
           in: query
-          description: Direction du tri
+          required: false
           schema:
             type: string
             enum: [ASC, DESC]
@@ -118,6 +110,7 @@ paths:
       tags:
         - CVs
       summary: Récupérer un CV par son ID
+      operationId: getCVById
       parameters:
         - name: id
           in: path
@@ -132,16 +125,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/CVResponse'
         '404':
-          description: CV non trouvé
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/NotFound'
 
     put:
       tags:
         - CVs
       summary: Mettre à jour un CV
+      operationId: updateCV
       parameters:
         - name: id
           in: path
@@ -162,16 +152,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/CVResponse'
         '404':
-          description: CV non trouvé
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/NotFound'
 
     delete:
       tags:
         - CVs
       summary: Supprimer un CV
+      operationId: supprimerCV
       parameters:
         - name: id
           in: path
@@ -182,18 +169,14 @@ paths:
         '204':
           description: CV supprimé
         '404':
-          description: CV non trouvé
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/NotFound'
 
   /cvs/{id}/complet:
     get:
       tags:
         - CVs
       summary: Récupérer un CV complet avec toutes ses sections
-      description: Retourne un CV avec expériences, formations, compétences, langues et certifications
+      operationId: getCVComplet
       parameters:
         - name: id
           in: path
@@ -208,17 +191,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/CVCompletResponse'
         '404':
-          description: CV non trouvé
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/NotFound'
 
   /cvs/{id}/utilisateur/{utilisateurId}:
     get:
       tags:
         - CVs
-      summary: Récupérer un CV par ID et utilisateur (sécurité)
+      summary: Récupérer un CV par ID et utilisateur
+      operationId: getCVByIdAndUtilisateur
       parameters:
         - name: id
           in: path
@@ -238,17 +218,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/CVResponse'
         '404':
-          description: CV non trouvé
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/NotFound'
 
   /cvs/utilisateur/{utilisateurId}:
     get:
       tags:
         - CVs
       summary: Récupérer tous les CVs d'un utilisateur
+      operationId: getCVsByUtilisateur
       parameters:
         - name: utilisateurId
           in: path
@@ -272,6 +249,7 @@ paths:
       tags:
         - Expériences
       summary: Créer une nouvelle expérience
+      operationId: creerExperience
       requestBody:
         required: true
         content:
@@ -286,17 +264,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExperienceResponse'
         '400':
-          description: Données invalides
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequest'
 
   /experiences/{id}:
     get:
       tags:
         - Expériences
       summary: Récupérer une expérience par son ID
+      operationId: getExperienceById
       parameters:
         - name: id
           in: path
@@ -311,16 +286,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExperienceResponse'
         '404':
-          description: Expérience non trouvée
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/NotFound'
 
     put:
       tags:
         - Expériences
       summary: Mettre à jour une expérience
+      operationId: updateExperience
       parameters:
         - name: id
           in: path
@@ -345,6 +317,7 @@ paths:
       tags:
         - Expériences
       summary: Supprimer une expérience
+      operationId: supprimerExperience
       parameters:
         - name: id
           in: path
@@ -360,6 +333,7 @@ paths:
       tags:
         - Expériences
       summary: Récupérer une expérience par ID et CV ID
+      operationId: getExperienceByIdAndCvId
       parameters:
         - name: id
           in: path
@@ -384,6 +358,7 @@ paths:
       tags:
         - Expériences
       summary: Récupérer toutes les expériences d'un CV
+      operationId: getExperiencesByCvId
       parameters:
         - name: cvId
           in: path
@@ -405,6 +380,7 @@ paths:
       tags:
         - Expériences
       summary: Récupérer les expériences en cours d'un CV
+      operationId: getExperiencesEnCours
       parameters:
         - name: cvId
           in: path
@@ -428,6 +404,7 @@ paths:
       tags:
         - Formations
       summary: Créer une nouvelle formation
+      operationId: creerFormation
       requestBody:
         required: true
         content:
@@ -442,17 +419,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/FormationResponse'
         '400':
-          description: Données invalides
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequest'
 
   /formations/{id}:
     get:
       tags:
         - Formations
       summary: Récupérer une formation par son ID
+      operationId: getFormationById
       parameters:
         - name: id
           in: path
@@ -471,6 +445,7 @@ paths:
       tags:
         - Formations
       summary: Mettre à jour une formation
+      operationId: updateFormation
       parameters:
         - name: id
           in: path
@@ -495,6 +470,7 @@ paths:
       tags:
         - Formations
       summary: Supprimer une formation
+      operationId: supprimerFormation
       parameters:
         - name: id
           in: path
@@ -510,6 +486,7 @@ paths:
       tags:
         - Formations
       summary: Récupérer une formation par ID et CV ID
+      operationId: getFormationByIdAndCvId
       parameters:
         - name: id
           in: path
@@ -534,6 +511,7 @@ paths:
       tags:
         - Formations
       summary: Récupérer toutes les formations d'un CV
+      operationId: getFormationsByCvId
       parameters:
         - name: cvId
           in: path
@@ -555,6 +533,7 @@ paths:
       tags:
         - Formations
       summary: Récupérer les formations en cours d'un CV
+      operationId: getFormationsEnCours
       parameters:
         - name: cvId
           in: path
@@ -578,6 +557,7 @@ paths:
       tags:
         - Compétences
       summary: Créer une nouvelle compétence
+      operationId: creerCompetence
       requestBody:
         required: true
         content:
@@ -592,17 +572,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/CompetenceResponse'
         '409':
-          description: Compétence déjà existante
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Conflict'
 
   /competences/{id}:
     get:
       tags:
         - Compétences
       summary: Récupérer une compétence par son ID
+      operationId: getCompetenceById
       parameters:
         - name: id
           in: path
@@ -621,6 +598,7 @@ paths:
       tags:
         - Compétences
       summary: Mettre à jour une compétence
+      operationId: updateCompetence
       parameters:
         - name: id
           in: path
@@ -645,6 +623,7 @@ paths:
       tags:
         - Compétences
       summary: Supprimer une compétence
+      operationId: supprimerCompetence
       parameters:
         - name: id
           in: path
@@ -660,6 +639,7 @@ paths:
       tags:
         - Compétences
       summary: Récupérer une compétence par ID et CV ID
+      operationId: getCompetenceByIdAndCvId
       parameters:
         - name: id
           in: path
@@ -684,6 +664,7 @@ paths:
       tags:
         - Compétences
       summary: Récupérer toutes les compétences d'un CV
+      operationId: getCompetencesByCvId
       parameters:
         - name: cvId
           in: path
@@ -705,6 +686,7 @@ paths:
       tags:
         - Compétences
       summary: Récupérer les compétences par catégorie
+      operationId: getCompetencesByCategorie
       parameters:
         - name: cvId
           in: path
@@ -731,6 +713,7 @@ paths:
       tags:
         - Compétences
       summary: Récupérer les compétences par niveau
+      operationId: getCompetencesByNiveau
       parameters:
         - name: cvId
           in: path
@@ -759,6 +742,7 @@ paths:
       tags:
         - Langues Parlées
       summary: Créer une nouvelle langue parlée
+      operationId: creerLangueParlees
       requestBody:
         required: true
         content:
@@ -773,17 +757,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/LangueParleesResponse'
         '409':
-          description: Langue déjà existante
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Conflict'
 
   /langues-parlees/{id}:
     get:
       tags:
         - Langues Parlées
       summary: Récupérer une langue parlée par son ID
+      operationId: getLangueParleesById
       parameters:
         - name: id
           in: path
@@ -802,6 +783,7 @@ paths:
       tags:
         - Langues Parlées
       summary: Mettre à jour une langue parlée
+      operationId: updateLangueParlees
       parameters:
         - name: id
           in: path
@@ -826,6 +808,7 @@ paths:
       tags:
         - Langues Parlées
       summary: Supprimer une langue parlée
+      operationId: supprimerLangueParlees
       parameters:
         - name: id
           in: path
@@ -841,6 +824,7 @@ paths:
       tags:
         - Langues Parlées
       summary: Récupérer une langue parlée par ID et CV ID
+      operationId: getLangueParleesByIdAndCvId
       parameters:
         - name: id
           in: path
@@ -865,6 +849,7 @@ paths:
       tags:
         - Langues Parlées
       summary: Récupérer toutes les langues parlées d'un CV
+      operationId: getLanguesParleesByCvId
       parameters:
         - name: cvId
           in: path
@@ -886,6 +871,7 @@ paths:
       tags:
         - Langues Parlées
       summary: Récupérer les langues parlées par niveau
+      operationId: getLanguesParleesByNiveau
       parameters:
         - name: cvId
           in: path
@@ -914,6 +900,7 @@ paths:
       tags:
         - Certifications
       summary: Créer une nouvelle certification
+      operationId: creerCertification
       requestBody:
         required: true
         content:
@@ -928,17 +915,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/CertificationResponse'
         '409':
-          description: Certification déjà existante
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/Conflict'
 
   /certifications/{id}:
     get:
       tags:
         - Certifications
       summary: Récupérer une certification par son ID
+      operationId: getCertificationById
       parameters:
         - name: id
           in: path
@@ -957,6 +941,7 @@ paths:
       tags:
         - Certifications
       summary: Mettre à jour une certification
+      operationId: updateCertification
       parameters:
         - name: id
           in: path
@@ -981,6 +966,7 @@ paths:
       tags:
         - Certifications
       summary: Supprimer une certification
+      operationId: supprimerCertification
       parameters:
         - name: id
           in: path
@@ -996,6 +982,7 @@ paths:
       tags:
         - Certifications
       summary: Récupérer une certification par ID et CV ID
+      operationId: getCertificationByIdAndCvId
       parameters:
         - name: id
           in: path
@@ -1020,6 +1007,7 @@ paths:
       tags:
         - Certifications
       summary: Récupérer toutes les certifications d'un CV
+      operationId: getCertificationsByCvId
       parameters:
         - name: cvId
           in: path
@@ -1041,6 +1029,7 @@ paths:
       tags:
         - Certifications
       summary: Récupérer les certifications avec date d'expiration
+      operationId: getCertificationsAvecExpiration
       parameters:
         - name: cvId
           in: path
@@ -1062,6 +1051,7 @@ paths:
       tags:
         - Certifications
       summary: Récupérer les certifications permanentes
+      operationId: getCertificationsPermanentes
       parameters:
         - name: cvId
           in: path
@@ -1081,6 +1071,31 @@ paths:
 # ==================== COMPOSANTS ====================
 
 components:
+
+  # ========== RESPONSES RÉUTILISABLES ==========
+  
+  responses:
+    BadRequest:
+      description: Données invalides
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    NotFound:
+      description: Ressource non trouvée
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    Conflict:
+      description: Conflit - Ressource déjà existante
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
   schemas:
 
     # ========== ENUMS ==========
@@ -1091,7 +1106,6 @@ components:
         - MODERNE
         - CLASSIQUE
         - PROFESSIONNEL
-      example: MODERNE
 
     Langues:
       type: string
@@ -1105,7 +1119,6 @@ components:
         - ARABE
         - CHINOIS
         - AUTRE
-      example: FRANCAIS
 
     NiveauLangue:
       type: string
@@ -1115,7 +1128,6 @@ components:
         - AVANCE
         - COURANT
         - NATIF
-      example: COURANT
 
     NiveauCompetence:
       type: string
@@ -1124,7 +1136,6 @@ components:
         - INTERMEDIAIRE
         - AVANCE
         - EXPERT
-      example: AVANCE
 
     CategorieCompetence:
       type: string
@@ -1133,7 +1144,6 @@ components:
         - LINGUISTIQUE
         - SOFT_SKILLS
         - AUTRE
-      example: TECHNIQUE
 
     # ========== CV ==========
 
@@ -1149,41 +1159,28 @@ components:
           type: string
           minLength: 3
           maxLength: 100
-          example: "Développeur Full Stack Java/Angular"
         resume:
           type: string
           maxLength: 2000
-          example: "Développeur passionné avec 3 ans d'expérience en développement web et mobile"
         photo:
           type: string
-          example: "https://example.com/photo.jpg"
         linkedin:
           type: string
-          pattern: "^(https?://)?(www\\.)?linkedin\\.com/.*$"
-          example: "https://linkedin.com/in/johndoe"
         github:
           type: string
-          pattern: "^(https?://)?(www\\.)?github\\.com/.*$"
-          example: "https://github.com/johndoe"
         portfolio:
           type: string
-          example: "https://johndoe.com"
         telephone:
           type: string
-          pattern: "^\\+221[0-9]{9}$"
-          example: "+221771234567"
         email:
           type: string
           format: email
           maxLength: 100
-          example: "john.doe@example.com"
         adresse:
           type: string
           maxLength: 200
-          example: "Dakar, Sénégal"
         utilisateurId:
           type: integer
-          example: 1
         template:
           $ref: '#/components/schemas/TypeTemplate'
 
@@ -1192,10 +1189,8 @@ components:
       properties:
         id:
           type: integer
-          example: 1
         titre:
           type: string
-          example: "Développeur Full Stack Java/Angular"
         resume:
           type: string
         photo:
@@ -1208,25 +1203,20 @@ components:
           type: string
         telephone:
           type: string
-          example: "+221771234567"
         email:
           type: string
-          example: "john.doe@example.com"
         adresse:
           type: string
         utilisateurId:
           type: integer
-          example: 1
         template:
           $ref: '#/components/schemas/TypeTemplate'
         dateCreation:
           type: string
           format: date-time
-          example: "2024-12-13T10:30:00"
         dateDerniereModification:
           type: string
           format: date-time
-          example: "2024-12-13T15:45:00"
 
     CVCompletResponse:
       allOf:
@@ -1266,64 +1256,46 @@ components:
       properties:
         cvId:
           type: integer
-          example: 1
         poste:
           type: string
           minLength: 2
           maxLength: 100
-          example: "Développeur Full Stack"
         entreprise:
           type: string
           minLength: 2
           maxLength: 100
-          example: "TechCorp SARL"
         localisation:
           type: string
           maxLength: 100
-          example: "Dakar, Sénégal"
         dateDebut:
           type: string
-          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
-          example: "01/2022"
         dateFin:
           type: string
-          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
-          example: "12/2023"
         enCours:
           type: boolean
-          example: false
         description:
           type: string
           maxLength: 2000
-          example: "Développement d'applications web avec Spring Boot et Angular"
 
     ExperienceResponse:
       type: object
       properties:
         id:
           type: integer
-          example: 1
         cvId:
           type: integer
-          example: 1
         poste:
           type: string
-          example: "Développeur Full Stack"
         entreprise:
           type: string
-          example: "TechCorp SARL"
         localisation:
           type: string
-          example: "Dakar, Sénégal"
         dateDebut:
           type: string
-          example: "01/2022"
         dateFin:
           type: string
-          example: "12/2023"
         enCours:
           type: boolean
-          example: false
         description:
           type: string
         dateCreation:
@@ -1345,64 +1317,46 @@ components:
       properties:
         cvId:
           type: integer
-          example: 1
         diplome:
           type: string
           minLength: 2
           maxLength: 150
-          example: "Master en Génie Logiciel"
         etablissement:
           type: string
           minLength: 2
           maxLength: 150
-          example: "Université Assane Seck de Ziguinchor"
         localisation:
           type: string
           maxLength: 100
-          example: "Ziguinchor, Sénégal"
         dateDebut:
           type: string
-          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
-          example: "10/2020"
         dateFin:
           type: string
-          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
-          example: "07/2022"
         enCours:
           type: boolean
-          example: false
         description:
           type: string
           maxLength: 2000
-          example: "Formation approfondie en développement logiciel et architecture des systèmes"
 
     FormationResponse:
       type: object
       properties:
         id:
           type: integer
-          example: 1
         cvId:
           type: integer
-          example: 1
         diplome:
           type: string
-          example: "Master en Génie Logiciel"
         etablissement:
           type: string
-          example: "Université Assane Seck de Ziguinchor"
         localisation:
           type: string
-          example: "Ziguinchor, Sénégal"
         dateDebut:
           type: string
-          example: "10/2020"
         dateFin:
           type: string
-          example: "07/2022"
         enCours:
           type: boolean
-          example: false
         description:
           type: string
         dateCreation:
@@ -1423,12 +1377,10 @@ components:
       properties:
         cvId:
           type: integer
-          example: 1
         nom:
           type: string
           minLength: 2
           maxLength: 100
-          example: "Java"
         niveau:
           $ref: '#/components/schemas/NiveauCompetence'
         categorie:
@@ -1439,13 +1391,10 @@ components:
       properties:
         id:
           type: integer
-          example: 1
         cvId:
           type: integer
-          example: 1
         nom:
           type: string
-          example: "Java"
         niveau:
           $ref: '#/components/schemas/NiveauCompetence'
         categorie:
@@ -1468,7 +1417,6 @@ components:
       properties:
         cvId:
           type: integer
-          example: 1
         langue:
           $ref: '#/components/schemas/Langues'
         niveau:
@@ -1479,10 +1427,8 @@ components:
       properties:
         id:
           type: integer
-          example: 1
         cvId:
           type: integer
-          example: 1
         langue:
           $ref: '#/components/schemas/Langues'
         niveau:
@@ -1506,60 +1452,43 @@ components:
       properties:
         cvId:
           type: integer
-          example: 1
         nom:
           type: string
           minLength: 2
           maxLength: 150
-          example: "Oracle Certified Professional Java SE 11"
         organisme:
           type: string
           minLength: 2
           maxLength: 150
-          example: "Oracle"
         dateObtention:
           type: string
-          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
-          example: "06/2023"
         dateExpiration:
           type: string
-          pattern: "^(0[1-9]|1[0-2])/[0-9]{4}$"
-          example: "06/2026"
         numeroCredential:
           type: string
           maxLength: 100
-          example: "OCP-12345678"
         urlVerification:
           type: string
-          example: "https://education.oracle.com/verify/credential/12345678"
 
     CertificationResponse:
       type: object
       properties:
         id:
           type: integer
-          example: 1
         cvId:
           type: integer
-          example: 1
         nom:
           type: string
-          example: "Oracle Certified Professional Java SE 11"
         organisme:
           type: string
-          example: "Oracle"
         dateObtention:
           type: string
-          example: "06/2023"
         dateExpiration:
           type: string
-          example: "06/2026"
         numeroCredential:
           type: string
-          example: "OCP-12345678"
         urlVerification:
           type: string
-          example: "https://education.oracle.com/verify/credential/12345678"
         dateCreation:
           type: string
           format: date-time
@@ -1578,23 +1507,17 @@ components:
             $ref: '#/components/schemas/CVResponse'
         pageNumber:
           type: integer
-          example: 0
         pageSize:
           type: integer
-          example: 10
         totalElements:
           type: integer
           format: int64
-          example: 100
         totalPages:
           type: integer
-          example: 10
         last:
           type: boolean
-          example: false
         first:
           type: boolean
-          example: true
 
     # ========== ERROR ==========
 
@@ -1604,22 +1527,16 @@ components:
         timestamp:
           type: string
           format: date-time
-          example: "2024-12-13 15:30:00"
         status:
           type: integer
-          example: 400
         error:
           type: string
-          example: "Bad Request"
         code:
           type: string
-          example: "VALIDATION_ERROR"
         message:
           type: string
-          example: "Erreur de validation des données"
         path:
           type: string
-          example: "/api/cvs"
         validationErrors:
           type: array
           items:
@@ -1627,7 +1544,5 @@ components:
             properties:
               field:
                 type: string
-                example: "titre"
               message:
                 type: string
-                example: "Le titre doit contenir entre 3 et 100 caractères"
