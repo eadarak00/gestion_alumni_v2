@@ -21,7 +21,7 @@ import jakarta.annotation.Generated;
  * LangueParleesRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T14:50:03.590683172Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T22:17:05.074030704Z[Africa/Dakar]")
 public class LangueParleesRequest {
 
   private Integer cvId;

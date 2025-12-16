@@ -24,7 +24,7 @@ import jakarta.annotation.Generated;
  * Invitation
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:26:58.951985870Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T20:10:40.405925321Z[Africa/Dakar]")
 public class Invitation {
 
   private Long id;
