@@ -5,13 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uasz.alumni.ms_cv.dto.request.ExperienceRequest;
-import uasz.alumni.ms_cv.dto.response.ExperienceResponse;
 import uasz.alumni.ms_cv.exception.*;
 import uasz.alumni.ms_cv.model.CV;
 import uasz.alumni.ms_cv.model.Experience;
 import uasz.alumni.ms_cv.repository.CVRepository;
 import uasz.alumni.ms_cv.repository.ExperienceRepository;
+import uasz.alumni.spi.model.ExperienceRequest;
+import uasz.alumni.spi.model.ExperienceResponse;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -401,19 +401,33 @@ public class ExperienceService {
                 throw new BadRequestException("L'expérience ne peut pas être null");
             }
             
-            return ExperienceResponse.builder()
-                    .id(experience.getId())
-                    .cvId(experience.getCv().getId())
-                    .poste(experience.getPoste())
-                    .entreprise(experience.getEntreprise())
-                    .localisation(experience.getLocalisation())
-                    .dateDebut(experience.getDateDebut())
-                    .dateFin(experience.getDateFin())
-                    .enCours(experience.getEnCours())
-                    .description(experience.getDescription())
-                    .dateCreation(experience.getDateCreation())
-                    .dateDerniereModification(experience.getDateDerniereModification())
-                    .build();
+            // return ExperienceResponse.builder()
+            //         .id(experience.getId())
+            //         .cvId(experience.getCv().getId())
+            //         .poste(experience.getPoste())
+            //         .entreprise(experience.getEntreprise())
+            //         .localisation(experience.getLocalisation())
+            //         .dateDebut(experience.getDateDebut())
+            //         .dateFin(experience.getDateFin())
+            //         .enCours(experience.getEnCours())
+            //         .description(experience.getDescription())
+            //         .dateCreation(experience.getDateCreation())
+            //         .dateDerniereModification(experience.getDateDerniereModification())
+            //         .build();
+
+            ExperienceResponse response = new ExperienceResponse();
+            response.setId(experience.getId());
+            response.setCvId(experience.getCv().getId());
+            response.setPoste(experience.getPoste());
+            response.setEntreprise(experience.getEntreprise());
+            response.setLocalisation(experience.getLocalisation());
+            response.setDateDebut(experience.getDateDebut());
+            response.setDateFin(experience.getDateFin());
+            response.setEnCours(experience.getEnCours());
+            response.setDescription(experience.getDescription());
+            response.setDateCreation(experience.getDateCreation());
+            response.setDateDerniereModification(experience.getDateDerniereModification());
+            return response;
                     
         } catch (Exception e) {
             logger.error("\n\nErreur lors du mapping Experience vers ExperienceResponse: \n", e);

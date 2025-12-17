@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import uasz.alumni.spi.model.CategorieCompetence;
+import uasz.alumni.spi.model.NiveauCompetence;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

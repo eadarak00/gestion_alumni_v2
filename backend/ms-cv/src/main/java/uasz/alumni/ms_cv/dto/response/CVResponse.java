@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uasz.alumni.ms_cv.model.TypeTemplate;
+import uasz.alumni.spi.model.TypeTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import uasz.alumni.spi.model.TypeTemplate;
 
 import java.util.ArrayList;
 import java.util.List;

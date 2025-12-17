@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import uasz.alumni.ms_cv.model.CategorieCompetence;
 import uasz.alumni.ms_cv.model.Competence;
-import uasz.alumni.ms_cv.model.NiveauCompetence;
+import uasz.alumni.spi.model.CategorieCompetence;
+import uasz.alumni.spi.model.NiveauCompetence;
 
 import java.util.List;
 import java.util.Optional;

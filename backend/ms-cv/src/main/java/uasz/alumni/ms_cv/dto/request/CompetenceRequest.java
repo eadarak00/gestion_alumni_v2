@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uasz.alumni.ms_cv.model.CategorieCompetence;
-import uasz.alumni.ms_cv.model.NiveauCompetence;
+import uasz.alumni.spi.model.CategorieCompetence;
+import uasz.alumni.spi.model.NiveauCompetence;
 
 @Data
 @AllArgsConstructor

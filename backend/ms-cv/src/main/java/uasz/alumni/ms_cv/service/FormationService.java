@@ -5,13 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uasz.alumni.ms_cv.dto.request.FormationRequest;
-import uasz.alumni.ms_cv.dto.response.FormationResponse;
 import uasz.alumni.ms_cv.exception.*;
 import uasz.alumni.ms_cv.model.CV;
 import uasz.alumni.ms_cv.model.Formation;
 import uasz.alumni.ms_cv.repository.CVRepository;
 import uasz.alumni.ms_cv.repository.FormationRepository;
+import uasz.alumni.spi.model.FormationRequest;
+import uasz.alumni.spi.model.FormationResponse;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -401,19 +401,33 @@ public class FormationService {
                 throw new BadRequestException("La formation ne peut pas être null");
             }
             
-            return FormationResponse.builder()
-                    .id(formation.getId())
-                    .cvId(formation.getCv().getId())
-                    .diplome(formation.getDiplome())
-                    .etablissement(formation.getEtablissement())
-                    .localisation(formation.getLocalisation())
-                    .dateDebut(formation.getDateDebut())
-                    .dateFin(formation.getDateFin())
-                    .enCours(formation.getEnCours())
-                    .description(formation.getDescription())
-                    .dateCreation(formation.getDateCreation())
-                    .dateDerniereModification(formation.getDateDerniereModification())
-                    .build();
+            // return FormationResponse.builder()
+            //         .id(formation.getId())
+            //         .cvId(formation.getCv().getId())
+            //         .diplome(formation.getDiplome())
+            //         .etablissement(formation.getEtablissement())
+            //         .localisation(formation.getLocalisation())
+            //         .dateDebut(formation.getDateDebut())
+            //         .dateFin(formation.getDateFin())
+            //         .enCours(formation.getEnCours())
+            //         .description(formation.getDescription())
+            //         .dateCreation(formation.getDateCreation())
+            //         .dateDerniereModification(formation.getDateDerniereModification())
+            //         .build();
+
+            FormationResponse response = new FormationResponse();
+            response.setId(formation.getId());
+            response.setCvId(formation.getCv().getId());
+            response.setDiplome(formation.getDiplome());
+            response.setEtablissement(formation.getEtablissement());
+            response.setLocalisation(formation.getLocalisation());
+            response.setDateDebut(formation.getDateDebut());
+            response.setDateFin(formation.getDateFin());
+            response.setEnCours(formation.getEnCours());
+            response.setDescription(formation.getDescription());
+            response.setDateCreation(formation.getDateCreation());
+            response.setDateDerniereModification(formation.getDateDerniereModification());
+            return response;
                     
         } catch (Exception e) {
             logger.error("\n\nErreur lors du mapping Formation vers FormationResponse: \n", e);

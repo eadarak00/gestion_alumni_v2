@@ -1,7 +1,8 @@
 package uasz.alumni.ms_cv.exception;
 
 import org.springframework.http.HttpStatus;
-import uasz.alumni.ms_cv.model.Langues;
+
+import uasz.alumni.spi.model.Langues;
 
 public class LangueAlreadyExistsException extends ApplicationException {
     

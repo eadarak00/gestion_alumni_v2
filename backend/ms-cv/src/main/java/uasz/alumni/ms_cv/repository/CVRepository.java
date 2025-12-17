@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import uasz.alumni.ms_cv.model.CV;
-import uasz.alumni.ms_cv.model.TypeTemplate;
+import uasz.alumni.spi.model.TypeTemplate;
 
 import java.util.List;
 import java.util.Optional;

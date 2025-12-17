@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import uasz.alumni.ms_cv.model.Langues;
 import uasz.alumni.ms_cv.model.LangueParlees;
-import uasz.alumni.ms_cv.model.NiveauLangue;
+import uasz.alumni.spi.model.Langues;
+import uasz.alumni.spi.model.NiveauLangue;
 
 import java.util.List;
 import java.util.Optional;

@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uasz.alumni.ms_cv.model.Langues;
-import uasz.alumni.ms_cv.model.NiveauLangue;
+import uasz.alumni.spi.model.Langues;
+import uasz.alumni.spi.model.NiveauLangue;
 
 import java.time.LocalDateTime;
 

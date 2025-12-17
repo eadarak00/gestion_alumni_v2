@@ -7,11 +7,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uasz.alumni.ms_cv.dto.request.CVRequest;
-import uasz.alumni.ms_cv.dto.response.*;
+
+import uasz.alumni.ms_cv.dto.response.PageResponse;
 import uasz.alumni.ms_cv.exception.*;
 import uasz.alumni.ms_cv.model.*;
 import uasz.alumni.ms_cv.repository.*;
+import uasz.alumni.spi.model.CVCompletResponse;
+import uasz.alumni.spi.model.CVRequest;
+import uasz.alumni.spi.model.CVResponse;
+import uasz.alumni.spi.model.CertificationResponse;
+import uasz.alumni.spi.model.CompetenceResponse;
+import uasz.alumni.spi.model.ExperienceResponse;
+import uasz.alumni.spi.model.FormationResponse;
+import uasz.alumni.spi.model.LangueParleesResponse;
+import uasz.alumni.spi.model.TypeTemplate;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -491,22 +500,39 @@ public class CVService {
                 throw new BadRequestException("Le CV ne peut pas être null");
             }
             
-            return CVResponse.builder()
-                    .id(cv.getId())
-                    .titre(cv.getTitre())
-                    .resume(cv.getResume())
-                    .photo(cv.getPhoto())
-                    .linkedin(cv.getLinkedin())
-                    .github(cv.getGithub())
-                    .portfolio(cv.getPortfolio())
-                    .telephone(cv.getTelephone())
-                    .email(cv.getEmail())
-                    .adresse(cv.getAdresse())
-                    .utilisateurId(cv.getUtilisateurId())
-                    .template(cv.getTemplate())
-                    .dateCreation(cv.getDateCreation())
-                    .dateDerniereModification(cv.getDateDerniereModification())
-                    .build();
+            // return CVResponse.builder()
+            //         .id(cv.getId())
+            //         .titre(cv.getTitre())
+            //         .resume(cv.getResume())
+            //         .photo(cv.getPhoto())
+            //         .linkedin(cv.getLinkedin())
+            //         .github(cv.getGithub())
+            //         .portfolio(cv.getPortfolio())
+            //         .telephone(cv.getTelephone())
+            //         .email(cv.getEmail())
+            //         .adresse(cv.getAdresse())
+            //         .utilisateurId(cv.getUtilisateurId())
+            //         .template(cv.getTemplate())
+            //         .dateCreation(cv.getDateCreation())
+            //         .dateDerniereModification(cv.getDateDerniereModification())
+            //         .build();
+
+            CVResponse response = new CVResponse();
+            response.setId(cv.getId());
+            response.setTitre(cv.getTitre());
+            response.setResume(cv.getResume());
+            response.setPhoto(cv.getPhoto());
+            response.setLinkedin(cv.getLinkedin());
+            response.setGithub(cv.getGithub());
+            response.setPortfolio(cv.getPortfolio());
+            response.setTelephone(cv.getTelephone());
+            response.setEmail(cv.getEmail());
+            response.setAdresse(cv.getAdresse());
+            response.setUtilisateurId(cv.getUtilisateurId());
+            response.setTemplate(cv.getTemplate());
+            response.setDateCreation(cv.getDateCreation());
+            response.setDateDerniereModification(cv.getDateDerniereModification());
+            return response;
                     
         } catch (Exception e) {
             logger.error("\n\nErreur lors du mapping CV vers CVResponse: \n", e);
@@ -523,37 +549,69 @@ public class CVService {
                 throw new BadRequestException("Le CV ne peut pas être null");
             }
             
-            return CVCompletResponse.builder()
-                    .id(cv.getId())
-                    .titre(cv.getTitre())
-                    .resume(cv.getResume())
-                    .photo(cv.getPhoto())
-                    .linkedin(cv.getLinkedin())
-                    .github(cv.getGithub())
-                    .portfolio(cv.getPortfolio())
-                    .telephone(cv.getTelephone())
-                    .email(cv.getEmail())
-                    .adresse(cv.getAdresse())
-                    .utilisateurId(cv.getUtilisateurId())
-                    .template(cv.getTemplate())
-                    .experiences(cv.getExperiences().stream()
-                            .map(this::mapToExperienceResponse)
-                            .collect(Collectors.toList()))
-                    .formations(cv.getFormations().stream()
-                            .map(this::mapToFormationResponse)
-                            .collect(Collectors.toList()))
-                    .competences(cv.getCompetences().stream()
-                            .map(this::mapToCompetenceResponse)
-                            .collect(Collectors.toList()))
-                    .languesParlees(cv.getLanguesParlees().stream()
-                            .map(this::mapToLangueParleesResponse)
-                            .collect(Collectors.toList()))
-                    .certifications(cv.getCertifications().stream()
-                            .map(this::mapToCertificationResponse)
-                            .collect(Collectors.toList()))
-                    .dateCreation(cv.getDateCreation())
-                    .dateDerniereModification(cv.getDateDerniereModification())
-                    .build();
+            // return CVCompletResponse.builder()
+            //         .id(cv.getId())
+            //         .titre(cv.getTitre())
+            //         .resume(cv.getResume())
+            //         .photo(cv.getPhoto())
+            //         .linkedin(cv.getLinkedin())
+            //         .github(cv.getGithub())
+            //         .portfolio(cv.getPortfolio())
+            //         .telephone(cv.getTelephone())
+            //         .email(cv.getEmail())
+            //         .adresse(cv.getAdresse())
+            //         .utilisateurId(cv.getUtilisateurId())
+            //         .template(cv.getTemplate())
+            //         .experiences(cv.getExperiences().stream()
+            //                 .map(this::mapToExperienceResponse)
+            //                 .collect(Collectors.toList()))
+            //         .formations(cv.getFormations().stream()
+            //                 .map(this::mapToFormationResponse)
+            //                 .collect(Collectors.toList()))
+            //         .competences(cv.getCompetences().stream()
+            //                 .map(this::mapToCompetenceResponse)
+            //                 .collect(Collectors.toList()))
+            //         .languesParlees(cv.getLanguesParlees().stream()
+            //                 .map(this::mapToLangueParleesResponse)
+            //                 .collect(Collectors.toList()))
+            //         .certifications(cv.getCertifications().stream()
+            //                 .map(this::mapToCertificationResponse)
+            //                 .collect(Collectors.toList()))
+            //         .dateCreation(cv.getDateCreation())
+            //         .dateDerniereModification(cv.getDateDerniereModification())
+            //         .build();
+
+            CVCompletResponse response = new CVCompletResponse();
+            response.setId(cv.getId());
+            response.setTitre(cv.getTitre());
+            response.setResume(cv.getResume());
+            response.setPhoto(cv.getPhoto());
+            response.setLinkedin(cv.getLinkedin());
+            response.setGithub(cv.getGithub());
+            response.setPortfolio(cv.getPortfolio());
+            response.setTelephone(cv.getTelephone());
+            response.setEmail(cv.getEmail());
+            response.setAdresse(cv.getAdresse());
+            response.setUtilisateurId(cv.getUtilisateurId());
+            response.setTemplate(cv.getTemplate());
+            response.setExperiences(cv.getExperiences().stream()
+                    .map(this::mapToExperienceResponse)
+                    .collect(Collectors.toList()));
+            response.setFormations(cv.getFormations().stream()
+                    .map(this::mapToFormationResponse)
+                    .collect(Collectors.toList()));
+            response.setCompetences(cv.getCompetences().stream()
+                    .map(this::mapToCompetenceResponse)
+                    .collect(Collectors.toList()));
+            response.setLanguesParlees(cv.getLanguesParlees().stream()
+                    .map(this::mapToLangueParleesResponse)
+                    .collect(Collectors.toList()));
+            response.setCertifications(cv.getCertifications().stream()
+                    .map(this::mapToCertificationResponse)
+                    .collect(Collectors.toList()));
+            response.setDateCreation(cv.getDateCreation());
+            response.setDateDerniereModification(cv.getDateDerniereModification());
+            return response;
                     
         } catch (Exception e) {
             logger.error("\n\nErreur lors du mapping CV vers CVCompletResponse: \n", e);
@@ -565,85 +623,145 @@ public class CVService {
      * Mappe Experience vers ExperienceResponse
      */
     private ExperienceResponse mapToExperienceResponse(Experience experience) {
-        return ExperienceResponse.builder()
-                .id(experience.getId())
-                .cvId(experience.getCv().getId())
-                .poste(experience.getPoste())
-                .entreprise(experience.getEntreprise())
-                .localisation(experience.getLocalisation())
-                .dateDebut(experience.getDateDebut())
-                .dateFin(experience.getDateFin())
-                .enCours(experience.getEnCours())
-                .description(experience.getDescription())
-                .dateCreation(experience.getDateCreation())
-                .dateDerniereModification(experience.getDateDerniereModification())
-                .build();
+        // return ExperienceResponse.builder()
+        //         .id(experience.getId())
+        //         .cvId(experience.getCv().getId())
+        //         .poste(experience.getPoste())
+        //         .entreprise(experience.getEntreprise())
+        //         .localisation(experience.getLocalisation())
+        //         .dateDebut(experience.getDateDebut())
+        //         .dateFin(experience.getDateFin())
+        //         .enCours(experience.getEnCours())
+        //         .description(experience.getDescription())
+        //         .dateCreation(experience.getDateCreation())
+        //         .dateDerniereModification(experience.getDateDerniereModification())
+        //         .build();
+
+        ExperienceResponse response = new ExperienceResponse();
+        response.setId(experience.getId());
+        response.setCvId(experience.getCv().getId());
+        response.setPoste(experience.getPoste());
+        response.setEntreprise(experience.getEntreprise());
+        response.setLocalisation(experience.getLocalisation());
+        response.setDateDebut(experience.getDateDebut());
+        response.setDateFin(experience.getDateFin());
+        response.setEnCours(experience.getEnCours());
+        response.setDescription(experience.getDescription());
+        response.setDateCreation(experience.getDateCreation());
+        response.setDateDerniereModification(experience.getDateDerniereModification());
+        return response;
     }
     
     /**
      * Mappe Formation vers FormationResponse
      */
     private FormationResponse mapToFormationResponse(Formation formation) {
-        return FormationResponse.builder()
-                .id(formation.getId())
-                .cvId(formation.getCv().getId())
-                .diplome(formation.getDiplome())
-                .etablissement(formation.getEtablissement())
-                .localisation(formation.getLocalisation())
-                .dateDebut(formation.getDateDebut())
-                .dateFin(formation.getDateFin())
-                .enCours(formation.getEnCours())
-                .description(formation.getDescription())
-                .dateCreation(formation.getDateCreation())
-                .dateDerniereModification(formation.getDateDerniereModification())
-                .build();
+        // return FormationResponse.builder()
+        //         .id(formation.getId())
+        //         .cvId(formation.getCv().getId())
+        //         .diplome(formation.getDiplome())
+        //         .etablissement(formation.getEtablissement())
+        //         .localisation(formation.getLocalisation())
+        //         .dateDebut(formation.getDateDebut())
+        //         .dateFin(formation.getDateFin())
+        //         .enCours(formation.getEnCours())
+        //         .description(formation.getDescription())
+        //         .dateCreation(formation.getDateCreation())
+        //         .dateDerniereModification(formation.getDateDerniereModification())
+        //         .build();
+
+        FormationResponse response = new FormationResponse();
+        response.setId(formation.getId());
+        response.setCvId(formation.getCv().getId());
+        response.setDiplome(formation.getDiplome());
+        response.setEtablissement(formation.getEtablissement());
+        response.setLocalisation(formation.getLocalisation());
+        response.setDateDebut(formation.getDateDebut());
+        response.setDateFin(formation.getDateFin());
+        response.setEnCours(formation.getEnCours());
+        response.setDescription(formation.getDescription());
+        response.setDateCreation(formation.getDateCreation());
+        response.setDateDerniereModification(formation.getDateDerniereModification());
+        return response;
     }
     
     /**
      * Mappe Competence vers CompetenceResponse
      */
     private CompetenceResponse mapToCompetenceResponse(Competence competence) {
-        return CompetenceResponse.builder()
-                .id(competence.getId())
-                .cvId(competence.getCv().getId())
-                .nom(competence.getNom())
-                .niveau(competence.getNiveau())
-                .categorie(competence.getCategorie())
-                .dateCreation(competence.getDateCreation())
-                .dateDerniereModification(competence.getDateDerniereModification())
-                .build();
+        // return CompetenceResponse.builder()
+        //         .id(competence.getId())
+        //         .cvId(competence.getCv().getId())
+        //         .nom(competence.getNom())
+        //         .niveau(competence.getNiveau())
+        //         .categorie(competence.getCategorie())
+        //         .dateCreation(competence.getDateCreation())
+        //         .dateDerniereModification(competence.getDateDerniereModification())
+        //         .build();
+
+        CompetenceResponse response = new CompetenceResponse();
+        response.setId(competence.getId());
+        response.setCvId(competence.getCv().getId());
+        response.setNom(competence.getNom());
+        response.setNiveau(competence.getNiveau());
+        response.setCategorie(competence.getCategorie());
+        response.setDateCreation(competence.getDateCreation());
+        response.setDateDerniereModification(competence.getDateDerniereModification());
+        return response;
     }
     
     /**
      * Mappe LangueParlees vers LangueParleesResponse
      */
     private LangueParleesResponse mapToLangueParleesResponse(LangueParlees langue) {
-        return LangueParleesResponse.builder()
-                .id(langue.getId())
-                .cvId(langue.getCv().getId())
-                .langue(langue.getLangue())
-                .niveau(langue.getNiveau())
-                .dateCreation(langue.getDateCreation())
-                .dateDerniereModification(langue.getDateDerniereModification())
-                .build();
+        // return LangueParleesResponse.builder()
+        //         .id(langue.getId())
+        //         .cvId(langue.getCv().getId())
+        //         .langue(langue.getLangue())
+        //         .niveau(langue.getNiveau())
+        //         .dateCreation(langue.getDateCreation())
+        //         .dateDerniereModification(langue.getDateDerniereModification())
+        //         .build();
+
+        LangueParleesResponse response = new LangueParleesResponse();
+        response.setId(langue.getId());
+        response.setCvId(langue.getCv().getId());
+        response.setLangue(langue.getLangue());
+        response.setNiveau(langue.getNiveau());
+        response.setDateCreation(langue.getDateCreation());
+        response.setDateDerniereModification(langue.getDateDerniereModification());
+        return response;
     }
     
     /**
      * Mappe Certification vers CertificationResponse
      */
     private CertificationResponse mapToCertificationResponse(Certification certification) {
-        return CertificationResponse.builder()
-                .id(certification.getId())
-                .cvId(certification.getCv().getId())
-                .nom(certification.getNom())
-                .organisme(certification.getOrganisme())
-                .dateObtention(certification.getDateObtention())
-                .dateExpiration(certification.getDateExpiration())
-                .numeroCredential(certification.getNumeroCredential())
-                .urlVerification(certification.getUrlVerification())
-                .dateCreation(certification.getDateCreation())
-                .dateDerniereModification(certification.getDateDerniereModification())
-                .build();
+        // return CertificationResponse.builder()
+        //         .id(certification.getId())
+        //         .cvId(certification.getCv().getId())
+        //         .nom(certification.getNom())
+        //         .organisme(certification.getOrganisme())
+        //         .dateObtention(certification.getDateObtention())
+        //         .dateExpiration(certification.getDateExpiration())
+        //         .numeroCredential(certification.getNumeroCredential())
+        //         .urlVerification(certification.getUrlVerification())
+        //         .dateCreation(certification.getDateCreation())
+        //         .dateDerniereModification(certification.getDateDerniereModification())
+        //         .build();
+
+        CertificationResponse response = new CertificationResponse();
+        response.setId(certification.getId());
+        response.setCvId(certification.getCv().getId());
+        response.setNom(certification.getNom());
+        response.setOrganisme(certification.getOrganisme());
+        response.setDateObtention(certification.getDateObtention());
+        response.setDateExpiration(certification.getDateExpiration());
+        response.setNumeroCredential(certification.getNumeroCredential());
+        response.setUrlVerification(certification.getUrlVerification());
+        response.setDateCreation(certification.getDateCreation());
+        response.setDateDerniereModification(certification.getDateDerniereModification());
+        return response;
     }
     
     /**

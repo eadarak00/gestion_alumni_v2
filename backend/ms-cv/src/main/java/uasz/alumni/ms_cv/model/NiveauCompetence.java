@@ -1,8 +1,8 @@
-package uasz.alumni.ms_cv.model;
+// package uasz.alumni.ms_cv.model;
 
-public enum NiveauCompetence {
-    DEBUTANT,
-    INTERMEDIAIRE,
-    AVANCE,
-    EXPERT
-}
+// public enum NiveauCompetence {
+//     DEBUTANT,
+//     INTERMEDIAIRE,
+//     AVANCE,
+//     EXPERT
+// }

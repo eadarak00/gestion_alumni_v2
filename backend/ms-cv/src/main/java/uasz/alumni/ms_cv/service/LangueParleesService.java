@@ -5,14 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uasz.alumni.ms_cv.dto.request.LangueParleesRequest;
-import uasz.alumni.ms_cv.dto.response.LangueParleesResponse;
 import uasz.alumni.ms_cv.exception.*;
 import uasz.alumni.ms_cv.model.CV;
 import uasz.alumni.ms_cv.model.LangueParlees;
-import uasz.alumni.ms_cv.model.NiveauLangue;
 import uasz.alumni.ms_cv.repository.CVRepository;
 import uasz.alumni.ms_cv.repository.LangueParleesRepository;
+import uasz.alumni.spi.model.LangueParleesRequest;
+import uasz.alumni.spi.model.LangueParleesResponse;
+import uasz.alumni.spi.model.NiveauLangue;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -330,14 +330,23 @@ public class LangueParleesService {
                 throw new BadRequestException("La langue parlée ne peut pas être null");
             }
             
-            return LangueParleesResponse.builder()
-                    .id(langueParlees.getId())
-                    .cvId(langueParlees.getCv().getId())
-                    .langue(langueParlees.getLangue())
-                    .niveau(langueParlees.getNiveau())
-                    .dateCreation(langueParlees.getDateCreation())
-                    .dateDerniereModification(langueParlees.getDateDerniereModification())
-                    .build();
+            // return LangueParleesResponse.builder()
+            //         .id(langueParlees.getId())
+            //         .cvId(langueParlees.getCv().getId())
+            //         .langue(langueParlees.getLangue())
+            //         .niveau(langueParlees.getNiveau())
+            //         .dateCreation(langueParlees.getDateCreation())
+            //         .dateDerniereModification(langueParlees.getDateDerniereModification())
+            //         .build();
+
+            LangueParleesResponse response = new LangueParleesResponse();
+            response.setId(langueParlees.getId());
+            response.setCvId(langueParlees.getCv().getId());
+            response.setLangue(langueParlees.getLangue());
+            response.setNiveau(langueParlees.getNiveau());
+            response.setDateCreation(langueParlees.getDateCreation());
+            response.setDateDerniereModification(langueParlees.getDateDerniereModification());
+            return response;
                     
         } catch (Exception e) {
             logger.error("\n\nErreur lors du mapping LangueParlees vers LangueParleesResponse: \n", e);

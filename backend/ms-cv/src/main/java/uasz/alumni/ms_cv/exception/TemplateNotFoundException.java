@@ -1,7 +1,8 @@
 package uasz.alumni.ms_cv.exception;
 
 import org.springframework.http.HttpStatus;
-import uasz.alumni.ms_cv.model.TypeTemplate;
+
+import uasz.alumni.spi.model.TypeTemplate;
 
 public class TemplateNotFoundException extends ApplicationException {
     

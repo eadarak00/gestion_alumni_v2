@@ -465,10 +465,8 @@ public class CertificationService {
             response.setDateExpiration(certification.getDateExpiration());
             response.setNumeroCredential(certification.getNumeroCredential());
             response.setUrlVerification(certification.getUrlVerification());
-            // response.setDateCreation(certification.getDateCreation() != null ? 
-            //         certification.getDateCreation().toOffsetDateTime() : null);
-            // response.setDateDerniereModification(certification.getDateDerniereModification() != null ? 
-            //         certification.getDateDerniereModification().toOffsetDateTime() : null);
+            response.setDateCreation(certification.getDateCreation());
+            response.setDateDerniereModification(certification.getDateDerniereModification());
 
             return response;
                     

@@ -1,8 +1,8 @@
-package uasz.alumni.ms_cv.model;
+// package uasz.alumni.ms_cv.model;
 
-public enum CategorieCompetence {
-    TECHNIQUE,
-    LINGUISTIQUE,
-    SOFT_SKILLS,
-    AUTRE
-}
+// public enum CategorieCompetence {
+//     TECHNIQUE,
+//     LINGUISTIQUE,
+//     SOFT_SKILLS,
+//     AUTRE
+// }

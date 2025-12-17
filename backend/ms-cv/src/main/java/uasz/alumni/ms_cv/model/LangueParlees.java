@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import uasz.alumni.spi.model.Langues;
+import uasz.alumni.spi.model.NiveauLangue;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

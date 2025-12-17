@@ -5,15 +5,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uasz.alumni.ms_cv.dto.request.CompetenceRequest;
-import uasz.alumni.ms_cv.dto.response.CompetenceResponse;
 import uasz.alumni.ms_cv.exception.*;
 import uasz.alumni.ms_cv.model.CV;
-import uasz.alumni.ms_cv.model.CategorieCompetence;
 import uasz.alumni.ms_cv.model.Competence;
-import uasz.alumni.ms_cv.model.NiveauCompetence;
 import uasz.alumni.ms_cv.repository.CVRepository;
 import uasz.alumni.ms_cv.repository.CompetenceRepository;
+import uasz.alumni.spi.model.CategorieCompetence;
+import uasz.alumni.spi.model.CompetenceRequest;
+import uasz.alumni.spi.model.CompetenceResponse;
+import uasz.alumni.spi.model.NiveauCompetence;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -264,8 +264,9 @@ public class CompetenceService {
             
             // Mettre à jour les champs
             competence.setNom(request.getNom().trim());
-            competence.setNiveau(request.getNiveau());
-            competence.setCategorie(request.getCategorie());
+            competence.setNiveau(NiveauCompetence.valueOf(request.getNiveau().name()));
+            competence.setCategorie(request.getCategorie() != null ? 
+                    CategorieCompetence.valueOf(request.getCategorie().name()) : CategorieCompetence.AUTRE);
             
             Competence updatedCompetence = competenceRepository.save(competence);
             
@@ -356,12 +357,20 @@ public class CompetenceService {
      */
     private Competence mapToCompetence(CompetenceRequest request, CV cv) {
         try {
-            return Competence.builder()
-                    .cv(cv)
-                    .nom(request.getNom().trim())
-                    .niveau(request.getNiveau())
-                    .categorie(request.getCategorie() != null ? request.getCategorie() : CategorieCompetence.AUTRE)
-                    .build();
+            // return Competence.builder()
+            //         .cv(cv)
+            //         .nom(request.getNom().trim())
+            //         .niveau(request.getNiveau())
+            //         .categorie(request.getCategorie() != null ? request.getCategorie() : CategorieCompetence.AUTRE)
+            //         .build();
+
+            Competence competence = new Competence();
+            competence.setCv(cv);
+            competence.setNom(request.getNom().trim());
+            competence.setNiveau(request.getNiveau());
+            competence.setCategorie(request.getCategorie() != null ? request.getCategorie() : uasz.alumni.spi.model.CategorieCompetence.AUTRE);
+            
+            return competence;
         } catch (Exception e) {
             logger.error("\n\nErreur lors du mapping CompetenceRequest vers Competence: \n", e);
             throw new BadRequestException("Erreur lors de la création de la compétence");
@@ -377,15 +386,25 @@ public class CompetenceService {
                 throw new BadRequestException("La compétence ne peut pas être null");
             }
             
-            return CompetenceResponse.builder()
-                    .id(competence.getId())
-                    .cvId(competence.getCv().getId())
-                    .nom(competence.getNom())
-                    .niveau(competence.getNiveau())
-                    .categorie(competence.getCategorie())
-                    .dateCreation(competence.getDateCreation())
-                    .dateDerniereModification(competence.getDateDerniereModification())
-                    .build();
+            // return CompetenceResponse.builder()
+            //         .id(competence.getId())
+            //         .cvId(competence.getCv().getId())
+            //         .nom(competence.getNom())
+            //         .niveau(competence.getNiveau())
+            //         .categorie(competence.getCategorie())
+            //         .dateCreation(competence.getDateCreation())
+            //         .dateDerniereModification(competence.getDateDerniereModification())
+            //         .build();
+
+            CompetenceResponse response = new CompetenceResponse();
+            response.setId(competence.getId());
+            response.setCvId(competence.getCv().getId());
+            response.setNom(competence.getNom());
+            response.setNiveau(competence.getNiveau());
+            response.setCategorie(competence.getCategorie());
+            response.setDateCreation(competence.getDateCreation());
+            response.setDateDerniereModification(competence.getDateDerniereModification());
+            return response;
                     
         } catch (Exception e) {
             logger.error("\n\nErreur lors du mapping Competence vers CompetenceResponse: \n", e);

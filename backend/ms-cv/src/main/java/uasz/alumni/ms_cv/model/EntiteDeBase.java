@@ -1,7 +1,6 @@
 package uasz.alumni.ms_cv.model;
 
-import java.time.LocalDateTime;
-
+import java.time.OffsetDateTime;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,19 +23,20 @@ public class EntiteDeBase {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private LocalDateTime dateCreation;
-    private LocalDateTime dateDerniereModification;
+    // private LocalDateTime dateCreation;
+    private OffsetDateTime dateCreation;
+    private OffsetDateTime dateDerniereModification;
     private String creePar;
     private String modifiePar;
 
     @PrePersist
     protected void lorsDeCreation() {
-        dateCreation = LocalDateTime.now();
-        dateDerniereModification = LocalDateTime.now();
+        dateCreation = OffsetDateTime.now();
+        dateDerniereModification = OffsetDateTime.now();
     }
 
     @PreUpdate
     protected void lorsDeModification() {
-        dateDerniereModification = LocalDateTime.now();
+        dateDerniereModification = OffsetDateTime.now();
     }
 }
