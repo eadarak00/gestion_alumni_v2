@@ -53,6 +53,8 @@ export const authService = {
    * Connexion utilisateur
    */
   login: async (email, motDePasse) => {
+    console.log("🔐 [AUTH] Tentative de connexion:", { email });
+
     try {
       const { data } = await authApi.login({ email, motDePasse });
 
@@ -85,10 +87,15 @@ export const authService = {
 
       localStorage.setItem("user", JSON.stringify(user));
 
-      // on conserve l’ancienne convention: data.user
+      console.log("✅ [AUTH] Connexion réussie:", {
+        email: user.email,
+        role: user.role,
+        username: user.username,
+      });
+
       return { ...data, user };
     } catch (error) {
-      console.error("❌ Login échoué:", error);
+      console.error("❌ [AUTH] Connexion échouée:", error);
       throw error;
     }
   },
@@ -97,8 +104,13 @@ export const authService = {
    * Inscription
    */
   registerUser: async (userData) => {
+    console.log("📝 [AUTH] Tentative d'inscription:", {
+      email: userData?.email,
+      role: userData?.role,
+    });
+
     try {
-      // TOn attend UtilisateurRequestDTO 
+      // On attend UtilisateurRequestDTO
       const payload = {
         nom: userData.nom,
         prenom: userData.prenom,
@@ -110,9 +122,15 @@ export const authService = {
       };
 
       const { data } = await authApi.inscrire(payload);
+
+      console.log("✅ [AUTH] Inscription réussie:", {
+        email: payload.email,
+        role: payload.role,
+      });
+
       return data;
     } catch (error) {
-      console.error("❌ Inscription échouée:", error);
+      console.error("❌ [AUTH] Inscription échouée:", error);
       throw error;
     }
   },
@@ -121,6 +139,8 @@ export const authService = {
    * Refresh token
    */
   refreshToken: async (refreshToken) => {
+    console.log("🔁 [AUTH] Tentative de refresh token...");
+
     try {
       const token = refreshToken || localStorage.getItem("refreshToken");
       const { data } = await authApi.refresh({ refreshToken: token });
@@ -133,9 +153,10 @@ export const authService = {
         localStorage.setItem("refreshToken", data.refreshToken);
       }
 
+      console.log("✅ [AUTH] Refresh token réussi");
       return data;
     } catch (error) {
-      console.error("❌ Refresh token échoué:", error);
+      console.error("❌ [AUTH] Refresh token échoué:", error);
 
       // Nettoyer en cas d'échec
       localStorage.removeItem("accessToken");
@@ -151,19 +172,25 @@ export const authService = {
    * Logout
    */
   logout: async (refreshTokenArg) => {
+    console.log("🚪 [AUTH] Tentative de déconnexion...");
+
     const refreshToken = refreshTokenArg || localStorage.getItem("refreshToken");
 
     try {
       if (refreshToken) {
         await authApi.logout({ refreshToken });
       }
+
+      console.log("✅ [AUTH] Déconnexion réussie (serveur)");
     } catch (error) {
-      console.warn("⚠️ Logout serveur échoué (on nettoie quand même):", error);
+      console.warn("⚠️ [AUTH] Déconnexion serveur échouée (nettoyage local quand même):", error);
     } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       setAuthToken(null);
+
+      console.log("🧹 [AUTH] Nettoyage localStorage effectué");
     }
   },
 
