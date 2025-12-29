@@ -1,71 +1,40 @@
-import ValidationApi from '../../api-ms-user/js-client/src/api/ValidationApi';
-import CodeValidationRequestDTO from '../../api-ms-user/js-client/src/model/CodeValidationRequestDTO';
-// import CodeValidationCheckDTO from '../../api-ms-user/js-client/src/model/CodeValidationCheckDTO';
-import apiClient from '../../utils/apiConfig';
+import { ValidationApi } from "../../api-ms-user/js-client";
+import apiClient, { msUserConfiguration } from "../../utils/apiConfig";
 
-const validationApi = new ValidationApi(apiClient);
-const API_BASE_URL = 'http://localhost:8088/api/v1';
+const validationApi = new ValidationApi(msUserConfiguration, undefined, apiClient);
 
 export const validationService = {
-  sendValidationCode: (email) => {
-    // Utiliser l'API générée pour l'envoi (ça fonctionne)
-    return new Promise((resolve, reject) => {
-      const codeRequest = new CodeValidationRequestDTO(email);
-      validationApi.envoyerCode(codeRequest, (error, data, response) => {
-        if (error) reject(error);
-        else resolve();
-      });
-    });
+  sendValidationCode: async (email) => {
+    console.log("📩 [VALIDATION] Envoi du code de validation...", { email });
+
+    try {
+      await validationApi.envoyerCode({ email });
+
+      console.log("✅ [VALIDATION] Code de validation envoyé avec succès.", { email });
+      return true;
+    } catch (error) {
+      console.error("❌ [VALIDATION] Échec envoi code de validation.", { email, error });
+      throw error;
+    }
   },
 
-  
+  verifyValidationCode: async (email, code) => {
+    console.log("🔐 [VALIDATION] Vérification du code...", { email, code });
 
-  verifyValidationCode: (email, code) => {
-    // Pour la vérification, utiliser fetch directement
-    return new Promise((resolve, reject) => {
-      fetch(`${API_BASE_URL}/validation/verifier`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'text/plain, */*'
-        },
-        body: JSON.stringify({ email, code })
-      })
-      .then(async (response) => {
-        const text = await response.text();
-        
-        // Debug logging
-        console.log('=== VALIDATION RESPONSE ===');
-        console.log('Status:', response.status);
-        console.log('Text:', text);
-        console.log('OK:', response.ok);
-        console.log('===========================');
-        
-        if (response.ok) {
-          // L'API retourne une string simple, pas du JSON
-          resolve(text || 'Validation réussie');
-        } else {
-          // Essayer de comprendre l'erreur
-          let errorMsg = `Code invalide (${response.status})`;
-          
-          if (text) {
-            try {
-              // Peut-être que l'erreur est en JSON
-              const errorJson = JSON.parse(text);
-              errorMsg = errorJson.message || errorJson;
-            } catch {
-              // Sinon utiliser le texte brut
-              errorMsg = text;
-            }
-          }
-          
-          reject(new Error(errorMsg));
-        }
-      })
-      .catch((error) => {
-        console.error('Network error:', error);
-        reject(new Error('Erreur réseau. Vérifiez votre connexion.'));
-      });
-    });
-  }
+    try {
+      // l'API retourne un string : axios le récupère dans data
+      const { data } = await validationApi.verifierCode(
+        { email, code },
+        { headers: { Accept: "text/plain, */*" } }
+      );
+
+      console.log("✅ [VALIDATION] Code vérifié avec succès.", { email, response: data });
+      return data;
+    } catch (error) {
+      console.error("❌ [VALIDATION] Code invalide / erreur vérification.", { email, error });
+      throw error;
+    }
+  },
 };
+
+export default validationService;

@@ -1,8 +1,8 @@
-import { createContext, useState, useEffect } from 'react';
-import { authService } from '../services/msUser/authService';
-import { tokenManager } from '../utils/tokenManager';
-import { setAuthToken } from '../utils/apiConfig';
-import { handleApiError } from '../utils/errorHandler';
+import { createContext, useState, useEffect } from "react";
+import { authService } from "../services/msUser/authService";
+import { tokenManager } from "../utils/tokenManager";
+import { setAuthToken } from "../utils/apiConfig";
+import { handleApiError } from "../utils/errorHandler";
 
 export const AuthContext = createContext(null);
 
@@ -16,6 +16,8 @@ export const AuthProvider = ({ children }) => {
   // Initialisation au démarrage
   useEffect(() => {
     const initAuth = () => {
+      console.log("🔄 [AUTH] Initialisation du contexte Auth...");
+
       const token = tokenManager.getAccessToken();
       const savedUser = tokenManager.getUser();
 
@@ -23,13 +25,21 @@ export const AuthProvider = ({ children }) => {
         setAuthToken(token);
         setUser(savedUser);
         setIsAuthenticated(true);
+
+        console.log("✅ [AUTH] Session restaurée depuis localStorage.", {
+          email: savedUser?.email,
+          role: savedUser?.role,
+        });
       } else {
         setAuthToken(null);
         setUser(null);
         setIsAuthenticated(false);
+
+        console.log("ℹ️ [AUTH] Aucune session existante (utilisateur non connecté).");
       }
 
       setLoading(false);
+      console.log("✅ [AUTH] Initialisation terminée.");
     };
 
     initAuth();
@@ -37,7 +47,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, motDePasse) => {
     try {
-      console.log('Tentative connexion pour:', email);
+      console.log("🔐 [AUTH] Tentative de connexion...", { email });
 
       const response = await authService.login(email, motDePasse);
 
@@ -50,6 +60,11 @@ export const AuthProvider = ({ children }) => {
       setUser(response.user);
       setIsAuthenticated(true);
 
+      console.log("✅ [AUTH] Connexion réussie !", {
+        email: response.user?.email,
+        role: response.user?.role,
+      });
+
       return {
         success: true,
         user: response.user,
@@ -59,33 +74,40 @@ export const AuthProvider = ({ children }) => {
         },
       };
     } catch (error) {
-      console.error('Erreur login dans AuthContext:', error);
+      console.error("❌ [AUTH] Connexion échouée.", { email, error });
       const errorInfo = handleApiError(error);
       throw errorInfo;
     }
   };
 
   const logout = async () => {
+    console.log("🚪 [AUTH] Déconnexion demandée...");
+
     try {
       const refreshToken = tokenManager.getRefreshToken();
       if (refreshToken) {
         await authService.logout(refreshToken);
       }
+      console.log("✅ [AUTH] Déconnexion côté serveur OK (ou ignorée si erreur).");
     } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
+      console.error("⚠️ [AUTH] Erreur lors de la déconnexion serveur:", error);
     } finally {
       tokenManager.clearAll();
       setAuthToken(null);
       setUser(null);
       setIsAuthenticated(false);
+
+      console.log("🧹 [AUTH] Session nettoyée (localStorage + état React).");
     }
   };
 
   const refreshAccessToken = async () => {
+    console.log("🔁 [AUTH] Tentative de refresh accessToken...");
+
     try {
       const refreshToken = tokenManager.getRefreshToken();
       if (!refreshToken) {
-        throw new Error('No refresh token available');
+        throw new Error("No refresh token available");
       }
 
       const response = await authService.refreshToken(refreshToken);
@@ -94,8 +116,10 @@ export const AuthProvider = ({ children }) => {
       tokenManager.setRefreshToken(response.refreshToken);
       setAuthToken(response.accessToken);
 
+      console.log("✅ [AUTH] Refresh token OK.");
       return response.accessToken;
     } catch (error) {
+      console.error("❌ [AUTH] Refresh token échoué → logout.", error);
       await logout();
       throw error;
     }
@@ -107,7 +131,7 @@ export const AuthProvider = ({ children }) => {
       // À implémenter plus tard si tu ajoutes un endpoint de profil
       return user;
     } catch (error) {
-      console.warn('Impossible de récupérer le profil complet:', error);
+      console.warn("⚠️ [AUTH] Impossible de récupérer le profil complet:", error);
       return user;
     }
   };
@@ -119,8 +143,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated,
     userRole,
-    isAlumni: userRole === 'ALUMNI',
-    isEtudiant: userRole === 'ETUDIANT',
+    isAlumni: userRole === "ALUMNI",
+    isEtudiant: userRole === "ETUDIANT",
     login,
     logout,
     refreshAccessToken,
