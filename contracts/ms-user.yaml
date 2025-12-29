@@ -507,6 +507,18 @@ paths:
           required: false
           schema:
             type: string
+        - name: nom
+          in: query
+          description: "Le nom de l'Alumni (ex: THIAM, DIOP...) "
+          required: false
+          schema:
+            type: string
+        - name: prenom
+          in: query
+          description: "Le prenom de l'Alumni (ex: Khoutbou, Ibrahima...) "
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Liste filtrée des alumni

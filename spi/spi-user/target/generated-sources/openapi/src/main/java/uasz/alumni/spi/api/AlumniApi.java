@@ -43,6 +43,8 @@ public interface AlumniApi {
      *
      * @param entreprise Nom de l&#39;entreprise actuelle de l&#39;alumni (optional)
      * @param profession Profession actuelle de l&#39;alumni (ex: Data Scientist, Médecin...) (optional)
+     * @param nom Le nom de l&#39;Alumni (ex: THIAM, DIOP...)  (optional)
+     * @param prenom Le prenom de l&#39;Alumni (ex: Khoutbou, Ibrahima...)  (optional)
      * @return Liste filtrée des alumni (status code 200)
      *         or Requête invalide (status code 400)
      *         or Erreur interne du serveur (status code 500)
@@ -71,7 +73,9 @@ public interface AlumniApi {
     
     ResponseEntity<List<AlumniResponseDTO>> searchAlumni(
         @Parameter(name = "entreprise", description = "Nom de l'entreprise actuelle de l'alumni", in = ParameterIn.QUERY) @Valid @RequestParam(value = "entreprise", required = false) String entreprise,
-        @Parameter(name = "profession", description = "Profession actuelle de l'alumni (ex: Data Scientist, Médecin...)", in = ParameterIn.QUERY) @Valid @RequestParam(value = "profession", required = false) String profession
+        @Parameter(name = "profession", description = "Profession actuelle de l'alumni (ex: Data Scientist, Médecin...)", in = ParameterIn.QUERY) @Valid @RequestParam(value = "profession", required = false) String profession,
+        @Parameter(name = "nom", description = "Le nom de l'Alumni (ex: THIAM, DIOP...) ", in = ParameterIn.QUERY) @Valid @RequestParam(value = "nom", required = false) String nom,
+        @Parameter(name = "prenom", description = "Le prenom de l'Alumni (ex: Khoutbou, Ibrahima...) ", in = ParameterIn.QUERY) @Valid @RequestParam(value = "prenom", required = false) String prenom
     );
 
 }
