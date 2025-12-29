@@ -1,50 +1,48 @@
-# MsUserApiDeGestionDesUtilisateurs.AuthentificationApi
+# AuthentificationApi
 
 All URIs are relative to *http://localhost:8081/api/v1*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**inscrire**](AuthentificationApi.md#inscrire) | **POST** /auth/inscrire | Inscrire un nouvel Utilisateur
-[**login**](AuthentificationApi.md#login) | **POST** /auth/connecter | Connexion utilisateur
-[**logout**](AuthentificationApi.md#logout) | **POST** /auth/deconnecter | Déconnexion utilisateur
-[**refresh**](AuthentificationApi.md#refresh) | **POST** /auth/refresh | Rafraîchir le token JWT
+|Method | HTTP request | Description|
+|------------- | ------------- | -------------|
+|[**inscrire**](#inscrire) | **POST** /auth/inscrire | Inscrire un nouvel Utilisateur|
+|[**login**](#login) | **POST** /auth/connecter | Connexion utilisateur|
+|[**logout**](#logout) | **POST** /auth/deconnecter | Déconnexion utilisateur|
+|[**refresh**](#refresh) | **POST** /auth/refresh | Rafraîchir le token JWT|
 
-
-
-## inscrire
-
+# **inscrire**
 > UtilisateurResponseDTO inscrire(utilisateurRequestDTO)
-
-Inscrire un nouvel Utilisateur
 
 Crée un nouveau compte utilisateur
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
+```typescript
+import {
+    AuthentificationApi,
+    Configuration,
+    UtilisateurRequestDTO
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.AuthentificationApi();
-let utilisateurRequestDTO = new MsUserApiDeGestionDesUtilisateurs.UtilisateurRequestDTO(); // UtilisateurRequestDTO | 
-apiInstance.inscrire(utilisateurRequestDTO, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new AuthentificationApi(configuration);
+
+let utilisateurRequestDTO: UtilisateurRequestDTO; //
+
+const { status, data } = await apiInstance.inscrire(
+    utilisateurRequestDTO
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **utilisateurRequestDTO** | **UtilisateurRequestDTO**|  | |
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **utilisateurRequestDTO** | [**UtilisateurRequestDTO**](UtilisateurRequestDTO.md)|  | 
 
 ### Return type
 
-[**UtilisateurResponseDTO**](UtilisateurResponseDTO.md)
+**UtilisateurResponseDTO**
 
 ### Authorization
 
@@ -52,44 +50,53 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 
-## login
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**201** | Utilisateur inscrit avec succès |  -  |
+|**400** | Données invalides |  -  |
+|**409** | Email, username ou numéro de carte déjà utilisé |  -  |
 
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **login**
 > TokenResponse login(loginRequest)
-
-Connexion utilisateur
 
 Authentifie un utilisateur et retourne un token JWT
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
+```typescript
+import {
+    AuthentificationApi,
+    Configuration,
+    LoginRequest
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.AuthentificationApi();
-let loginRequest = new MsUserApiDeGestionDesUtilisateurs.LoginRequest(); // LoginRequest | 
-apiInstance.login(loginRequest, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new AuthentificationApi(configuration);
+
+let loginRequest: LoginRequest; //
+
+const { status, data } = await apiInstance.login(
+    loginRequest
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **loginRequest** | **LoginRequest**|  | |
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **loginRequest** | [**LoginRequest**](LoginRequest.md)|  | 
 
 ### Return type
 
-[**TokenResponse**](TokenResponse.md)
+**TokenResponse**
 
 ### Authorization
 
@@ -97,44 +104,53 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 
-## logout
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Connexion réussie |  -  |
+|**401** | Identifiants invalides |  -  |
+|**403** | Compte inactif ou supprimé |  -  |
 
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **logout**
 > logout(refreshRequest)
 
-Déconnexion utilisateur
-
-Déconnecte l&#39;utilisateur et invalide le refresh token
+Déconnecte l\'utilisateur et invalide le refresh token
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
+```typescript
+import {
+    AuthentificationApi,
+    Configuration,
+    RefreshRequest
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.AuthentificationApi();
-let refreshRequest = new MsUserApiDeGestionDesUtilisateurs.RefreshRequest(); // RefreshRequest | 
-apiInstance.logout(refreshRequest, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new AuthentificationApi(configuration);
+
+let refreshRequest: RefreshRequest; //
+
+const { status, data } = await apiInstance.logout(
+    refreshRequest
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **refreshRequest** | **RefreshRequest**|  | |
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **refreshRequest** | [**RefreshRequest**](RefreshRequest.md)|  | 
 
 ### Return type
 
-null (empty response body)
+void (empty response body)
 
 ### Authorization
 
@@ -142,44 +158,52 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: Not defined
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
 
 
-## refresh
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**204** | Déconnexion réussie |  -  |
+|**401** | Non authentifié |  -  |
 
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **refresh**
 > TokenResponse refresh(refreshRequest)
-
-Rafraîchir le token JWT
 
 Permet de renouveler un token JWT expiré en utilisant le refresh token
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
+```typescript
+import {
+    AuthentificationApi,
+    Configuration,
+    RefreshRequest
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.AuthentificationApi();
-let refreshRequest = new MsUserApiDeGestionDesUtilisateurs.RefreshRequest(); // RefreshRequest | 
-apiInstance.refresh(refreshRequest, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new AuthentificationApi(configuration);
+
+let refreshRequest: RefreshRequest; //
+
+const { status, data } = await apiInstance.refresh(
+    refreshRequest
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **refreshRequest** | **RefreshRequest**|  | |
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **refreshRequest** | [**RefreshRequest**](RefreshRequest.md)|  | 
 
 ### Return type
 
-[**TokenResponse**](TokenResponse.md)
+**TokenResponse**
 
 ### Authorization
 
@@ -187,6 +211,15 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Token rafraîchi avec succès |  -  |
+|**401** | Refresh token invalide ou expiré |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
