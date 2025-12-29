@@ -5,6 +5,10 @@
  */
 package uasz.alumni.spi.api;
 
+import uasz.alumni.spi.model.AlumniProfilRequestDTO;
+import uasz.alumni.spi.model.AlumniResponseDTO;
+import uasz.alumni.spi.model.EtudiantProfilRequestDTO;
+import uasz.alumni.spi.model.EtudiantResponseDTO;
 import uasz.alumni.spi.model.GetAllUtilisateursFiltered200Response;
 import uasz.alumni.spi.model.UtilisateurResponseDTO;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -33,10 +37,88 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:28.367020818Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-14T13:56:15.185012708Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Utilisateurs", description = "API pour gérer les utilisateurs")
 public interface UtilisateursApi {
+
+    /**
+     * PUT /utilisateurs/completer-profil/alumni : Compléter son profil alumni
+     * Permet à l&#39;utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. 
+     *
+     * @param alumniProfilRequestDTO  (required)
+     * @return Profil alumni complété avec succès (status code 200)
+     *         or Utilisateur non alumni ou données invalides (status code 400)
+     *         or Non authentifié (status code 401)
+     *         or Accès interdit (status code 403)
+     */
+    @Operation(
+        operationId = "completerProfilAlumni",
+        summary = "Compléter son profil alumni",
+        description = "Permet à l'utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. ",
+        tags = { "Utilisateurs" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Profil alumni complété avec succès", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AlumniResponseDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Utilisateur non alumni ou données invalides"),
+            @ApiResponse(responseCode = "401", description = "Non authentifié"),
+            @ApiResponse(responseCode = "403", description = "Accès interdit")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/utilisateurs/completer-profil/alumni",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    
+    ResponseEntity<AlumniResponseDTO> completerProfilAlumni(
+        @Parameter(name = "AlumniProfilRequestDTO", description = "", required = true) @Valid @RequestBody AlumniProfilRequestDTO alumniProfilRequestDTO
+    );
+
+
+    /**
+     * PUT /utilisateurs/completer-profil/etudiant : Compléter son profil étudiant
+     * Permet à l&#39;utilisateur connecté ayant le rôle ETUDIANT de compléter son profil avec les informations spécifiques : numeroCarteEtudiant, filiere et niveau. 
+     *
+     * @param etudiantProfilRequestDTO  (required)
+     * @return Profil étudiant complété avec succès (status code 200)
+     *         or Utilisateur non étudiant ou données invalides (status code 400)
+     *         or Non authentifié (status code 401)
+     *         or Accès interdit (status code 403)
+     */
+    @Operation(
+        operationId = "completerProfilEtudiant",
+        summary = "Compléter son profil étudiant",
+        description = "Permet à l'utilisateur connecté ayant le rôle ETUDIANT de compléter son profil avec les informations spécifiques : numeroCarteEtudiant, filiere et niveau. ",
+        tags = { "Utilisateurs" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Profil étudiant complété avec succès", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = EtudiantResponseDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Utilisateur non étudiant ou données invalides"),
+            @ApiResponse(responseCode = "401", description = "Non authentifié"),
+            @ApiResponse(responseCode = "403", description = "Accès interdit")
+        },
+        security = {
+            @SecurityRequirement(name = "bearerAuth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/utilisateurs/completer-profil/etudiant",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    
+    ResponseEntity<EtudiantResponseDTO> completerProfilEtudiant(
+        @Parameter(name = "EtudiantProfilRequestDTO", description = "", required = true) @Valid @RequestBody EtudiantProfilRequestDTO etudiantProfilRequestDTO
+    );
+
 
     /**
      * GET /utilisateurs/exists/email/{email} : Vérifier si un email existe
