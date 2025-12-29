@@ -17,8 +17,7 @@ const decodeJWT = (token) => {
         .join("")
     );
     return JSON.parse(jsonPayload);
-  } catch (error) {
-    console.error("Erreur lors du décodage du JWT:", error);
+  } catch {
     return null;
   }
 };
@@ -53,8 +52,6 @@ export const authService = {
    * Connexion utilisateur
    */
   login: async (email, motDePasse) => {
-    console.log("🔐 [AUTH] Tentative de connexion:", { email });
-
     try {
       const { data } = await authApi.login({ email, motDePasse });
 
@@ -87,15 +84,8 @@ export const authService = {
 
       localStorage.setItem("user", JSON.stringify(user));
 
-      console.log("✅ [AUTH] Connexion réussie:", {
-        email: user.email,
-        role: user.role,
-        username: user.username,
-      });
-
       return { ...data, user };
     } catch (error) {
-      console.error("❌ [AUTH] Connexion échouée:", error);
       throw error;
     }
   },
@@ -104,11 +94,6 @@ export const authService = {
    * Inscription
    */
   registerUser: async (userData) => {
-    console.log("📝 [AUTH] Tentative d'inscription:", {
-      email: userData?.email,
-      role: userData?.role,
-    });
-
     try {
       // On attend UtilisateurRequestDTO
       const payload = {
@@ -122,15 +107,8 @@ export const authService = {
       };
 
       const { data } = await authApi.inscrire(payload);
-
-      console.log("✅ [AUTH] Inscription réussie:", {
-        email: payload.email,
-        role: payload.role,
-      });
-
       return data;
     } catch (error) {
-      console.error("❌ [AUTH] Inscription échouée:", error);
       throw error;
     }
   },
@@ -139,8 +117,6 @@ export const authService = {
    * Refresh token
    */
   refreshToken: async (refreshToken) => {
-    console.log("🔁 [AUTH] Tentative de refresh token...");
-
     try {
       const token = refreshToken || localStorage.getItem("refreshToken");
       const { data } = await authApi.refresh({ refreshToken: token });
@@ -153,11 +129,8 @@ export const authService = {
         localStorage.setItem("refreshToken", data.refreshToken);
       }
 
-      console.log("✅ [AUTH] Refresh token réussi");
       return data;
     } catch (error) {
-      console.error("❌ [AUTH] Refresh token échoué:", error);
-
       // Nettoyer en cas d'échec
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
@@ -172,25 +145,19 @@ export const authService = {
    * Logout
    */
   logout: async (refreshTokenArg) => {
-    console.log("🚪 [AUTH] Tentative de déconnexion...");
-
     const refreshToken = refreshTokenArg || localStorage.getItem("refreshToken");
 
     try {
       if (refreshToken) {
         await authApi.logout({ refreshToken });
       }
-
-      console.log("✅ [AUTH] Déconnexion réussie (serveur)");
-    } catch (error) {
-      console.warn("⚠️ [AUTH] Déconnexion serveur échouée (nettoyage local quand même):", error);
+    } catch {
+      // on ignore l'erreur serveur, le nettoyage local se fait quand même
     } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       setAuthToken(null);
-
-      console.log("🧹 [AUTH] Nettoyage localStorage effectué");
     }
   },
 

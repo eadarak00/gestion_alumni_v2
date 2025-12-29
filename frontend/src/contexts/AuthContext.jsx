@@ -16,8 +16,6 @@ export const AuthProvider = ({ children }) => {
   // Initialisation au démarrage
   useEffect(() => {
     const initAuth = () => {
-      console.log("🔄 [AUTH] Initialisation du contexte Auth...");
-
       const token = tokenManager.getAccessToken();
       const savedUser = tokenManager.getUser();
 
@@ -25,21 +23,13 @@ export const AuthProvider = ({ children }) => {
         setAuthToken(token);
         setUser(savedUser);
         setIsAuthenticated(true);
-
-        console.log("✅ [AUTH] Session restaurée depuis localStorage.", {
-          email: savedUser?.email,
-          role: savedUser?.role,
-        });
       } else {
         setAuthToken(null);
         setUser(null);
         setIsAuthenticated(false);
-
-        console.log("ℹ️ [AUTH] Aucune session existante (utilisateur non connecté).");
       }
 
       setLoading(false);
-      console.log("✅ [AUTH] Initialisation terminée.");
     };
 
     initAuth();
@@ -47,8 +37,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, motDePasse) => {
     try {
-      console.log("🔐 [AUTH] Tentative de connexion...", { email });
-
       const response = await authService.login(email, motDePasse);
 
       // authService a déjà stocké les tokens dans localStorage
@@ -60,11 +48,6 @@ export const AuthProvider = ({ children }) => {
       setUser(response.user);
       setIsAuthenticated(true);
 
-      console.log("✅ [AUTH] Connexion réussie !", {
-        email: response.user?.email,
-        role: response.user?.role,
-      });
-
       return {
         success: true,
         user: response.user,
@@ -74,36 +57,28 @@ export const AuthProvider = ({ children }) => {
         },
       };
     } catch (error) {
-      console.error("❌ [AUTH] Connexion échouée.", { email, error });
       const errorInfo = handleApiError(error);
       throw errorInfo;
     }
   };
 
   const logout = async () => {
-    console.log("🚪 [AUTH] Déconnexion demandée...");
-
     try {
       const refreshToken = tokenManager.getRefreshToken();
       if (refreshToken) {
         await authService.logout(refreshToken);
       }
-      console.log("✅ [AUTH] Déconnexion côté serveur OK (ou ignorée si erreur).");
     } catch (error) {
-      console.error("⚠️ [AUTH] Erreur lors de la déconnexion serveur:", error);
+      // on ignore l'erreur serveur de logout, le nettoyage local se fait quand même
     } finally {
       tokenManager.clearAll();
       setAuthToken(null);
       setUser(null);
       setIsAuthenticated(false);
-
-      console.log("🧹 [AUTH] Session nettoyée (localStorage + état React).");
     }
   };
 
   const refreshAccessToken = async () => {
-    console.log("🔁 [AUTH] Tentative de refresh accessToken...");
-
     try {
       const refreshToken = tokenManager.getRefreshToken();
       if (!refreshToken) {
@@ -116,10 +91,8 @@ export const AuthProvider = ({ children }) => {
       tokenManager.setRefreshToken(response.refreshToken);
       setAuthToken(response.accessToken);
 
-      console.log("✅ [AUTH] Refresh token OK.");
       return response.accessToken;
     } catch (error) {
-      console.error("❌ [AUTH] Refresh token échoué → logout.", error);
       await logout();
       throw error;
     }
@@ -131,7 +104,6 @@ export const AuthProvider = ({ children }) => {
       // À implémenter plus tard si tu ajoutes un endpoint de profil
       return user;
     } catch (error) {
-      console.warn("⚠️ [AUTH] Impossible de récupérer le profil complet:", error);
       return user;
     }
   };
