@@ -133,7 +133,7 @@ public class UtilisateurService {
         Utilisateur user = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
 
-        if (!user.getRole().equals("ETUDIANT")) {
+        if (!user.getRole().getLibelle().equals("ETUDIANT")) {
             throw new IllegalArgumentException("Cet utilisateur n'est pas un étudiant.");
         }
 
@@ -161,7 +161,7 @@ public class UtilisateurService {
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
 
         // Vérifier le rôle
-        if (!"ALUMNI".equals(user.getRole())) {
+        if (!"ALUMNI".equals(user.getRole().getLibelle())) {
             throw new IllegalArgumentException("Cet utilisateur n'est pas un alumni.");
         }
 

@@ -20,7 +20,7 @@ import uasz.alumni.spi.model.UtilisateurResponseDTO;
 import uasz.alumni.ms_user.common.utils.SecurityServiceUtils;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api-users/v1")
 @RequiredArgsConstructor
 public class UtilisateurController implements UtilisateursApi {
 

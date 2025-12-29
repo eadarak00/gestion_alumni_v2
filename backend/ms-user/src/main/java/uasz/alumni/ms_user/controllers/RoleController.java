@@ -16,7 +16,7 @@ import uasz.alumni.spi.model.RoleRequestDTO;
 import uasz.alumni.spi.model.RoleResponseDTO;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api-users/v1")
 @RequiredArgsConstructor
 public class RoleController implements RolesApi {
 

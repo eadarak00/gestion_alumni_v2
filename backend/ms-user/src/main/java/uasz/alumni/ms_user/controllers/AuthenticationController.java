@@ -1,6 +1,5 @@
 package uasz.alumni.ms_user.controllers;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +15,7 @@ import uasz.alumni.spi.model.UtilisateurRequestDTO;
 import uasz.alumni.spi.model.UtilisateurResponseDTO;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api-users/v1")
 @RequiredArgsConstructor
 public class AuthenticationController implements AuthApi {
 

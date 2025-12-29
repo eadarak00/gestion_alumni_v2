@@ -6,11 +6,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import uasz.alumni.ms_user.entities.Utilisateur;
 import uasz.alumni.ms_user.repositories.UtilisateurRepository;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityServiceUtils {
     private final UtilisateurRepository utilisateurRepository;
 
@@ -38,9 +40,12 @@ public class SecurityServiceUtils {
 
 
     public Long getAuthenticatedUserId() {
-        String username = this.getAuthenticatedUsername();
+        String email = this.getAuthenticatedUsername();
 
-        return utilisateurRepository.findByUsername(username)
+        log.debug("Utilisateur email : " + email);
+
+
+        return utilisateurRepository.findByEmail(email)
                 .map(Utilisateur::getId)
                 .orElseThrow(() -> new IllegalStateException("Utilisateur introuvable"));
     }
