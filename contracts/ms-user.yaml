@@ -1,0 +1,869 @@
+openapi: 3.0.1
+info:
+  title: MS User - API de Gestion des Utilisateurs
+  description: |
+    Microservice de gestion des utilisateurs et authentification pour la plateforme UASZ Alumni.
+    Cette API permet de gérer les utilisateurs, les rôles, les permissions et l'authentification.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081/api/v1
+    description: Environnement de développement
+security:
+  - bearerAuth: []
+tags:
+  - name: Authentification
+    description: Endpoints pour l'authentification et la gestion des sessions
+  - name: Rôles
+    description: API pour la gestion des rôles utilisateurs
+  - name: Utilisateurs
+    description: API pour gérer les utilisateurs
+  - name: Alumnis
+    description: API pour gérer les alumnis
+  - name: Etudiants
+    description: API pour gérer les etudiants
+  - name: Validation
+    description: Endpoints pour la validation des codes par email
+
+paths:
+  # ==================== AUTHENTIFICATION ====================
+  /auth/connecter:
+    post:
+      tags:
+        - Authentification
+      summary: Connexion utilisateur
+      description: Authentifie un utilisateur et retourne un token JWT
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Identifiants invalides
+        '403':
+          description: Compte inactif ou supprimé
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentification
+      summary: Rafraîchir le token JWT
+      description: Permet de renouveler un token JWT expiré en utilisant le refresh token
+      operationId: refresh
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Token rafraîchi avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Refresh token invalide ou expiré
+
+  /auth/deconnecter:
+    post:
+      tags:
+        - Authentification
+      summary: Déconnexion utilisateur
+      description: Déconnecte l'utilisateur et invalide le refresh token
+      operationId: logout
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '204':
+          description: Déconnexion réussie
+        '401':
+          description: Non authentifié
+
+  /auth/inscrire:
+    post:
+      tags:
+        - Authentification
+      summary: Inscrire un nouvel Utilisateur
+      description: Crée un nouveau compte utilisateur
+      operationId: inscrire
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UtilisateurRequestDTO'
+      responses:
+        '201':
+          description: Utilisateur inscrit avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UtilisateurResponseDTO'
+        '400':
+          description: Données invalides
+        '409':
+          description: Email, username ou numéro de carte déjà utilisé
+    
+
+  # ==================== RÔLES ====================
+  /roles:
+    get:
+      tags:
+        - Rôles
+      summary: Récupérer tous les rôles
+      description: Retourne la liste de tous les rôles disponibles dans le système
+      operationId: getAllRoles
+      responses:
+        '200':
+          description: Liste des rôles récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleResponseDTO'
+
+    post:
+      tags:
+        - Rôles
+      summary: Créer un nouveau rôle
+      description: Crée un nouveau rôle dans le système
+      operationId: createRole
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleRequestDTO'
+      responses:
+        '201':
+          description: Rôle créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleResponseDTO'
+        '400':
+          description: Données invalides
+        '409':
+          description: Un rôle avec le même nom existe déjà
+
+  /roles/{id}:
+    get:
+      tags:
+        - Rôles
+      summary: Récupérer un rôle par son ID
+      description: Retourne les détails d'un rôle spécifique
+      operationId: getRoleById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Rôle trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleResponseDTO'
+        '404':
+          description: Rôle non trouvé
+
+    put:
+      tags:
+        - Rôles
+      summary: Mettre à jour un rôle existant
+      description: Met à jour les informations d'un rôle
+      operationId: updateRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleRequestDTO'
+      responses:
+        '200':
+          description: Rôle mis à jour avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleResponseDTO'
+        '400':
+          description: Données invalides
+        '404':
+          description: Rôle non trouvé
+
+    delete:
+      tags:
+        - Rôles
+      summary: Supprimer logiquement un rôle
+      description: Effectue une suppression logique (soft delete) d'un rôle
+      operationId: softDeleteRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Rôle supprimé logiquement avec succès
+        '404':
+          description: Rôle non trouvé
+
+  # ==================== UTILISATEURS ====================
+  /utilisateurs:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Lister et filtrer les utilisateurs
+      description: >
+        Permet de lister les utilisateurs avec pagination, filtre par actif et filtre par suppression (soft delete).
+      operationId: getAllUtilisateursFiltered
+      parameters:
+
+        - name: actif
+          in: query
+          description: Filtre sur l'état d'activation du compte
+          required: false
+          schema:
+            type: boolean
+          example: true
+
+        - name: deleted
+          in: query
+          description: Filtre sur l'état de suppression logique (soft delete)
+          required: false
+          schema:
+            type: boolean
+          example: false
+
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          example: 0
+
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          example: 10
+
+        - name: sort
+          in: query
+          description: "Format: champ,ordre (asc|desc)"
+          required: false
+          schema:
+            type: string
+          example: nom,asc
+
+      responses:
+        '200':
+          description: Résultats de la recherche filtrée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UtilisateurResponseDTO"
+                  totalElements:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  size:
+                    type: integer
+                  number:
+                    type: integer
+
+
+
+  /utilisateurs/email/{email}:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Récupérer un utilisateur par email
+      description: Retourne les informations d'un utilisateur par son email
+      operationId: getUtilisateurByEmail
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Utilisateur trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UtilisateurResponseDTO'
+        '404':
+          description: Utilisateur non trouvé
+
+  /utilisateurs/exists/email/{email}:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Vérifier si un email existe
+      description: Vérifie si un email est déjà utilisé dans le système
+      operationId: emailExists
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Résultat de la vérification
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  /utilisateurs/exists/username/{username}:
+    get:
+      tags:
+        - Utilisateurs
+      summary: Vérifier si un username existe
+      description: Vérifie si un username est déjà utilisé dans le système
+      operationId: usernameExists
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Résultat de la vérification
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  # ==================== VALIDATION ====================
+  /validation/envoyer:
+    post:
+      tags:
+        - Validation
+      summary: Envoyer un code de validation
+      description: Génère et envoie un code de validation par email
+      operationId: envoyerCode
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeValidationRequestDTO'
+      responses:
+        '201':
+          description: Code envoyé avec succès
+        '400':
+          description: Email invalide
+
+  /validation/verifier:
+    post:
+      tags:
+        - Validation
+      summary: Vérifier un code de validation
+      description: Valide un code fourni par l'utilisateur
+      operationId: verifierCode
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeValidationCheckDTO'
+      responses:
+        '200':
+          description: Code validé avec succès
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Code invalide ou expiré
+          content:
+            application/json:
+              schema:
+                type: string
+  # ==================== RECHERCHE ====================
+  /alumni/search:
+    get:
+      tags:
+        - Alumnis
+      summary: Recherche avancée des alumni
+      description: >
+        Permet de rechercher des alumni à l'aide de filtres optionnels
+        par entreprise et profession.
+      operationId: searchAlumni
+      parameters:
+        - name: entreprise
+          in: query
+          description: Nom de l'entreprise actuelle de l'alumni
+          required: false
+          schema:
+            type: string
+        - name: profession
+          in: query
+          description: "Profession actuelle de l'alumni (ex: Data Scientist, Médecin...)"
+          required: false
+          schema:
+            type: string
+        - name: nom
+          in: query
+          description: "Le nom de l'Alumni (ex: THIAM, DIOP...) "
+          required: false
+          schema:
+            type: string
+        - name: prenom
+          in: query
+          description: "Le prenom de l'Alumni (ex: Khoutbou, Ibrahima...) "
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste filtrée des alumni
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlumniResponseDTO'
+        '400':
+          description: Requête invalide
+        '500':
+          description: Erreur interne du serveur
+
+
+components:
+  schemas:
+    # ==================== AUTHENTIFICATION ====================
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - motDePasse
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email de l'utilisateur
+          example: etudiant@uasz.sn
+        motDePasse:
+          type: string
+          format: password
+          description: Mot de passe de l'utilisateur
+          example: MotDePasse123!
+
+    RefreshRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          description: Token de rafraîchissement
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    TokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: Token JWT d'accès
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          description: Token de rafraîchissement
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        tokenType:
+          type: string
+          description: Type de token
+          example: Bearer
+          default: Bearer
+        expiresInSeconds:
+          type: integer
+          format: int64
+          description: Durée de validité du token en secondes
+          example: 900
+
+    UtilisateurRequestDTO:
+      type: object
+      required:
+        - nom
+        - prenom
+        - email
+        - motDePasse
+        - username
+        - telephone
+        - role
+      properties:
+        nom:
+          type: string
+          description: Nom de famille
+          example: Diallo
+        prenom:
+          type: string
+          description: Prénom
+          example: Mamadou
+        email:
+          type: string
+          format: email
+          description: Adresse email
+          example: mamadou.diallo@uasz.sn
+        username:
+          type: string
+          description: Nom d'utilisateur
+          example: mdiallo
+        motDePasse:
+          type: string
+          format: password
+          description: Mot de passe
+          example: MotDePasse123!
+        telephone:
+          type: string
+          description: Numéro de téléphone (format Sénégal)
+          pattern: '^(\+221|00221)?7[015678]\d{7}$'
+          example: "+221781234567"
+        role:
+          type: string
+          description: Rôle de l'utilisateur
+          example: "ETUDIANT"
+    
+
+    # ==================== ÉTUDIANT ====================
+    EtudiantRequestDTO:
+      type: object
+      required:
+        - nom
+        - prenom
+        - email
+        - motDePasse
+        - numeroCarteEtudiant
+        - niveau
+        - filiere
+      properties:
+        nom:
+          type: string
+          description: Nom de famille
+          example: Diallo
+        prenom:
+          type: string
+          description: Prénom
+          example: Mamadou
+        email:
+          type: string
+          format: email
+          description: Adresse email
+          example: mamadou.diallo@uasz.sn
+        username:
+          type: string
+          description: Nom d'utilisateur (optionnel)
+          example: mdiallo
+        motDePasse:
+          type: string
+          format: password
+          description: Mot de passe
+          example: MotDePasse123!
+        telephone:
+          type: string
+          description: Numéro de téléphone (format Sénégal)
+          pattern: '^(\+221|00221)?7[015678]\d{7}$'
+          example: "+221781234567"
+        numeroCarteEtudiant:
+          type: string
+          description: Numéro de carte étudiant
+          example: "ETU123456"
+        niveau:
+          type: string
+          description: Niveau d'études
+          example: "MASTER"
+        filiere:
+          type: string
+          description: Filière d'études
+          example: "Informatique"
+
+    EtudiantResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifiant unique
+          example: 123
+        nom:
+          type: string
+          example: Diallo
+        prenom:
+          type: string
+          example: Mamadou
+        email:
+          type: string
+          example: mamadou.diallo@uasz.sn
+        username:
+          type: string
+          example: mdiallo
+        telephone:
+          type: string
+          example: "+221781234567"
+        numeroCarteEtudiant:
+          type: string
+          example: "ETU123456"
+        niveau:
+          type: string
+          example: "MASTER"
+        filiere:
+          type: string
+          example: "Informatique"
+        actif:
+          type: boolean
+          description: Indique si le compte est actif
+          example: true
+        role:
+          type: string
+          description: Rôle de l'utilisateur
+          example: "ETUDIANT"
+        deleted:
+          type: boolean
+          description: Indique si le compte est supprimé
+          example: false
+
+    # ==================== ALUMNI ====================
+    AlumniRequestDTO:
+      type: object
+      required:
+        - nom
+        - prenom
+        - email
+        - motDePasse
+        - telephone
+      properties:
+        nom:
+          type: string
+          description: Nom de famille
+          example: Sow
+        prenom:
+          type: string
+          description: Prénom
+          example: Aïssatou
+        email:
+          type: string
+          format: email
+          description: Adresse email
+          example: aissatou.sow@alumni.uasz.sn
+        username:
+          type: string
+          description: Nom d'utilisateur (optionnel)
+          example: asow
+        motDePasse:
+          type: string
+          format: password
+          description: Mot de passe
+          example: MotDePasse123!
+        telephone:
+          type: string
+          description: Numéro de téléphone (format Sénégal)
+          pattern: '^(\+221|00221)?7[015678]\d{7}$'
+          example: "+221781234568"
+        profession:
+          type: string
+          description: Profession actuelle
+          example: "Data Scientist"
+        entreprise:
+          type: string
+          description: Entreprise actuelle
+          example: "Sonatel"
+
+    AlumniResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifiant unique
+          example: 124
+        nom:
+          type: string
+          example: Sow
+        prenom:
+          type: string
+          example: Aïssatou
+        email:
+          type: string
+          example: aissatou.sow@alumni.uasz.sn
+        username:
+          type: string
+          example: asow
+        telephone:
+          type: string
+          example: "+221781234568"
+        profession:
+          type: string
+          example: "Data Scientist"
+        entreprise:
+          type: string
+          example: "Sonatel"
+        actif:
+          type: boolean
+          description: Indique si le compte est actif
+          example: true
+        role:
+          type: string
+          description: Rôle de l'utilisateur
+          example: "ALUMNI"
+        deleted:
+          type: boolean
+          description: Indique si le compte est supprimé
+          example: false
+
+    # ==================== RÔLE ====================
+    RoleRequestDTO:
+      type: object
+      required:
+        - libelle
+      properties:
+        libelle:
+          type: string
+          minLength: 2
+          maxLength: 50
+          pattern: '^[A-Z_]+$'
+          description: Libellé du rôle (majuscules et underscores uniquement)
+          example: ADMIN
+
+    RoleResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifiant unique du rôle
+          example: 1
+        libelle:
+          type: string
+          description: Libellé du rôle
+          example: ADMIN
+        deleted:
+          type: boolean
+          description: Indique si le rôle est supprimé
+          example: false
+
+    # ==================== UTILISATEUR ====================
+    UtilisateurResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifiant unique
+          example: 123
+        nom:
+          type: string
+          example: Diallo
+        prenom:
+          type: string
+          example: Mamadou
+        email:
+          type: string
+          example: mamadou.diallo@uasz.sn
+        telephone:
+          type: string
+          example: "+221781234567"
+        username:
+          type: string
+          example: mdiallo
+        actif:
+          type: boolean
+          description: Indique si le compte est actif
+          example: true
+        deleted:
+          type: boolean
+          description: Indique si le compte est supprimé
+          example: false
+        role:
+          type: string
+          description: Rôle de l'utilisateur
+          example: ETUDIANT
+
+    # ==================== VALIDATION ====================
+    CodeValidationRequestDTO:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email de l'utilisateur
+          example: mamadou.diallo@uasz.sn
+
+    CodeValidationCheckDTO:
+      type: object
+      required:
+        - email
+        - code
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email de l'utilisateur
+          example: mamadou.diallo@uasz.sn
+        code:
+          type: string
+          description: Code de validation reçu par email
+          example: "123456"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Authentification par token JWT (JSON Web Token).
+        
+        **Format d'utilisation:**
+        ```
+        Authorization: Bearer <votre_token_jwt>
+        ```
