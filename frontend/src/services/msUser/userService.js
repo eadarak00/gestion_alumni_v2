@@ -1,165 +1,93 @@
-import UtilisateursApi from '../../api-ms-user/js-client/src/api/UtilisateursApi';
-import apiClient from '../../utils/apiConfig';
+import { UtilisateursApi } from "../../api-ms-user/js-client";
+import apiClient, { msUserConfiguration } from "../../utils/apiConfig";
 
-// Création d'une instance de l'API utilisateurs avec le client configuré
-const userApi = new UtilisateursApi(apiClient);
+const userApi = new UtilisateursApi(msUserConfiguration, undefined, apiClient);
 
-/**
- * Service utilisateur qui encapsule les appels API
- * Toutes les méthodes retournent des Promises pour une utilisation avec async/await
- */
 export const userService = {
   /**
-   * Récupère tous les utilisateurs avec filtres optionnels
-   * @param {Object} filters - Filtres optionnels (deleted, actif, role, etc.)
-   * @returns {Promise} Promesse qui se résout avec les données des utilisateurs
+   * GET /utilisateurs?actif&deleted&page&size&sort
    */
-  getAllUsers: (filters = {}) => {
-    return new Promise((resolve, reject) => {
-      userApi.getAllUtilisateursFiltered(filters, (error, data, response) => {
-        if (error) {
-          console.error('❌ Erreur lors de la récupération des utilisateurs:', error);
-          reject(error);
-        } else {
-          console.log('✅ Utilisateurs récupérés avec succès:', data);
-          resolve(data);
-        }
-      });
-    });
+  getAllUsers: async (filters = {}) => {
+    try {
+      const { data } = await userApi.getAllUtilisateursFiltered(
+        filters.actif,
+        filters.deleted,
+        filters.page,
+        filters.size,
+        filters.sort
+      );
+      return data;
+    } catch (error) {
+      console.error("❌ Erreur récupération utilisateurs:", error);
+      throw error;
+    }
   },
 
-  /**
-   * Récupère uniquement les utilisateurs actifs (non supprimés)
-   * @returns {Promise} Promesse qui se résout avec les données des utilisateurs actifs
-   */
-  getActiveUsers: () => {
-    return new Promise((resolve, reject) => {
-      userApi.getAllUtilisateursFiltered({ deleted: false }, (error, data, response) => {
-        if (error) {
-          console.error('❌ Erreur lors de la récupération des utilisateurs actifs:', error);
-          reject(error);
-        } else {
-          console.log('✅ Utilisateurs actifs récupérés:', data);
-          resolve(data);
-        }
-      });
-    });
+  getActiveUsers: async () => {
+    try {
+      const { data } = await userApi.getAllUtilisateursFiltered(true, false, 0, 10, "nom,asc");
+      return data;
+    } catch (error) {
+      console.error("❌ Erreur récupération utilisateurs actifs:", error);
+      throw error;
+    }
   },
 
-  /**
-   * Recherche un utilisateur par son ID
-   * @param {number} id - L'ID de l'utilisateur
-   * @returns {Promise} Promesse qui se résout avec les données de l'utilisateur
-   */
-  getUserById: (id) => {
-    return new Promise((resolve, reject) => {
-      userApi.getUtilisateurById(id, (error, data, response) => {
-        if (error) {
-          console.error(`❌ Erreur lors de la récupération de l'utilisateur ${id}:`, error);
-          reject(error);
-        } else {
-          console.log(`✅ Utilisateur ${id} récupéré:`, data);
-          resolve(data);
-        }
-      });
-    });
+  getUserByEmail: async (email) => {
+    try {
+      const { data } = await userApi.getUtilisateurByEmail(email);
+      return data;
+    } catch (error) {
+      console.error(`❌ Utilisateur non trouvé pour ${email}:`, error);
+      throw error;
+    }
   },
 
-  /**
-   * Recherche un utilisateur par son adresse email
-   * @param {string} email - L'adresse email de l'utilisateur à rechercher
-   * @returns {Promise} Promesse qui se résout avec les données de l'utilisateur
-   */
-  getUserByEmail: (email) => {
-    return new Promise((resolve, reject) => {
-      userApi.getUtilisateurByEmail(email, (error, data, response) => {
-        if (error) {
-          console.error(`❌ Utilisateur non trouvé pour l'email ${email}:`, error);
-          reject(error);
-        } else {
-          console.log(`✅ Utilisateur trouvé pour l'email ${email}:`, data);
-          resolve(data);
-        }
-      });
-    });
+  checkEmailExists: async (email) => {
+    try {
+      const { data } = await userApi.emailExists(email);
+      return data;
+    } catch (error) {
+      console.error(`❌ Erreur vérification email ${email}:`, error);
+      throw error;
+    }
   },
 
-  /**
-   * Vérifie si une adresse email existe déjà dans le système
-   * @param {string} email - L'adresse email à vérifier
-   * @returns {Promise} Promesse qui se résout avec un booléen
-   */
-  checkEmailExists: (email) => {
-    return new Promise((resolve, reject) => {
-      userApi.emailExists(email, (error, data, response) => {
-        if (error) {
-          console.error(`❌ Erreur lors de la vérification de l'email ${email}:`, error);
-          reject(error);
-        } else {
-          console.log(`✅ Vérification email ${email}:`, data);
-          resolve(data);
-        }
-      });
-    });
+  checkUsernameExists: async (username) => {
+    try {
+      const { data } = await userApi.usernameExists(username);
+      return data;
+    } catch (error) {
+      console.error(`❌ Erreur vérification username ${username}:`, error);
+      throw error;
+    }
   },
 
-  /**
-   * Vérifie si un nom d'utilisateur existe déjà dans le système
-   * @param {string} username - Le nom d'utilisateur à vérifier
-   * @returns {Promise} Promesse qui se résout avec un booléen
-   */
-  checkUsernameExists: (username) => {
-    return new Promise((resolve, reject) => {
-      userApi.usernameExists(username, (error, data, response) => {
-        if (error) {
-          console.error(`❌ Erreur lors de la vérification du username ${username}:`, error);
-          reject(error);
-        } else {
-          console.log(`✅ Vérification username ${username}:`, data);
-          resolve(data);
-        }
-      });
-    });
+  searchAlumni: async (filters = {}) => {
+    try {
+      const { data } = await userApi.searchAlumni(
+        filters.entreprise,
+        filters.profession,
+        filters.nom,
+        filters.prenom
+      );
+      return data;
+    } catch (error) {
+      console.error("❌ Erreur recherche alumni:", error);
+      throw error;
+    }
   },
 
-  /**
-   * Met à jour un utilisateur
-   * @param {number} id - L'ID de l'utilisateur
-   * @param {Object} userData - Les données à mettre à jour
-   * @returns {Promise} Promesse qui se résout avec les données mises à jour
-   */
-  updateUser: (id, userData) => {
-    return new Promise((resolve, reject) => {
-      userApi.updateUtilisateur(id, userData, (error, data, response) => {
-        if (error) {
-          console.error(`❌ Erreur lors de la mise à jour de l'utilisateur ${id}:`, error);
-          reject(error);
-        } else {
-          console.log(`✅ Utilisateur ${id} mis à jour:`, data);
-          resolve(data);
-        }
-      });
-    });
+  // Endpoints NON présents
+  getUserById: async () => {
+    throw new Error("Endpoint getUtilisateurById non défini dans le contrat OpenAPI.");
   },
-
-  /**
-   * Supprime (soft delete) un utilisateur
-   * @param {number} id - L'ID de l'utilisateur à supprimer
-   * @returns {Promise} Promesse qui se résout si la suppression réussit
-   */
-  deleteUser: (id) => {
-    return new Promise((resolve, reject) => {
-      userApi.deleteUtilisateur(id, (error, data, response) => {
-        if (error) {
-          console.error(`❌ Erreur lors de la suppression de l'utilisateur ${id}:`, error);
-          reject(error);
-        } else {
-          console.log(`✅ Utilisateur ${id} supprimé`);
-          resolve(data);
-        }
-      });
-    });
-  }
+  updateUser: async () => {
+    throw new Error("Endpoint updateUtilisateur non défini dans le contrat OpenAPI.");
+  },
+  deleteUser: async () => {
+    throw new Error("Endpoint deleteUtilisateur non défini dans le contrat OpenAPI.");
+  },
 };
 
 export default userService;

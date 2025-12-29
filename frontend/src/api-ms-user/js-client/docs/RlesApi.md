@@ -1,55 +1,49 @@
-# MsUserApiDeGestionDesUtilisateurs.RlesApi
+# RlesApi
 
 All URIs are relative to *http://localhost:8081/api/v1*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**createRole**](RlesApi.md#createRole) | **POST** /roles | Créer un nouveau rôle
-[**getAllRoles**](RlesApi.md#getAllRoles) | **GET** /roles | Récupérer tous les rôles
-[**getRoleById**](RlesApi.md#getRoleById) | **GET** /roles/{id} | Récupérer un rôle par son ID
-[**softDeleteRole**](RlesApi.md#softDeleteRole) | **DELETE** /roles/{id} | Supprimer logiquement un rôle
-[**updateRole**](RlesApi.md#updateRole) | **PUT** /roles/{id} | Mettre à jour un rôle existant
+|Method | HTTP request | Description|
+|------------- | ------------- | -------------|
+|[**createRole**](#createrole) | **POST** /roles | Créer un nouveau rôle|
+|[**getAllRoles**](#getallroles) | **GET** /roles | Récupérer tous les rôles|
+|[**getRoleById**](#getrolebyid) | **GET** /roles/{id} | Récupérer un rôle par son ID|
+|[**softDeleteRole**](#softdeleterole) | **DELETE** /roles/{id} | Supprimer logiquement un rôle|
+|[**updateRole**](#updaterole) | **PUT** /roles/{id} | Mettre à jour un rôle existant|
 
-
-
-## createRole
-
+# **createRole**
 > RoleResponseDTO createRole(roleRequestDTO)
-
-Créer un nouveau rôle
 
 Crée un nouveau rôle dans le système
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    RlesApi,
+    Configuration,
+    RoleRequestDTO
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.RlesApi();
-let roleRequestDTO = new MsUserApiDeGestionDesUtilisateurs.RoleRequestDTO(); // RoleRequestDTO | 
-apiInstance.createRole(roleRequestDTO, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new RlesApi(configuration);
+
+let roleRequestDTO: RoleRequestDTO; //
+
+const { status, data } = await apiInstance.createRole(
+    roleRequestDTO
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **roleRequestDTO** | **RoleRequestDTO**|  | |
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **roleRequestDTO** | [**RoleRequestDTO**](RoleRequestDTO.md)|  | 
 
 ### Return type
 
-[**RoleResponseDTO**](RoleResponseDTO.md)
+**RoleResponseDTO**
 
 ### Authorization
 
@@ -57,44 +51,45 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 
-## getAllRoles
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**201** | Rôle créé avec succès |  -  |
+|**400** | Données invalides |  -  |
+|**409** | Un rôle avec le même nom existe déjà |  -  |
 
-> [RoleResponseDTO] getAllRoles()
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-Récupérer tous les rôles
+# **getAllRoles**
+> Array<RoleResponseDTO> getAllRoles()
 
 Retourne la liste de tous les rôles disponibles dans le système
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    RlesApi,
+    Configuration
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.RlesApi();
-apiInstance.getAllRoles((error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new RlesApi(configuration);
+
+const { status, data } = await apiInstance.getAllRoles();
 ```
 
 ### Parameters
+This endpoint does not have any parameters.
 
-This endpoint does not need any parameter.
 
 ### Return type
 
-[**[RoleResponseDTO]**](RoleResponseDTO.md)
+**Array<RoleResponseDTO>**
 
 ### Authorization
 
@@ -102,48 +97,50 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
 
-## getRoleById
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Liste des rôles récupérée avec succès |  -  |
 
-> RoleResponseDTO getRoleById(id)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-Récupérer un rôle par son ID
+# **getRoleById**
+> RoleResponseDTO getRoleById()
 
-Retourne les détails d&#39;un rôle spécifique
+Retourne les détails d\'un rôle spécifique
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    RlesApi,
+    Configuration
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.RlesApi();
-let id = 789; // Number | 
-apiInstance.getRoleById(id, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new RlesApi(configuration);
+
+let id: number; // (default to undefined)
+
+const { status, data } = await apiInstance.getRoleById(
+    id
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**number**] |  | defaults to undefined|
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **Number**|  | 
 
 ### Return type
 
-[**RoleResponseDTO**](RoleResponseDTO.md)
+**RoleResponseDTO**
 
 ### Authorization
 
@@ -151,48 +148,51 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
 
-## softDeleteRole
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Rôle trouvé |  -  |
+|**404** | Rôle non trouvé |  -  |
 
-> softDeleteRole(id)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-Supprimer logiquement un rôle
+# **softDeleteRole**
+> softDeleteRole()
 
-Effectue une suppression logique (soft delete) d&#39;un rôle
+Effectue une suppression logique (soft delete) d\'un rôle
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    RlesApi,
+    Configuration
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.RlesApi();
-let id = 789; // Number | 
-apiInstance.softDeleteRole(id, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new RlesApi(configuration);
+
+let id: number; // (default to undefined)
+
+const { status, data } = await apiInstance.softDeleteRole(
+    id
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**number**] |  | defaults to undefined|
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **Number**|  | 
 
 ### Return type
 
-null (empty response body)
+void (empty response body)
 
 ### Authorization
 
@@ -200,50 +200,55 @@ null (empty response body)
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: Not defined
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 
-## updateRole
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**204** | Rôle supprimé logiquement avec succès |  -  |
+|**404** | Rôle non trouvé |  -  |
 
-> RoleResponseDTO updateRole(id, roleRequestDTO)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-Mettre à jour un rôle existant
+# **updateRole**
+> RoleResponseDTO updateRole(roleRequestDTO)
 
-Met à jour les informations d&#39;un rôle
+Met à jour les informations d\'un rôle
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    RlesApi,
+    Configuration,
+    RoleRequestDTO
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.RlesApi();
-let id = 789; // Number | 
-let roleRequestDTO = new MsUserApiDeGestionDesUtilisateurs.RoleRequestDTO(); // RoleRequestDTO | 
-apiInstance.updateRole(id, roleRequestDTO, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new RlesApi(configuration);
+
+let id: number; // (default to undefined)
+let roleRequestDTO: RoleRequestDTO; //
+
+const { status, data } = await apiInstance.updateRole(
+    id,
+    roleRequestDTO
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **roleRequestDTO** | **RoleRequestDTO**|  | |
+| **id** | [**number**] |  | defaults to undefined|
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **Number**|  | 
- **roleRequestDTO** | [**RoleRequestDTO**](RoleRequestDTO.md)|  | 
 
 ### Return type
 
-[**RoleResponseDTO**](RoleResponseDTO.md)
+**RoleResponseDTO**
 
 ### Authorization
 
@@ -251,6 +256,16 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Rôle mis à jour avec succès |  -  |
+|**400** | Données invalides |  -  |
+|**404** | Rôle non trouvé |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -1,55 +1,48 @@
-# MsUserApiDeGestionDesUtilisateurs.UtilisateursApi
+# UtilisateursApi
 
 All URIs are relative to *http://localhost:8081/api/v1*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**emailExists**](UtilisateursApi.md#emailExists) | **GET** /utilisateurs/exists/email/{email} | Vérifier si un email existe
-[**getAllUtilisateursFiltered**](UtilisateursApi.md#getAllUtilisateursFiltered) | **GET** /utilisateurs | Lister et filtrer les utilisateurs
-[**getUtilisateurByEmail**](UtilisateursApi.md#getUtilisateurByEmail) | **GET** /utilisateurs/email/{email} | Récupérer un utilisateur par email
-[**searchAlumni**](UtilisateursApi.md#searchAlumni) | **GET** /alumni/search | Recherche avancée des alumni
-[**usernameExists**](UtilisateursApi.md#usernameExists) | **GET** /utilisateurs/exists/username/{username} | Vérifier si un username existe
+|Method | HTTP request | Description|
+|------------- | ------------- | -------------|
+|[**emailExists**](#emailexists) | **GET** /utilisateurs/exists/email/{email} | Vérifier si un email existe|
+|[**getAllUtilisateursFiltered**](#getallutilisateursfiltered) | **GET** /utilisateurs | Lister et filtrer les utilisateurs|
+|[**getUtilisateurByEmail**](#getutilisateurbyemail) | **GET** /utilisateurs/email/{email} | Récupérer un utilisateur par email|
+|[**searchAlumni**](#searchalumni) | **GET** /alumni/search | Recherche avancée des alumni|
+|[**usernameExists**](#usernameexists) | **GET** /utilisateurs/exists/username/{username} | Vérifier si un username existe|
 
-
-
-## emailExists
-
-> Boolean emailExists(email)
-
-Vérifier si un email existe
+# **emailExists**
+> boolean emailExists()
 
 Vérifie si un email est déjà utilisé dans le système
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    UtilisateursApi,
+    Configuration
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.UtilisateursApi();
-let email = "email_example"; // String | 
-apiInstance.emailExists(email, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new UtilisateursApi(configuration);
+
+let email: string; // (default to undefined)
+
+const { status, data } = await apiInstance.emailExists(
+    email
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **email** | [**string**] |  | defaults to undefined|
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **email** | **String**|  | 
 
 ### Return type
 
-**Boolean**
+**boolean**
 
 ### Authorization
 
@@ -57,58 +50,62 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
 
-## getAllUtilisateursFiltered
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Résultat de la vérification |  -  |
 
-> GetAllUtilisateursFiltered200Response getAllUtilisateursFiltered(opts)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-Lister et filtrer les utilisateurs
+# **getAllUtilisateursFiltered**
+> GetAllUtilisateursFiltered200Response getAllUtilisateursFiltered()
 
 Permet de lister les utilisateurs avec pagination, filtre par actif et filtre par suppression (soft delete). 
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    UtilisateursApi,
+    Configuration
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.UtilisateursApi();
-let opts = {
-  'actif': true, // Boolean | Filtre sur l'état d'activation du compte
-  'deleted': false, // Boolean | Filtre sur l'état de suppression logique (soft delete)
-  'page': 0, // Number | 
-  'size': 10, // Number | 
-  'sort': "nom,asc" // String | Format: champ,ordre (asc|desc)
-};
-apiInstance.getAllUtilisateursFiltered(opts, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new UtilisateursApi(configuration);
+
+let actif: boolean; //Filtre sur l\'état d\'activation du compte (optional) (default to undefined)
+let deleted: boolean; //Filtre sur l\'état de suppression logique (soft delete) (optional) (default to undefined)
+let page: number; // (optional) (default to undefined)
+let size: number; // (optional) (default to undefined)
+let sort: string; //Format: champ,ordre (asc|desc) (optional) (default to undefined)
+
+const { status, data } = await apiInstance.getAllUtilisateursFiltered(
+    actif,
+    deleted,
+    page,
+    size,
+    sort
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **actif** | [**boolean**] | Filtre sur l\&#39;état d\&#39;activation du compte | (optional) defaults to undefined|
+| **deleted** | [**boolean**] | Filtre sur l\&#39;état de suppression logique (soft delete) | (optional) defaults to undefined|
+| **page** | [**number**] |  | (optional) defaults to undefined|
+| **size** | [**number**] |  | (optional) defaults to undefined|
+| **sort** | [**string**] | Format: champ,ordre (asc|desc) | (optional) defaults to undefined|
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **actif** | **Boolean**| Filtre sur l&#39;état d&#39;activation du compte | [optional] 
- **deleted** | **Boolean**| Filtre sur l&#39;état de suppression logique (soft delete) | [optional] 
- **page** | **Number**|  | [optional] 
- **size** | **Number**|  | [optional] 
- **sort** | **String**| Format: champ,ordre (asc|desc) | [optional] 
 
 ### Return type
 
-[**GetAllUtilisateursFiltered200Response**](GetAllUtilisateursFiltered200Response.md)
+**GetAllUtilisateursFiltered200Response**
 
 ### Authorization
 
@@ -116,48 +113,50 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
 
-## getUtilisateurByEmail
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Résultats de la recherche filtrée |  -  |
 
-> UtilisateurResponseDTO getUtilisateurByEmail(email)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-Récupérer un utilisateur par email
+# **getUtilisateurByEmail**
+> UtilisateurResponseDTO getUtilisateurByEmail()
 
-Retourne les informations d&#39;un utilisateur par son email
+Retourne les informations d\'un utilisateur par son email
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    UtilisateursApi,
+    Configuration
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.UtilisateursApi();
-let email = "email_example"; // String | 
-apiInstance.getUtilisateurByEmail(email, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new UtilisateursApi(configuration);
+
+let email: string; // (default to undefined)
+
+const { status, data } = await apiInstance.getUtilisateurByEmail(
+    email
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **email** | [**string**] |  | defaults to undefined|
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **email** | **String**|  | 
 
 ### Return type
 
-[**UtilisateurResponseDTO**](UtilisateurResponseDTO.md)
+**UtilisateurResponseDTO**
 
 ### Authorization
 
@@ -165,56 +164,60 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
 
-## searchAlumni
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Utilisateur trouvé |  -  |
+|**404** | Utilisateur non trouvé |  -  |
 
-> [AlumniResponseDTO] searchAlumni(opts)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-Recherche avancée des alumni
+# **searchAlumni**
+> Array<AlumniResponseDTO> searchAlumni()
 
-Permet de rechercher des alumni à l&#39;aide de filtres optionnels par entreprise et profession. 
+Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    UtilisateursApi,
+    Configuration
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.UtilisateursApi();
-let opts = {
-  'entreprise': "entreprise_example", // String | Nom de l'entreprise actuelle de l'alumni
-  'profession': "profession_example", // String | Profession actuelle de l'alumni (ex: Data Scientist, Médecin...)
-  'nom': "nom_example", // String | Le nom de l'Alumni (ex: THIAM, DIOP...) 
-  'prenom': "prenom_example" // String | Le prenom de l'Alumni (ex: Khoutbou, Ibrahima...) 
-};
-apiInstance.searchAlumni(opts, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new UtilisateursApi(configuration);
+
+let entreprise: string; //Nom de l\'entreprise actuelle de l\'alumni (optional) (default to undefined)
+let profession: string; //Profession actuelle de l\'alumni (ex: Data Scientist, Médecin...) (optional) (default to undefined)
+let nom: string; //Le nom de l\'Alumni (ex: THIAM, DIOP...)  (optional) (default to undefined)
+let prenom: string; //Le prenom de l\'Alumni (ex: Khoutbou, Ibrahima...)  (optional) (default to undefined)
+
+const { status, data } = await apiInstance.searchAlumni(
+    entreprise,
+    profession,
+    nom,
+    prenom
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **entreprise** | [**string**] | Nom de l\&#39;entreprise actuelle de l\&#39;alumni | (optional) defaults to undefined|
+| **profession** | [**string**] | Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...) | (optional) defaults to undefined|
+| **nom** | [**string**] | Le nom de l\&#39;Alumni (ex: THIAM, DIOP...)  | (optional) defaults to undefined|
+| **prenom** | [**string**] | Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...)  | (optional) defaults to undefined|
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **entreprise** | **String**| Nom de l&#39;entreprise actuelle de l&#39;alumni | [optional] 
- **profession** | **String**| Profession actuelle de l&#39;alumni (ex: Data Scientist, Médecin...) | [optional] 
- **nom** | **String**| Le nom de l&#39;Alumni (ex: THIAM, DIOP...)  | [optional] 
- **prenom** | **String**| Le prenom de l&#39;Alumni (ex: Khoutbou, Ibrahima...)  | [optional] 
 
 ### Return type
 
-[**[AlumniResponseDTO]**](AlumniResponseDTO.md)
+**Array<AlumniResponseDTO>**
 
 ### Authorization
 
@@ -222,48 +225,52 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
 
 
-## usernameExists
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Liste filtrée des alumni |  -  |
+|**400** | Requête invalide |  -  |
+|**500** | Erreur interne du serveur |  -  |
 
-> Boolean usernameExists(username)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-Vérifier si un username existe
+# **usernameExists**
+> boolean usernameExists()
 
 Vérifie si un username est déjà utilisé dans le système
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
-let defaultClient = MsUserApiDeGestionDesUtilisateurs.ApiClient.instance;
-// Configure Bearer (JWT) access token for authorization: bearerAuth
-let bearerAuth = defaultClient.authentications['bearerAuth'];
-bearerAuth.accessToken = "YOUR ACCESS TOKEN"
+```typescript
+import {
+    UtilisateursApi,
+    Configuration
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.UtilisateursApi();
-let username = "username_example"; // String | 
-apiInstance.usernameExists(username, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new UtilisateursApi(configuration);
+
+let username: string; // (default to undefined)
+
+const { status, data } = await apiInstance.usernameExists(
+    username
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **username** | [**string**] |  | defaults to undefined|
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **username** | **String**|  | 
 
 ### Return type
 
-**Boolean**
+**boolean**
 
 ### Authorization
 
@@ -271,6 +278,14 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Résultat de la vérification |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
