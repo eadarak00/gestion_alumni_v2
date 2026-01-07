@@ -24,7 +24,7 @@ import jakarta.annotation.Generated;
  * SuiviInvitation
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:23.314978840Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-05T21:01:46.093610739Z[Africa/Dakar]")
 public class SuiviInvitation {
 
   /**

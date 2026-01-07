@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   User,
-  FileText,
   GraduationCap,
   Briefcase,
   Users,
@@ -17,7 +16,6 @@ import { Header } from './Header';
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: User, label: 'Mon Profil', path: '/profile' },
-  { icon: FileText, label: 'Mon CV', path: '/cv' },
   { icon: GraduationCap, label: 'Parcours Académique', path: '/academic' },
   { icon: Briefcase, label: 'Expériences Pro', path: '/experience' },
   { icon: Users, label: 'Réseau Alumni', path: '/network' },

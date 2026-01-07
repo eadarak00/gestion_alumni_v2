@@ -9,7 +9,9 @@ import {
   Calendar,
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  FileText
+
 } from 'lucide-react';
 import { Header } from './Header';
 
@@ -17,6 +19,7 @@ const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
   { icon: User, label: 'Mon Profil', path: '/profile' },
   { icon: BookOpen, label: 'Mes Études', path: '/studies' },
+  { icon: FileText, label: 'Mon CV', path: '/cv' },
   { icon: Users, label: 'Alumni à Découvrir', path: '/discover-alumni' },
   { icon: MessageCircle, label: 'Mentorat', path: '/mentorship' },
   { icon: Calendar, label: 'Événements', path: '/events' },

@@ -1,14 +1,125 @@
 # UtilisateursApi
 
-All URIs are relative to *http://localhost:8081/api/v1*
+All URIs are relative to *http://localhost:8081/api-users/v1*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
+|[**completerProfilAlumni**](#completerprofilalumni) | **PUT** /utilisateurs/completer-profil/alumni | Compléter son profil alumni|
+|[**completerProfilEtudiant**](#completerprofiletudiant) | **PUT** /utilisateurs/completer-profil/etudiant | Compléter son profil étudiant|
 |[**emailExists**](#emailexists) | **GET** /utilisateurs/exists/email/{email} | Vérifier si un email existe|
 |[**getAllUtilisateursFiltered**](#getallutilisateursfiltered) | **GET** /utilisateurs | Lister et filtrer les utilisateurs|
 |[**getUtilisateurByEmail**](#getutilisateurbyemail) | **GET** /utilisateurs/email/{email} | Récupérer un utilisateur par email|
-|[**searchAlumni**](#searchalumni) | **GET** /alumni/search | Recherche avancée des alumni|
 |[**usernameExists**](#usernameexists) | **GET** /utilisateurs/exists/username/{username} | Vérifier si un username existe|
+
+# **completerProfilAlumni**
+> AlumniResponseDTO completerProfilAlumni(alumniProfilRequestDTO)
+
+Permet à l\'utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. 
+
+### Example
+
+```typescript
+import {
+    UtilisateursApi,
+    Configuration,
+    AlumniProfilRequestDTO
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new UtilisateursApi(configuration);
+
+let alumniProfilRequestDTO: AlumniProfilRequestDTO; //
+
+const { status, data } = await apiInstance.completerProfilAlumni(
+    alumniProfilRequestDTO
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **alumniProfilRequestDTO** | **AlumniProfilRequestDTO**|  | |
+
+
+### Return type
+
+**AlumniResponseDTO**
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Profil alumni complété avec succès |  -  |
+|**400** | Utilisateur non alumni ou données invalides |  -  |
+|**401** | Non authentifié |  -  |
+|**403** | Accès interdit |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **completerProfilEtudiant**
+> EtudiantResponseDTO completerProfilEtudiant(etudiantProfilRequestDTO)
+
+Permet à l\'utilisateur connecté ayant le rôle ETUDIANT de compléter son profil avec les informations spécifiques : numeroCarteEtudiant, filiere et niveau. 
+
+### Example
+
+```typescript
+import {
+    UtilisateursApi,
+    Configuration,
+    EtudiantProfilRequestDTO
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new UtilisateursApi(configuration);
+
+let etudiantProfilRequestDTO: EtudiantProfilRequestDTO; //
+
+const { status, data } = await apiInstance.completerProfilEtudiant(
+    etudiantProfilRequestDTO
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **etudiantProfilRequestDTO** | **EtudiantProfilRequestDTO**|  | |
+
+
+### Return type
+
+**EtudiantResponseDTO**
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Profil étudiant complété avec succès |  -  |
+|**400** | Utilisateur non étudiant ou données invalides |  -  |
+|**401** | Non authentifié |  -  |
+|**403** | Accès interdit |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **emailExists**
 > boolean emailExists()
@@ -173,68 +284,6 @@ const { status, data } = await apiInstance.getUtilisateurByEmail(
 |-------------|-------------|------------------|
 |**200** | Utilisateur trouvé |  -  |
 |**404** | Utilisateur non trouvé |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **searchAlumni**
-> Array<AlumniResponseDTO> searchAlumni()
-
-Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
-
-### Example
-
-```typescript
-import {
-    UtilisateursApi,
-    Configuration
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new UtilisateursApi(configuration);
-
-let entreprise: string; //Nom de l\'entreprise actuelle de l\'alumni (optional) (default to undefined)
-let profession: string; //Profession actuelle de l\'alumni (ex: Data Scientist, Médecin...) (optional) (default to undefined)
-let nom: string; //Le nom de l\'Alumni (ex: THIAM, DIOP...)  (optional) (default to undefined)
-let prenom: string; //Le prenom de l\'Alumni (ex: Khoutbou, Ibrahima...)  (optional) (default to undefined)
-
-const { status, data } = await apiInstance.searchAlumni(
-    entreprise,
-    profession,
-    nom,
-    prenom
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **entreprise** | [**string**] | Nom de l\&#39;entreprise actuelle de l\&#39;alumni | (optional) defaults to undefined|
-| **profession** | [**string**] | Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...) | (optional) defaults to undefined|
-| **nom** | [**string**] | Le nom de l\&#39;Alumni (ex: THIAM, DIOP...)  | (optional) defaults to undefined|
-| **prenom** | [**string**] | Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...)  | (optional) defaults to undefined|
-
-
-### Return type
-
-**Array<AlumniResponseDTO>**
-
-### Authorization
-
-[bearerAuth](../README.md#bearerAuth)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | Liste filtrée des alumni |  -  |
-|**400** | Requête invalide |  -  |
-|**500** | Erreur interne du serveur |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -23,6 +23,10 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
+export interface AlumniProfilRequestDTO {
+    'profession'?: string;
+    'entreprise'?: string;
+}
 export interface AlumniRequestDTO {
     /**
      * Nom de famille
@@ -98,6 +102,20 @@ export interface CodeValidationRequestDTO {
      */
     'email': string;
 }
+export interface EtudiantProfilRequestDTO {
+    /**
+     * Numéro de carte étudiant (8 à 10 chiffres)
+     */
+    'numeroEtudiant': string;
+    /**
+     * Filière d\'études
+     */
+    'filiere': string;
+    /**
+     * Niveau d\'études
+     */
+    'niveau': string;
+}
 export interface EtudiantRequestDTO {
     /**
      * Nom de famille
@@ -124,7 +142,7 @@ export interface EtudiantRequestDTO {
      */
     'telephone'?: string;
     /**
-     * Numéro de carte étudiant
+     * Numéro de carte étudiant (8 à 10 chiffres)
      */
     'numeroCarteEtudiant': string;
     /**
@@ -276,6 +294,136 @@ export interface UtilisateurResponseDTO {
      */
     'role'?: string;
 }
+
+/**
+ * AlumnisApi - axios parameter creator
+ */
+export const AlumnisApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
+         * @summary Recherche avancée des alumni
+         * @param {string} [entreprise] Nom de l\&#39;entreprise actuelle de l\&#39;alumni
+         * @param {string} [profession] Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...)
+         * @param {string} [nom] Le nom de l\&#39;Alumni (ex: THIAM, DIOP...) 
+         * @param {string} [prenom] Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...) 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchAlumni: async (entreprise?: string, profession?: string, nom?: string, prenom?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/alumni/search`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (entreprise !== undefined) {
+                localVarQueryParameter['entreprise'] = entreprise;
+            }
+
+            if (profession !== undefined) {
+                localVarQueryParameter['profession'] = profession;
+            }
+
+            if (nom !== undefined) {
+                localVarQueryParameter['nom'] = nom;
+            }
+
+            if (prenom !== undefined) {
+                localVarQueryParameter['prenom'] = prenom;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AlumnisApi - functional programming interface
+ */
+export const AlumnisApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AlumnisApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
+         * @summary Recherche avancée des alumni
+         * @param {string} [entreprise] Nom de l\&#39;entreprise actuelle de l\&#39;alumni
+         * @param {string} [profession] Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...)
+         * @param {string} [nom] Le nom de l\&#39;Alumni (ex: THIAM, DIOP...) 
+         * @param {string} [prenom] Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...) 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async searchAlumni(entreprise?: string, profession?: string, nom?: string, prenom?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AlumniResponseDTO>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.searchAlumni(entreprise, profession, nom, prenom, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AlumnisApi.searchAlumni']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * AlumnisApi - factory interface
+ */
+export const AlumnisApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AlumnisApiFp(configuration)
+    return {
+        /**
+         * Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
+         * @summary Recherche avancée des alumni
+         * @param {string} [entreprise] Nom de l\&#39;entreprise actuelle de l\&#39;alumni
+         * @param {string} [profession] Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...)
+         * @param {string} [nom] Le nom de l\&#39;Alumni (ex: THIAM, DIOP...) 
+         * @param {string} [prenom] Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...) 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchAlumni(entreprise?: string, profession?: string, nom?: string, prenom?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<AlumniResponseDTO>> {
+            return localVarFp.searchAlumni(entreprise, profession, nom, prenom, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AlumnisApi - object-oriented interface
+ */
+export class AlumnisApi extends BaseAPI {
+    /**
+     * Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
+     * @summary Recherche avancée des alumni
+     * @param {string} [entreprise] Nom de l\&#39;entreprise actuelle de l\&#39;alumni
+     * @param {string} [profession] Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...)
+     * @param {string} [nom] Le nom de l\&#39;Alumni (ex: THIAM, DIOP...) 
+     * @param {string} [prenom] Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...) 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public searchAlumni(entreprise?: string, profession?: string, nom?: string, prenom?: string, options?: RawAxiosRequestConfig) {
+        return AlumnisApiFp(this.configuration).searchAlumni(entreprise, profession, nom, prenom, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * AuthentificationApi - axios parameter creator
@@ -993,6 +1141,86 @@ export class RlesApi extends BaseAPI {
 export const UtilisateursApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Permet à l\'utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. 
+         * @summary Compléter son profil alumni
+         * @param {AlumniProfilRequestDTO} alumniProfilRequestDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        completerProfilAlumni: async (alumniProfilRequestDTO: AlumniProfilRequestDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'alumniProfilRequestDTO' is not null or undefined
+            assertParamExists('completerProfilAlumni', 'alumniProfilRequestDTO', alumniProfilRequestDTO)
+            const localVarPath = `/utilisateurs/completer-profil/alumni`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(alumniProfilRequestDTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Permet à l\'utilisateur connecté ayant le rôle ETUDIANT de compléter son profil avec les informations spécifiques : numeroCarteEtudiant, filiere et niveau. 
+         * @summary Compléter son profil étudiant
+         * @param {EtudiantProfilRequestDTO} etudiantProfilRequestDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        completerProfilEtudiant: async (etudiantProfilRequestDTO: EtudiantProfilRequestDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'etudiantProfilRequestDTO' is not null or undefined
+            assertParamExists('completerProfilEtudiant', 'etudiantProfilRequestDTO', etudiantProfilRequestDTO)
+            const localVarPath = `/utilisateurs/completer-profil/etudiant`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(etudiantProfilRequestDTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Vérifie si un email est déjà utilisé dans le système
          * @summary Vérifier si un email existe
          * @param {string} email 
@@ -1128,60 +1356,6 @@ export const UtilisateursApiAxiosParamCreator = function (configuration?: Config
             };
         },
         /**
-         * Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
-         * @summary Recherche avancée des alumni
-         * @param {string} [entreprise] Nom de l\&#39;entreprise actuelle de l\&#39;alumni
-         * @param {string} [profession] Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...)
-         * @param {string} [nom] Le nom de l\&#39;Alumni (ex: THIAM, DIOP...) 
-         * @param {string} [prenom] Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...) 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        searchAlumni: async (entreprise?: string, profession?: string, nom?: string, prenom?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/alumni/search`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearerAuth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            if (entreprise !== undefined) {
-                localVarQueryParameter['entreprise'] = entreprise;
-            }
-
-            if (profession !== undefined) {
-                localVarQueryParameter['profession'] = profession;
-            }
-
-            if (nom !== undefined) {
-                localVarQueryParameter['nom'] = nom;
-            }
-
-            if (prenom !== undefined) {
-                localVarQueryParameter['prenom'] = prenom;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Vérifie si un username est déjà utilisé dans le système
          * @summary Vérifier si un username existe
          * @param {string} username 
@@ -1229,6 +1403,32 @@ export const UtilisateursApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UtilisateursApiAxiosParamCreator(configuration)
     return {
         /**
+         * Permet à l\'utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. 
+         * @summary Compléter son profil alumni
+         * @param {AlumniProfilRequestDTO} alumniProfilRequestDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async completerProfilAlumni(alumniProfilRequestDTO: AlumniProfilRequestDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AlumniResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.completerProfilAlumni(alumniProfilRequestDTO, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UtilisateursApi.completerProfilAlumni']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Permet à l\'utilisateur connecté ayant le rôle ETUDIANT de compléter son profil avec les informations spécifiques : numeroCarteEtudiant, filiere et niveau. 
+         * @summary Compléter son profil étudiant
+         * @param {EtudiantProfilRequestDTO} etudiantProfilRequestDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async completerProfilEtudiant(etudiantProfilRequestDTO: EtudiantProfilRequestDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EtudiantResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.completerProfilEtudiant(etudiantProfilRequestDTO, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UtilisateursApi.completerProfilEtudiant']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Vérifie si un email est déjà utilisé dans le système
          * @summary Vérifier si un email existe
          * @param {string} email 
@@ -1272,22 +1472,6 @@ export const UtilisateursApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
-         * @summary Recherche avancée des alumni
-         * @param {string} [entreprise] Nom de l\&#39;entreprise actuelle de l\&#39;alumni
-         * @param {string} [profession] Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...)
-         * @param {string} [nom] Le nom de l\&#39;Alumni (ex: THIAM, DIOP...) 
-         * @param {string} [prenom] Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...) 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async searchAlumni(entreprise?: string, profession?: string, nom?: string, prenom?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AlumniResponseDTO>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.searchAlumni(entreprise, profession, nom, prenom, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UtilisateursApi.searchAlumni']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Vérifie si un username est déjà utilisé dans le système
          * @summary Vérifier si un username existe
          * @param {string} username 
@@ -1309,6 +1493,26 @@ export const UtilisateursApiFp = function(configuration?: Configuration) {
 export const UtilisateursApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UtilisateursApiFp(configuration)
     return {
+        /**
+         * Permet à l\'utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. 
+         * @summary Compléter son profil alumni
+         * @param {AlumniProfilRequestDTO} alumniProfilRequestDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        completerProfilAlumni(alumniProfilRequestDTO: AlumniProfilRequestDTO, options?: RawAxiosRequestConfig): AxiosPromise<AlumniResponseDTO> {
+            return localVarFp.completerProfilAlumni(alumniProfilRequestDTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Permet à l\'utilisateur connecté ayant le rôle ETUDIANT de compléter son profil avec les informations spécifiques : numeroCarteEtudiant, filiere et niveau. 
+         * @summary Compléter son profil étudiant
+         * @param {EtudiantProfilRequestDTO} etudiantProfilRequestDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        completerProfilEtudiant(etudiantProfilRequestDTO: EtudiantProfilRequestDTO, options?: RawAxiosRequestConfig): AxiosPromise<EtudiantResponseDTO> {
+            return localVarFp.completerProfilEtudiant(etudiantProfilRequestDTO, options).then((request) => request(axios, basePath));
+        },
         /**
          * Vérifie si un email est déjà utilisé dans le système
          * @summary Vérifier si un email existe
@@ -1344,19 +1548,6 @@ export const UtilisateursApiFactory = function (configuration?: Configuration, b
             return localVarFp.getUtilisateurByEmail(email, options).then((request) => request(axios, basePath));
         },
         /**
-         * Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
-         * @summary Recherche avancée des alumni
-         * @param {string} [entreprise] Nom de l\&#39;entreprise actuelle de l\&#39;alumni
-         * @param {string} [profession] Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...)
-         * @param {string} [nom] Le nom de l\&#39;Alumni (ex: THIAM, DIOP...) 
-         * @param {string} [prenom] Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...) 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        searchAlumni(entreprise?: string, profession?: string, nom?: string, prenom?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<AlumniResponseDTO>> {
-            return localVarFp.searchAlumni(entreprise, profession, nom, prenom, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Vérifie si un username est déjà utilisé dans le système
          * @summary Vérifier si un username existe
          * @param {string} username 
@@ -1373,6 +1564,28 @@ export const UtilisateursApiFactory = function (configuration?: Configuration, b
  * UtilisateursApi - object-oriented interface
  */
 export class UtilisateursApi extends BaseAPI {
+    /**
+     * Permet à l\'utilisateur connecté ayant le rôle ALUMNI de compléter son profil avec les informations spécifiques : profession et entreprise. 
+     * @summary Compléter son profil alumni
+     * @param {AlumniProfilRequestDTO} alumniProfilRequestDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public completerProfilAlumni(alumniProfilRequestDTO: AlumniProfilRequestDTO, options?: RawAxiosRequestConfig) {
+        return UtilisateursApiFp(this.configuration).completerProfilAlumni(alumniProfilRequestDTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Permet à l\'utilisateur connecté ayant le rôle ETUDIANT de compléter son profil avec les informations spécifiques : numeroCarteEtudiant, filiere et niveau. 
+     * @summary Compléter son profil étudiant
+     * @param {EtudiantProfilRequestDTO} etudiantProfilRequestDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public completerProfilEtudiant(etudiantProfilRequestDTO: EtudiantProfilRequestDTO, options?: RawAxiosRequestConfig) {
+        return UtilisateursApiFp(this.configuration).completerProfilEtudiant(etudiantProfilRequestDTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Vérifie si un email est déjà utilisé dans le système
      * @summary Vérifier si un email existe
@@ -1408,20 +1621,6 @@ export class UtilisateursApi extends BaseAPI {
      */
     public getUtilisateurByEmail(email: string, options?: RawAxiosRequestConfig) {
         return UtilisateursApiFp(this.configuration).getUtilisateurByEmail(email, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Permet de rechercher des alumni à l\'aide de filtres optionnels par entreprise et profession. 
-     * @summary Recherche avancée des alumni
-     * @param {string} [entreprise] Nom de l\&#39;entreprise actuelle de l\&#39;alumni
-     * @param {string} [profession] Profession actuelle de l\&#39;alumni (ex: Data Scientist, Médecin...)
-     * @param {string} [nom] Le nom de l\&#39;Alumni (ex: THIAM, DIOP...) 
-     * @param {string} [prenom] Le prenom de l\&#39;Alumni (ex: Khoutbou, Ibrahima...) 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public searchAlumni(entreprise?: string, profession?: string, nom?: string, prenom?: string, options?: RawAxiosRequestConfig) {
-        return UtilisateursApiFp(this.configuration).searchAlumni(entreprise, profession, nom, prenom, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **username** | **string** | Nom d\&#39;utilisateur (optionnel) | [optional] [default to undefined]
 **motDePasse** | **string** | Mot de passe | [default to undefined]
 **telephone** | **string** | Numéro de téléphone (format Sénégal) | [optional] [default to undefined]
-**numeroCarteEtudiant** | **string** | Numéro de carte étudiant | [default to undefined]
+**numeroCarteEtudiant** | **string** | Numéro de carte étudiant (8 à 10 chiffres) | [default to undefined]
 **niveau** | **string** | Niveau d\&#39;études | [default to undefined]
 **filiere** | **string** | Filière d\&#39;études | [default to undefined]
 

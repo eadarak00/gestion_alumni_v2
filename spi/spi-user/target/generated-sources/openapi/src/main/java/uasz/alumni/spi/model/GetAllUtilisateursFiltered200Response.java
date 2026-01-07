@@ -24,7 +24,11 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("getAllUtilisateursFiltered_200_response")
+<<<<<<< Updated upstream
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-14T13:56:15.185012708Z[Africa/Dakar]")
+=======
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-05T21:01:52.688704211Z[Africa/Dakar]")
+>>>>>>> Stashed changes
 public class GetAllUtilisateursFiltered200Response {
 
   @Valid
