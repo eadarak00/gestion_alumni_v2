@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 README.md
 pom.xml
 src/main/java/uasz/alumni/spi/api/ApiUtil.java

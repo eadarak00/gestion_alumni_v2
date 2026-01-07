@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * ExperienceRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T22:17:05.074030704Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-05T02:02:10.601143888Z[Africa/Dakar]")
 public class ExperienceRequest {
 
   private Integer cvId;
