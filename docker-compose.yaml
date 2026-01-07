@@ -12,12 +12,12 @@ services:
     ports:
       - "8888:8888"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8888/actuator/health"]
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8888/actuator/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-  
+
   # DISCOVERY SERVER (Eureka)
   ms-discover:
     <<: *service-defaults
@@ -29,12 +29,12 @@ services:
       ms-config:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8761/actuator/health"]
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8761/actuator/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-  
+
   # GATEWAY SERVER
   ms-gateway:
     <<: *service-defaults
@@ -48,12 +48,12 @@ services:
       ms-discover:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8088/actuator/health"]
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8088/actuator/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-  
+
   # MS-USER Database
   ms-user-db:
     <<: *service-defaults
@@ -69,12 +69,12 @@ services:
     volumes:
       - ms-user-db-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
       interval: 10s
       timeout: 30s
       retries: 20
       start_period: 60s
-    command: 
+    command:
       - --wait-timeout=28800
       - --interactive-timeout=28800
 
@@ -95,105 +95,105 @@ services:
       ms-user-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081/actuator/health"]
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8081/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 40s
 
-   # MS-CV Database
-  ms-cv-db:
-    <<: *service-defaults
-    image: mariadb:11
-    container_name: ms-cv-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db_cv
-      MYSQL_USER: cvuser
-      MYSQL_PASSWORD: passer123
-    ports:
-      - "3309:3306"
-    volumes:
-      - ms-cv-db-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      interval: 10s
-      timeout: 30s
-      retries: 20
-      start_period: 60s
-    command: 
-      - --wait-timeout=28800
-      - --interactive-timeout=28800
+  #  # MS-CV Database
+  # ms-cv-db:
+  #   <<: *service-defaults
+  #   image: mariadb:11
+  #   container_name: ms-cv-db
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: db_cv
+  #     MYSQL_USER: cvuser
+  #     MYSQL_PASSWORD: passer123
+  #   ports:
+  #     - "3309:3306"
+  #   volumes:
+  #     - ms-cv-db-data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+  #     interval: 10s
+  #     timeout: 30s
+  #     retries: 20
+  #     start_period: 60s
+  #   command: 
+  #     - --wait-timeout=28800
+  #     - --interactive-timeout=28800
 
-  # MS-CV API
-  ms-cv:
-    <<: *service-defaults
-    build:
-      context: .
-      dockerfile: backend/ms-cv/Dockerfile
-    container_name: ms-cv
-    ports:
-      - "8082:8082"
-    depends_on:
-      ms-config:
-        condition: service_healthy
-      ms-discover:
-        condition: service_healthy
-      ms-cv-db:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
+  # # MS-CV API
+  # ms-cv:
+  #   <<: *service-defaults
+  #   build:
+  #     context: .
+  #     dockerfile: backend/ms-cv/Dockerfile
+  #   container_name: ms-cv
+  #   ports:
+  #     - "8082:8082"
+  #   depends_on:
+  #     ms-config:
+  #       condition: service_healthy
+  #     ms-discover:
+  #       condition: service_healthy
+  #     ms-cv-db:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081/actuator/health"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
+  #     start_period: 40s
 
-  # MS-INVITATION Database
-  ms-invitation-db:
-    <<: *service-defaults
-    image: mariadb:11
-    container_name: ms-invitation-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db_invitation
-      MYSQL_USER: inviteUser
-      MYSQL_PASSWORD: passer123
-    ports:
-      - "3310:3306"
-    volumes:
-      - ms-invitation-db-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      interval: 10s
-      timeout: 30s
-      retries: 20
-      start_period: 60s
-    command: 
-      - --wait-timeout=28800
-      - --interactive-timeout=28800
+  # # MS-INVITATION Database
+  # ms-invitation-db:
+  #   <<: *service-defaults
+  #   image: mariadb:11
+  #   container_name: ms-invitation-db
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: db_invitation
+  #     MYSQL_USER: inviteUser
+  #     MYSQL_PASSWORD: passer123
+  #   ports:
+  #     - "3310:3306"
+  #   volumes:
+  #     - ms-invitation-db-data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+  #     interval: 10s
+  #     timeout: 30s
+  #     retries: 20
+  #     start_period: 60s
+  #   command: 
+  #     - --wait-timeout=28800
+  #     - --interactive-timeout=28800
 
-  # MS-INVITATION API
-  ms-invitation:
-    <<: *service-defaults
-    build:
-      context: .
-      dockerfile: backend/ms-invitation/Dockerfile
-    container_name: ms-invitation
-    ports:
-      - "8083:8083"
-    depends_on:
-      ms-config:
-        condition: service_healthy
-      ms-discover:
-        condition: service_healthy
-      ms-invitation-db:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8083/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
+  # # MS-INVITATION API
+  # ms-invitation:
+  #   <<: *service-defaults
+  #   build:
+  #     context: .
+  #     dockerfile: backend/ms-invitation/Dockerfile
+  #   container_name: ms-invitation
+  #   ports:
+  #     - "8083:8083"
+  #   depends_on:
+  #     ms-config:
+  #       condition: service_healthy
+  #     ms-discover:
+  #       condition: service_healthy
+  #     ms-invitation-db:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--spider", "-q", "http://localhost:8083/actuator/health"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
+  #     start_period: 40s
 
   # phpMyAdmin for MS-USER
   phpmyadmin-user:
@@ -209,54 +209,54 @@ services:
     depends_on:
       - ms-user-db
     restart: unless-stopped
-  
-   # phpMyAdmin for MS-CV
-  phpmyadmin-cv:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin-cv
-    environment:
-      PMA_HOST: ms-cv-db
-      PMA_PORT: 3306
-    ports:
-      - "9092:80"
-    networks:
-      - microservices-net
-    depends_on:
-      - ms-cv-db
-    restart: unless-stopped
 
-  # phpMyAdmin for MS-INVITATION
-  phpmyadmin-invitation:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin-invitation
-    environment:
-      PMA_HOST: ms-invitation-db
-      PMA_PORT: 3306
-    ports:
-      - "9093:80"
-    networks:
-      - microservices-net
-    depends_on:
-      - ms-invitation-db
-    restart: unless-stopped
+  #  # phpMyAdmin for MS-CV
+  # phpmyadmin-cv:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: phpmyadmin-cv
+  #   environment:
+  #     PMA_HOST: ms-cv-db
+  #     PMA_PORT: 3306
+  #   ports:
+  #     - "9092:80"
+  #   networks:
+  #     - microservices-net
+  #   depends_on:
+  #     - ms-cv-db
+  #   restart: unless-stopped
 
-   # FRONTEND REACT + VITE 
-  frontend:
-    build: ./frontend
-    container_name: frontend
-    ports:
-      - "3000:80"         # NGINX sert l’app sur 80
-    networks:
-      - microservices-net
-    depends_on:
-      ms-gateway:
-        condition: service_healthy
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  # # phpMyAdmin for MS-INVITATION
+  # phpmyadmin-invitation:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: phpmyadmin-invitation
+  #   environment:
+  #     PMA_HOST: ms-invitation-db
+  #     PMA_PORT: 3306
+  #   ports:
+  #     - "9093:80"
+  #   networks:
+  #     - microservices-net
+  #   depends_on:
+  #     - ms-invitation-db
+  #   restart: unless-stopped
+
+  # FRONTEND REACT + VITE 
+  # frontend:
+  #   build: ./frontend
+  #   container_name: frontend
+  #   ports:
+  #     - "3000:80" # NGINX sert l’app sur 80
+  #   networks:
+  #     - microservices-net
+  #   depends_on:
+  #     ms-gateway:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: [ "CMD", "wget", "--spider", "-q", "http://localhost" ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
 networks:
   microservices-net:

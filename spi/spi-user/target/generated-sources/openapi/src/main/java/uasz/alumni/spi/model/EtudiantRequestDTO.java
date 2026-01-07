@@ -18,11 +18,7 @@ import jakarta.annotation.Generated;
  * EtudiantRequestDTO
  */
 
-<<<<<<< Updated upstream
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T20:10:41.247958539Z[Africa/Dakar]")
-=======
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:26.566966538Z[Africa/Dakar]")
->>>>>>> Stashed changes
 public class EtudiantRequestDTO {
 
   private String nom;
@@ -186,11 +182,11 @@ public class EtudiantRequestDTO {
   }
 
   /**
-   * Numéro de carte étudiant
+   * Numéro de carte étudiant (8 à 10 chiffres)
    * @return numeroCarteEtudiant
   */
-  @NotNull 
-  @Schema(name = "numeroCarteEtudiant", example = "ETU123456", description = "Numéro de carte étudiant", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull @Pattern(regexp = "^\\d{8,10}$") 
+  @Schema(name = "numeroCarteEtudiant", example = "12345678", description = "Numéro de carte étudiant (8 à 10 chiffres)", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("numeroCarteEtudiant")
   public String getNumeroCarteEtudiant() {
     return numeroCarteEtudiant;

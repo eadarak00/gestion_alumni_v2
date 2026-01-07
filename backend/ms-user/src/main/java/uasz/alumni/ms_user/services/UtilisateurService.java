@@ -8,9 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import uasz.alumni.ms_user.common.exceptions.ResourceNotFoundException;
+import uasz.alumni.ms_user.entities.Alumni;
+import uasz.alumni.ms_user.entities.Etudiant;
 import uasz.alumni.ms_user.entities.Utilisateur;
 import uasz.alumni.ms_user.mappers.UtilisateurMapper;
 import uasz.alumni.ms_user.repositories.UtilisateurRepository;
+import uasz.alumni.spi.model.AlumniProfilRequestDTO;
+import uasz.alumni.spi.model.AlumniResponseDTO;
+import uasz.alumni.spi.model.EtudiantProfilRequestDTO;
+import uasz.alumni.spi.model.EtudiantResponseDTO;
 import uasz.alumni.spi.model.GetAllUtilisateursFiltered200Response;
 import uasz.alumni.spi.model.UtilisateurResponseDTO;
 
@@ -121,4 +127,63 @@ public class UtilisateurService {
     public boolean usernameExists(@NonNull String username) {
         return utilisateurRepository.existsByUsername(username);
     }
+
+    @Transactional
+    public EtudiantResponseDTO completerProfilEtudiant(Long id, EtudiantProfilRequestDTO dto) {
+        Utilisateur user = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+
+        if (!user.getRole().getLibelle().equals("ETUDIANT")) {
+            throw new IllegalArgumentException("Cet utilisateur n'est pas un étudiant.");
+        }
+
+        Etudiant etudiant = new Etudiant();
+        etudiant.setId(user.getId());
+        etudiant.setNom(user.getNom());
+        etudiant.setPrenom(user.getPrenom());
+        etudiant.setEmail(user.getEmail());
+        etudiant.setUsername(user.getUsername());
+        etudiant.setTelephone(user.getTelephone());
+        etudiant.setRole(user.getRole());
+
+        etudiant.setNumeroCarteEtudiant(dto.getNumeroEtudiant());
+        etudiant.setFiliere(dto.getFiliere());
+        etudiant.setNiveau(dto.getNiveau());
+
+        Etudiant savedEtudiant = utilisateurRepository.save(etudiant);
+        return utilisateurMapper.toEtudiantDto(savedEtudiant);
+    }
+
+    @Transactional
+    public AlumniResponseDTO completerProfilAlumni(Long id, AlumniProfilRequestDTO dto) {
+        // Récupérer l'utilisateur générique
+        Utilisateur user = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+
+        // Vérifier le rôle
+        if (!"ALUMNI".equals(user.getRole().getLibelle())) {
+            throw new IllegalArgumentException("Cet utilisateur n'est pas un alumni.");
+        }
+
+        // Créer une instance Alumni et copier les champs communs
+        Alumni alumni = new Alumni();
+        alumni.setId(user.getId()); // garder le même ID
+        alumni.setNom(user.getNom());
+        alumni.setPrenom(user.getPrenom());
+        alumni.setEmail(user.getEmail());
+        alumni.setUsername(user.getUsername());
+        alumni.setTelephone(user.getTelephone());
+        alumni.setRole(user.getRole());
+        alumni.setActif(user.isActif());
+
+        // Compléter les informations spécifiques
+        alumni.setProfession(dto.getProfession());
+        alumni.setEntreprise(dto.getEntreprise());
+
+        // Sauvegarder la nouvelle instance Alumni
+        Alumni savedAlumni = utilisateurRepository.save(alumni);
+
+        return utilisateurMapper.toAlumniDto(savedAlumni);
+    }
+
 }

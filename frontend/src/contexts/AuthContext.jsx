@@ -1,8 +1,8 @@
-import { createContext, useState, useEffect } from 'react';
-import { authService } from '../services/msUser/authService';
-import { tokenManager } from '../utils/tokenManager';
-import { setAuthToken } from '../utils/apiConfig';
-import { handleApiError } from '../utils/errorHandler';
+import { createContext, useState, useEffect } from "react";
+import { authService } from "../services/msUser/authService";
+import { tokenManager } from "../utils/tokenManager";
+import { setAuthToken } from "../utils/apiConfig";
+import { handleApiError } from "../utils/errorHandler";
 
 export const AuthContext = createContext(null);
 
@@ -37,8 +37,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, motDePasse) => {
     try {
-      console.log('Tentative connexion pour:', email);
-
       const response = await authService.login(email, motDePasse);
 
       // authService a déjà stocké les tokens dans localStorage
@@ -59,7 +57,6 @@ export const AuthProvider = ({ children }) => {
         },
       };
     } catch (error) {
-      console.error('Erreur login dans AuthContext:', error);
       const errorInfo = handleApiError(error);
       throw errorInfo;
     }
@@ -72,7 +69,7 @@ export const AuthProvider = ({ children }) => {
         await authService.logout(refreshToken);
       }
     } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
+      // on ignore l'erreur serveur de logout, le nettoyage local se fait quand même
     } finally {
       tokenManager.clearAll();
       setAuthToken(null);
@@ -85,7 +82,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const refreshToken = tokenManager.getRefreshToken();
       if (!refreshToken) {
-        throw new Error('No refresh token available');
+        throw new Error("No refresh token available");
       }
 
       const response = await authService.refreshToken(refreshToken);
@@ -107,7 +104,6 @@ export const AuthProvider = ({ children }) => {
       // À implémenter plus tard si tu ajoutes un endpoint de profil
       return user;
     } catch (error) {
-      console.warn('Impossible de récupérer le profil complet:', error);
       return user;
     }
   };
@@ -119,8 +115,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated,
     userRole,
-    isAlumni: userRole === 'ALUMNI',
-    isEtudiant: userRole === 'ETUDIANT',
+    isAlumni: userRole === "ALUMNI",
+    isEtudiant: userRole === "ETUDIANT",
     login,
     logout,
     refreshAccessToken,

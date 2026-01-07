@@ -1,9 +1,20 @@
-# MsUserApiDeGestionDesUtilisateurs.RefreshRequest
+# RefreshRequest
+
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**refreshToken** | **String** | Token de rafraîchissement | 
+**refreshToken** | **string** | Token de rafraîchissement | [default to undefined]
 
+## Example
 
+```typescript
+import { RefreshRequest } from './api';
+
+const instance: RefreshRequest = {
+    refreshToken,
+};
+```
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

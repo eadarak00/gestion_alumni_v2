@@ -1,48 +1,46 @@
-# MsUserApiDeGestionDesUtilisateurs.ValidationApi
+# ValidationApi
 
 All URIs are relative to *http://localhost:8081/api/v1*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**envoyerCode**](ValidationApi.md#envoyerCode) | **POST** /validation/envoyer | Envoyer un code de validation
-[**verifierCode**](ValidationApi.md#verifierCode) | **POST** /validation/verifier | Vérifier un code de validation
+|Method | HTTP request | Description|
+|------------- | ------------- | -------------|
+|[**envoyerCode**](#envoyercode) | **POST** /validation/envoyer | Envoyer un code de validation|
+|[**verifierCode**](#verifiercode) | **POST** /validation/verifier | Vérifier un code de validation|
 
-
-
-## envoyerCode
-
+# **envoyerCode**
 > envoyerCode(codeValidationRequestDTO)
-
-Envoyer un code de validation
 
 Génère et envoie un code de validation par email
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
+```typescript
+import {
+    ValidationApi,
+    Configuration,
+    CodeValidationRequestDTO
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.ValidationApi();
-let codeValidationRequestDTO = new MsUserApiDeGestionDesUtilisateurs.CodeValidationRequestDTO(); // CodeValidationRequestDTO | 
-apiInstance.envoyerCode(codeValidationRequestDTO, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new ValidationApi(configuration);
+
+let codeValidationRequestDTO: CodeValidationRequestDTO; //
+
+const { status, data } = await apiInstance.envoyerCode(
+    codeValidationRequestDTO
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **codeValidationRequestDTO** | **CodeValidationRequestDTO**|  | |
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **codeValidationRequestDTO** | [**CodeValidationRequestDTO**](CodeValidationRequestDTO.md)|  | 
 
 ### Return type
 
-null (empty response body)
+void (empty response body)
 
 ### Authorization
 
@@ -50,44 +48,52 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: Not defined
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
 
 
-## verifierCode
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**201** | Code envoyé avec succès |  -  |
+|**400** | Email invalide |  -  |
 
-> String verifierCode(codeValidationCheckDTO)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-Vérifier un code de validation
+# **verifierCode**
+> string verifierCode(codeValidationCheckDTO)
 
-Valide un code fourni par l&#39;utilisateur
+Valide un code fourni par l\'utilisateur
 
 ### Example
 
-```javascript
-import MsUserApiDeGestionDesUtilisateurs from 'ms_user_api_de_gestion_des_utilisateurs';
+```typescript
+import {
+    ValidationApi,
+    Configuration,
+    CodeValidationCheckDTO
+} from './api';
 
-let apiInstance = new MsUserApiDeGestionDesUtilisateurs.ValidationApi();
-let codeValidationCheckDTO = new MsUserApiDeGestionDesUtilisateurs.CodeValidationCheckDTO(); // CodeValidationCheckDTO | 
-apiInstance.verifierCode(codeValidationCheckDTO, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-});
+const configuration = new Configuration();
+const apiInstance = new ValidationApi(configuration);
+
+let codeValidationCheckDTO: CodeValidationCheckDTO; //
+
+const { status, data } = await apiInstance.verifierCode(
+    codeValidationCheckDTO
+);
 ```
 
 ### Parameters
 
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **codeValidationCheckDTO** | **CodeValidationCheckDTO**|  | |
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **codeValidationCheckDTO** | [**CodeValidationCheckDTO**](CodeValidationCheckDTO.md)|  | 
 
 ### Return type
 
-**String**
+**string**
 
 ### Authorization
 
@@ -95,6 +101,15 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: application/json
-- **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Code validé avec succès |  -  |
+|**400** | Code invalide ou expiré |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
