@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * RoleRequestDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T15:59:08.700783195Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-05T21:01:52.688704211Z[Africa/Dakar]")
 public class RoleRequestDTO {
 
   private String libelle;

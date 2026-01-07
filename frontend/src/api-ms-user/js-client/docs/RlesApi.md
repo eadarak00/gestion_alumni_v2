@@ -1,6 +1,6 @@
 # RlesApi
 
-All URIs are relative to *http://localhost:8081/api/v1*
+All URIs are relative to *http://localhost:8081/api-users/v1*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|

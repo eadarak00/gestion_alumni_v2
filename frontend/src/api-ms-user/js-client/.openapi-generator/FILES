@@ -5,11 +5,14 @@ api.ts
 base.ts
 common.ts
 configuration.ts
+docs/AlumniProfilRequestDTO.md
 docs/AlumniRequestDTO.md
 docs/AlumniResponseDTO.md
+docs/AlumnisApi.md
 docs/AuthentificationApi.md
 docs/CodeValidationCheckDTO.md
 docs/CodeValidationRequestDTO.md
+docs/EtudiantProfilRequestDTO.md
 docs/EtudiantRequestDTO.md
 docs/EtudiantResponseDTO.md
 docs/GetAllUtilisateursFiltered200Response.md
