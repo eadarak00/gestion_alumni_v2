@@ -13,7 +13,7 @@ import uasz.alumni.spi.model.CodeValidationCheckDTO;
 import uasz.alumni.spi.model.CodeValidationRequestDTO;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api-users/v1")
 @RequiredArgsConstructor
 @Slf4j
 public class CodeValidationController implements ValidationApi {
