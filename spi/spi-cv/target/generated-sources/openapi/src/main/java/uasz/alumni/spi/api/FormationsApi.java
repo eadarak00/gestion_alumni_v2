@@ -5,8 +5,9 @@
  */
 package uasz.alumni.spi.api;
 
-import uasz.alumni.spi.model.Formation;
-import uasz.alumni.spi.model.FormationCreate;
+import uasz.alumni.spi.model.ErrorResponse;
+import uasz.alumni.spi.model.FormationRequest;
+import uasz.alumni.spi.model.FormationResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,10 +34,161 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:19.435775471Z[Africa/Dakar]")
+<<<<<<< Updated upstream
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T22:17:05.074030704Z[Africa/Dakar]")
+=======
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:16.558845098Z[Africa/Dakar]")
+>>>>>>> Stashed changes
 @Validated
-@Tag(name = "Formations", description = "the Formations API")
+@Tag(name = "Formations", description = "Gestion des formations académiques")
 public interface FormationsApi {
+
+    /**
+     * POST /formations : Créer une nouvelle formation
+     *
+     * @param formationRequest  (required)
+     * @return Formation créée (status code 201)
+     *         or Données invalides (status code 400)
+     */
+    @Operation(
+        operationId = "creerFormation",
+        summary = "Créer une nouvelle formation",
+        tags = { "Formations" },
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Formation créée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = FormationResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Données invalides", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/formations",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    
+    FormationResponse creerFormation(
+        @Parameter(name = "FormationRequest", description = "", required = true) @Valid @RequestBody FormationRequest formationRequest
+    );
+
+
+    /**
+     * GET /formations/{id} : Récupérer une formation par son ID
+     *
+     * @param id  (required)
+     * @return Formation trouvée (status code 200)
+     */
+    @Operation(
+        operationId = "getFormationById",
+        summary = "Récupérer une formation par son ID",
+        tags = { "Formations" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Formation trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = FormationResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/formations/{id}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    FormationResponse getFormationById(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
+    );
+
+
+    /**
+     * GET /formations/{id}/cv/{cvId} : Récupérer une formation par ID et CV ID
+     *
+     * @param id  (required)
+     * @param cvId  (required)
+     * @return Formation trouvée (status code 200)
+     */
+    @Operation(
+        operationId = "getFormationByIdAndCvId",
+        summary = "Récupérer une formation par ID et CV ID",
+        tags = { "Formations" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Formation trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = FormationResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/formations/{id}/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    FormationResponse getFormationByIdAndCvId(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /formations/cv/{cvId} : Récupérer toutes les formations d&#39;un CV
+     *
+     * @param cvId  (required)
+     * @return Liste des formations (status code 200)
+     */
+    @Operation(
+        operationId = "getFormationsByCvId",
+        summary = "Récupérer toutes les formations d'un CV",
+        tags = { "Formations" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des formations", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FormationResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/formations/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<FormationResponse> getFormationsByCvId(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /formations/cv/{cvId}/en-cours : Récupérer les formations en cours d&#39;un CV
+     *
+     * @param cvId  (required)
+     * @return Liste des formations en cours (status code 200)
+     */
+    @Operation(
+        operationId = "getFormationsEnCours",
+        summary = "Récupérer les formations en cours d'un CV",
+        tags = { "Formations" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des formations en cours", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FormationResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/formations/cv/{cvId}/en-cours",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<FormationResponse> getFormationsEnCours(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
 
     /**
      * DELETE /formations/{id} : Supprimer une formation
@@ -45,7 +197,7 @@ public interface FormationsApi {
      * @return Formation supprimée (status code 204)
      */
     @Operation(
-        operationId = "formationsIdDelete",
+        operationId = "supprimerFormation",
         summary = "Supprimer une formation",
         tags = { "Formations" },
         responses = {
@@ -58,67 +210,39 @@ public interface FormationsApi {
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
     
-    void formationsIdDelete(
+    void supprimerFormation(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
     );
 
 
     /**
-     * PUT /formations/{id} : Modifier une formation
+     * PUT /formations/{id} : Mettre à jour une formation
      *
      * @param id  (required)
-     * @param formationCreate  (required)
+     * @param formationRequest  (required)
      * @return Formation mise à jour (status code 200)
      */
     @Operation(
-        operationId = "formationsIdPut",
-        summary = "Modifier une formation",
+        operationId = "updateFormation",
+        summary = "Mettre à jour une formation",
         tags = { "Formations" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Formation mise à jour")
+            @ApiResponse(responseCode = "200", description = "Formation mise à jour", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = FormationResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.PUT,
         value = "/formations/{id}",
+        produces = { "application/json" },
         consumes = { "application/json" }
     )
     @ResponseStatus(HttpStatus.OK)
     
-    void formationsIdPut(
+    FormationResponse updateFormation(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "FormationCreate", description = "", required = true) @Valid @RequestBody FormationCreate formationCreate
-    );
-
-
-    /**
-     * POST /formations : Ajouter une formation
-     *
-     * @param formationCreate  (required)
-     * @return Formation ajoutée (status code 201)
-     *         or Données invalides (status code 400)
-     */
-    @Operation(
-        operationId = "formationsPost",
-        summary = "Ajouter une formation",
-        tags = { "Formations" },
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Formation ajoutée", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Formation.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Données invalides")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/formations",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.CREATED)
-    
-    Formation formationsPost(
-        @Parameter(name = "FormationCreate", description = "", required = true) @Valid @RequestBody FormationCreate formationCreate
+        @Parameter(name = "FormationRequest", description = "", required = true) @Valid @RequestBody FormationRequest formationRequest
     );
 
 }

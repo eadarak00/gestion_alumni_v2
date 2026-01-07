@@ -5,8 +5,9 @@
  */
 package uasz.alumni.spi.api;
 
-import uasz.alumni.spi.model.Experience;
-import uasz.alumni.spi.model.ExperienceCreate;
+import uasz.alumni.spi.model.ErrorResponse;
+import uasz.alumni.spi.model.ExperienceRequest;
+import uasz.alumni.spi.model.ExperienceResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,10 +34,165 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:19.435775471Z[Africa/Dakar]")
+<<<<<<< Updated upstream
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T22:17:05.074030704Z[Africa/Dakar]")
+=======
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:16.558845098Z[Africa/Dakar]")
+>>>>>>> Stashed changes
 @Validated
-@Tag(name = "Expériences", description = "the Expériences API")
+@Tag(name = "Expériences", description = "Gestion des expériences professionnelles")
 public interface ExperiencesApi {
+
+    /**
+     * POST /experiences : Créer une nouvelle expérience
+     *
+     * @param experienceRequest  (required)
+     * @return Expérience créée (status code 201)
+     *         or Données invalides (status code 400)
+     */
+    @Operation(
+        operationId = "creerExperience",
+        summary = "Créer une nouvelle expérience",
+        tags = { "Expériences" },
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Expérience créée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Données invalides", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/experiences",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    
+    ExperienceResponse creerExperience(
+        @Parameter(name = "ExperienceRequest", description = "", required = true) @Valid @RequestBody ExperienceRequest experienceRequest
+    );
+
+
+    /**
+     * GET /experiences/{id} : Récupérer une expérience par son ID
+     *
+     * @param id  (required)
+     * @return Expérience trouvée (status code 200)
+     *         or Ressource non trouvée (status code 404)
+     */
+    @Operation(
+        operationId = "getExperienceById",
+        summary = "Récupérer une expérience par son ID",
+        tags = { "Expériences" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Expérience trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceResponse.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Ressource non trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/experiences/{id}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    ExperienceResponse getExperienceById(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
+    );
+
+
+    /**
+     * GET /experiences/{id}/cv/{cvId} : Récupérer une expérience par ID et CV ID
+     *
+     * @param id  (required)
+     * @param cvId  (required)
+     * @return Expérience trouvée (status code 200)
+     */
+    @Operation(
+        operationId = "getExperienceByIdAndCvId",
+        summary = "Récupérer une expérience par ID et CV ID",
+        tags = { "Expériences" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Expérience trouvée", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/experiences/{id}/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    ExperienceResponse getExperienceByIdAndCvId(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /experiences/cv/{cvId} : Récupérer toutes les expériences d&#39;un CV
+     *
+     * @param cvId  (required)
+     * @return Liste des expériences (status code 200)
+     */
+    @Operation(
+        operationId = "getExperiencesByCvId",
+        summary = "Récupérer toutes les expériences d'un CV",
+        tags = { "Expériences" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des expériences", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ExperienceResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/experiences/cv/{cvId}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<ExperienceResponse> getExperiencesByCvId(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
+
+    /**
+     * GET /experiences/cv/{cvId}/en-cours : Récupérer les expériences en cours d&#39;un CV
+     *
+     * @param cvId  (required)
+     * @return Liste des expériences en cours (status code 200)
+     */
+    @Operation(
+        operationId = "getExperiencesEnCours",
+        summary = "Récupérer les expériences en cours d'un CV",
+        tags = { "Expériences" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Liste des expériences en cours", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ExperienceResponse.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/experiences/cv/{cvId}/en-cours",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    List<ExperienceResponse> getExperiencesEnCours(
+        @Parameter(name = "cvId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("cvId") Integer cvId
+    );
+
 
     /**
      * DELETE /experiences/{id} : Supprimer une expérience
@@ -45,7 +201,7 @@ public interface ExperiencesApi {
      * @return Expérience supprimée (status code 204)
      */
     @Operation(
-        operationId = "experiencesIdDelete",
+        operationId = "supprimerExperience",
         summary = "Supprimer une expérience",
         tags = { "Expériences" },
         responses = {
@@ -58,25 +214,25 @@ public interface ExperiencesApi {
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
     
-    void experiencesIdDelete(
+    void supprimerExperience(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id
     );
 
 
     /**
-     * PUT /experiences/{id} : Modifier une expérience
+     * PUT /experiences/{id} : Mettre à jour une expérience
      *
      * @param id  (required)
-     * @param experienceCreate  (required)
+     * @param experienceRequest  (required)
      * @return Expérience mise à jour (status code 200)
      */
     @Operation(
-        operationId = "experiencesIdPut",
-        summary = "Modifier une expérience",
+        operationId = "updateExperience",
+        summary = "Mettre à jour une expérience",
         tags = { "Expériences" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Expérience mise à jour", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Experience.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceResponse.class))
             })
         }
     )
@@ -88,40 +244,9 @@ public interface ExperiencesApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    Experience experiencesIdPut(
+    ExperienceResponse updateExperience(
         @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") Integer id,
-        @Parameter(name = "ExperienceCreate", description = "", required = true) @Valid @RequestBody ExperienceCreate experienceCreate
-    );
-
-
-    /**
-     * POST /experiences : Ajouter une expérience professionnelle
-     *
-     * @param experienceCreate  (required)
-     * @return Expérience ajoutée (status code 201)
-     *         or Données invalides (status code 400)
-     */
-    @Operation(
-        operationId = "experiencesPost",
-        summary = "Ajouter une expérience professionnelle",
-        tags = { "Expériences" },
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Expérience ajoutée", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Experience.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Données invalides")
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/experiences",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.CREATED)
-    
-    Experience experiencesPost(
-        @Parameter(name = "ExperienceCreate", description = "", required = true) @Valid @RequestBody ExperienceCreate experienceCreate
+        @Parameter(name = "ExperienceRequest", description = "", required = true) @Valid @RequestBody ExperienceRequest experienceRequest
     );
 
 }

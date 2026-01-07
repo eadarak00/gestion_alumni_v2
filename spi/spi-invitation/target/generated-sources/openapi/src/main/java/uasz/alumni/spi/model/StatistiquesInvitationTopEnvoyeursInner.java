@@ -20,7 +20,11 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("StatistiquesInvitation_topEnvoyeurs_inner")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-10T22:49:23.314978840Z[Africa/Dakar]")
+<<<<<<< Updated upstream
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T20:10:40.405925321Z[Africa/Dakar]")
+=======
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:23.051945639Z[Africa/Dakar]")
+>>>>>>> Stashed changes
 public class StatistiquesInvitationTopEnvoyeursInner {
 
   private String idEnvoyeur;
