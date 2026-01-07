@@ -32,7 +32,11 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
+<<<<<<< Updated upstream
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T20:10:40.405925321Z[Africa/Dakar]")
+=======
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:23.051945639Z[Africa/Dakar]")
+>>>>>>> Stashed changes
 @Validated
 @Tag(name = "Statistiques", description = "Statistiques globales et individuelles")
 public interface StatistiquesApi {
