@@ -18,11 +18,7 @@ import jakarta.annotation.Generated;
  * RoleRequestDTO
  */
 
-<<<<<<< Updated upstream
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T20:10:41.247958539Z[Africa/Dakar]")
-=======
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:26.566966538Z[Africa/Dakar]")
->>>>>>> Stashed changes
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T15:59:08.700783195Z[Africa/Dakar]")
 public class RoleRequestDTO {
 
   private String libelle;

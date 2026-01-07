@@ -22,11 +22,7 @@ import jakarta.annotation.Generated;
  * PageResponseCVResponse
  */
 
-<<<<<<< Updated upstream
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T22:17:05.074030704Z[Africa/Dakar]")
-=======
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:16.558845098Z[Africa/Dakar]")
->>>>>>> Stashed changes
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T15:59:02.955391208Z[Africa/Dakar]")
 public class PageResponseCVResponse {
 
   @Valid
