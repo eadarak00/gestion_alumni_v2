@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:16.558845098Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T16:18:31.988765597Z[Africa/Dakar]")
 @Validated
 @Tag(name = "CVs", description = "Gestion des CVs")
 public interface CvsApi {
