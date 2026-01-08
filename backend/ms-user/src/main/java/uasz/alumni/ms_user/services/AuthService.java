@@ -9,6 +9,8 @@ import uasz.alumni.spi.model.UtilisateurRequestDTO;
 import uasz.alumni.spi.model.UtilisateurResponseDTO;
 import uasz.alumni.ms_user.common.exceptions.ResourceAlreadyExistsException;
 import uasz.alumni.ms_user.common.exceptions.ResourceNotFoundException;
+import uasz.alumni.ms_user.entities.Alumni;
+import uasz.alumni.ms_user.entities.Etudiant;
 import uasz.alumni.ms_user.entities.RefreshToken;
 import uasz.alumni.ms_user.entities.Role;
 import uasz.alumni.ms_user.entities.Utilisateur;
@@ -147,16 +149,33 @@ public class AuthService {
 
         Role role = findRole(dto.getRole());
 
-        Utilisateur utilisateur = buildUtilisateur(dto, role);
+        Utilisateur utilisateur;
+
+        switch (role.getLibelle()) {
+            case "ETUDIANT" -> utilisateur = new Etudiant();
+            case "ALUMNI" -> utilisateur = new Alumni();
+            default -> utilisateur = new Utilisateur();
+        }
+
+        // Champs communs
+        utilisateur.setNom(dto.getNom());
+        utilisateur.setPrenom(dto.getPrenom());
+        utilisateur.setEmail(dto.getEmail());
+        utilisateur.setUsername(dto.getUsername());
+        utilisateur.setTelephone(dto.getTelephone());
+        utilisateur.setRole(role);
+        utilisateur.setMotDePasse(passwordEncoder.encode(dto.getMotDePasse()));
 
         Utilisateur savedUser = utilisateurRepository.save(utilisateur);
 
         codeValidationService.creerEtEnvoyerCode(savedUser.getEmail());
 
-        log.info("Nouvel utilisateur inscrit : {} ({})", savedUser.getNom(), savedUser.getEmail());
+        log.info("Nouvel utilisateur inscrit : {} ({})",
+                savedUser.getNom(), savedUser.getEmail());
 
         return utilisateurMapper.toDto(savedUser);
     }
+
 
     //
     // ---------------- Méthodes privées propres ----------------
