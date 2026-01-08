@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * LoginRequest
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:26.566966538Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T20:15:43.596926073Z[Africa/Dakar]")
 public class LoginRequest {
 
   private String email;

@@ -22,11 +22,7 @@ import jakarta.annotation.Generated;
  * DemandeCreationInvitation
  */
 
-<<<<<<< Updated upstream
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T20:10:40.405925321Z[Africa/Dakar]")
-=======
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:23.051945639Z[Africa/Dakar]")
->>>>>>> Stashed changes
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T20:15:40.284658106Z[Africa/Dakar]")
 public class DemandeCreationInvitation {
 
   private String idEnvoyeur;

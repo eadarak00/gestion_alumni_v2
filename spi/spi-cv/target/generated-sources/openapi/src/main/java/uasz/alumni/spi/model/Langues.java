@@ -20,11 +20,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Gets or Sets Langues
  */
 
-<<<<<<< Updated upstream
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T22:17:05.074030704Z[Africa/Dakar]")
-=======
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T18:41:16.558845098Z[Africa/Dakar]")
->>>>>>> Stashed changes
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T20:15:24.930473964Z[Africa/Dakar]")
 public enum Langues {
   
   FRANCAIS("FRANCAIS"),
