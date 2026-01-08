@@ -11,6 +11,9 @@ import java.util.List;
 public class CvResponseDTO {
 
     private Long id;
+    private Long userId;
+    private String prenom;
+    private String nom;
 
     private Long templateId;
     private String templateNom;

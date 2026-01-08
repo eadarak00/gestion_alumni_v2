@@ -3,6 +3,7 @@ package uasz.alumni.ms_cv_v2.controller;
 import lombok.RequiredArgsConstructor;
 import uasz.alumni.ms_cv_v2.dtos.CvRequestDTO;
 import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
+import uasz.alumni.ms_cv_v2.services.CvPdfService;
 import uasz.alumni.ms_cv_v2.services.CvService;
 
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @RestController
@@ -27,6 +29,7 @@ import java.util.List;
 public class CvController {
 
     private final CvService cvService;
+    private final CvPdfService cvPdfService;
 
     /* ================= Utils ================= */
 
@@ -93,4 +96,20 @@ public class CvController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/pdf")
+    public ResponseEntity<byte[]> downloadCvPdf(@PathVariable Long id) {
+
+        Long userId = getUserId();
+
+        CvResponseDTO cv = cvService.getCvById(id, userId);
+
+        ByteArrayOutputStream baos = cvPdfService.generatePdf(cv);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() + ".pdf")
+                .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                .body(baos.toByteArray());
+    }
+
 }
