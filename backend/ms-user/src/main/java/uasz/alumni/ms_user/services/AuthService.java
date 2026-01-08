@@ -176,7 +176,6 @@ public class AuthService {
         return utilisateurMapper.toDto(savedUser);
     }
 
-
     //
     // ---------------- Méthodes privées propres ----------------
     //
