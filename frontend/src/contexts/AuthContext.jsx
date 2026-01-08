@@ -126,15 +126,28 @@
 //   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 // };
 
-
 import { createContext, useState, useEffect } from "react";
 import { authService } from "../services/msUser/authService";
-import userService from "../services/msUser/userService";
 import { tokenManager } from "../utils/tokenManager";
 import { setAuthToken } from "../utils/apiConfig";
 import { handleApiError } from "../utils/errorHandler";
 
 export const AuthContext = createContext(null);
+
+const isProfileComplete = (user) => {
+  if (!user?.role) return false;
+
+  if (user.role === "ALUMNI") {
+    // selon ton besoin, tu peux exiger profession ET entreprise
+    return !!(user.profession && user.entreprise);
+  }
+
+  if (user.role === "ETUDIANT") {
+    return !!(user.numeroCarteEtudiant && user.filiere && user.niveau);
+  }
+
+  return true; // USER ou autres
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => tokenManager.getUser() || null);
@@ -142,22 +155,6 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!tokenManager.getAccessToken()
   );
-  const [profileCompleted, setProfileCompleted] = useState(true);
-
-  // Fonction pour vérifier si le profil est complet
-  const checkProfileCompleteness = (userData) => {
-    if (!userData) return true;
-    
-    if (userData.role === 'ALUMNI') {
-      return !!(userData.profession && userData.entreprise);
-    }
-    
-    if (userData.role === 'ETUDIANT') {
-      return !!(userData.numeroEtudiant && userData.filiere && userData.niveau);
-    }
-    
-    return true;
-  };
 
   useEffect(() => {
     const initAuth = () => {
@@ -168,15 +165,10 @@ export const AuthProvider = ({ children }) => {
         setAuthToken(token);
         setUser(savedUser);
         setIsAuthenticated(true);
-        
-        // Vérifier si le profil est complet
-        const isComplete = checkProfileCompleteness(savedUser);
-        setProfileCompleted(isComplete);
       } else {
         setAuthToken(null);
         setUser(null);
         setIsAuthenticated(false);
-        setProfileCompleted(true);
       }
 
       setLoading(false);
@@ -196,10 +188,6 @@ export const AuthProvider = ({ children }) => {
       setAuthToken(response.accessToken);
       setUser(response.user);
       setIsAuthenticated(true);
-      
-      // Vérifier si le profil est complet après login
-      const isComplete = checkProfileCompleteness(response.user);
-      setProfileCompleted(isComplete);
 
       return {
         success: true,
@@ -208,7 +196,6 @@ export const AuthProvider = ({ children }) => {
           accessToken: response.accessToken,
           refreshToken: response.refreshToken,
         },
-        profileCompleted: isComplete,
       };
     } catch (error) {
       const errorInfo = handleApiError(error);
@@ -222,14 +209,11 @@ export const AuthProvider = ({ children }) => {
       if (refreshToken) {
         await authService.logout(refreshToken);
       }
-    } catch (error) {
-      // ignore
     } finally {
       tokenManager.clearAll();
       setAuthToken(null);
       setUser(null);
       setIsAuthenticated(false);
-      setProfileCompleted(true);
     }
   };
 
@@ -241,45 +225,18 @@ export const AuthProvider = ({ children }) => {
       const response = await authService.refreshToken(refreshToken);
 
       tokenManager.setAccessToken(response.accessToken);
-      tokenManager.setRefreshToken(response.refreshToken);
-      setAuthToken(response.accessToken);
+      if (response.refreshToken) tokenManager.setRefreshToken(response.refreshToken);
 
+      // user peut avoir été régénéré par authService.refreshToken()
+      const newUser = tokenManager.getUser();
+      setUser(newUser);
+
+      setAuthToken(response.accessToken);
       return response.accessToken;
     } catch (error) {
       await logout();
       throw error;
     }
-  };
-
-  const updateUser = (nextUser) => {
-    setUser(nextUser);
-    tokenManager.setUser(nextUser);
-    
-    // Re-vérifier si le profil est complet après mise à jour
-    const isComplete = checkProfileCompleteness(nextUser);
-    setProfileCompleted(isComplete);
-  };
-
-  const reloadUserFromApi = async () => {
-    if (!user?.email) return null;
-    try {
-      const fullUser = await userService.getUserByEmail(user.email);
-      const merged = { ...user, ...fullUser };
-      updateUser(merged);
-      return merged;
-    } catch {
-      return null;
-    }
-  };
-
-  // Fonction spécifique pour mettre à jour l'état du profil après complétion
-  const markProfileAsCompleted = (profileData) => {
-    const updatedUser = { 
-      ...user, 
-      ...profileData,
-      profileCompleted: true 
-    };
-    updateUser(updatedUser);
   };
 
   const userRole = user?.role || null;
@@ -291,13 +248,10 @@ export const AuthProvider = ({ children }) => {
     userRole,
     isAlumni: userRole === "ALUMNI",
     isEtudiant: userRole === "ETUDIANT",
-    profileCompleted, // Ajouté
+    isProfileComplete: isProfileComplete(user),
     login,
     logout,
     refreshAccessToken,
-    updateUser,
-    reloadUserFromApi,
-    markProfileAsCompleted, // Nouvelle fonction
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

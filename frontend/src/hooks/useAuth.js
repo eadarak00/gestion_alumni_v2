@@ -32,14 +32,14 @@
 //   };
 // };
 
-import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
 
   const {
@@ -48,13 +48,10 @@ export const useAuth = () => {
     userRole,
     isAlumni,
     isEtudiant,
-    profileCompleted,
+    isProfileComplete, 
     login,
     logout,
     loading,
-    updateUser,
-    reloadUserFromApi,
-    markProfileAsCompleted,
   } = context;
 
   return {
@@ -63,12 +60,9 @@ export const useAuth = () => {
     userRole,
     isAlumni,
     isEtudiant,
-    profileCompleted,
+    isProfileComplete, 
     login,
     logout,
     loading,
-    updateUser,
-    reloadUserFromApi,
-    markProfileAsCompleted,
   };
 };
