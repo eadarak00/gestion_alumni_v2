@@ -2,12 +2,10 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
-  User,
-  BookOpen,
+  UserPlus,
   Users,
   MessageCircle,
   Calendar,
-  Settings,
   ChevronLeft,
   ChevronRight,
   FileText
@@ -17,13 +15,11 @@ import { Header } from './Header';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: User, label: 'Mon Profil', path: '/profile' },
-  { icon: BookOpen, label: 'Mes Études', path: '/studies' },
   { icon: FileText, label: 'Mon CV', path: '/cv' },
   { icon: Users, label: 'Alumni à Découvrir', path: '/discover-alumni' },
+  { icon: UserPlus, label: 'Mes amis', path: '/etudiant/friends' },
   { icon: MessageCircle, label: 'Mentorat', path: '/mentorship' },
   { icon: Calendar, label: 'Événements', path: '/events' },
-  { icon: Settings, label: 'Paramètres', path: '/settings' }
 ];
 
 export const EtudiantLayout = ({ children }) => {
