@@ -6,10 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.format.annotation.DateTimeFormat;
-import java.util.NoSuchElementException;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -24,18 +21,14 @@ import jakarta.annotation.Generated;
  * SuiviInvitation
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:26:58.951985870Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-01T18:01:20.684089Z[Atlantic/Reykjavik]")
 public class SuiviInvitation {
 
   /**
    * Gets or Sets etat
    */
   public enum EtatEnum {
-    EN_ATTENTE_PARTAGE("EN_ATTENTE_PARTAGE"),
-    
-    OUVERTE("OUVERTE"),
-    
-    INSCRIPTION_INITIEE("INSCRIPTION_INITIEE"),
+    EN_ATTENTE("EN_ATTENTE"),
     
     ACCEPTEE("ACCEPTEE"),
     
@@ -71,10 +64,10 @@ public class SuiviInvitation {
   private EtatEnum etat;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private JsonNullable<OffsetDateTime> dateOuverture = JsonNullable.<OffsetDateTime>undefined();
+  private OffsetDateTime dateOuverture;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private JsonNullable<OffsetDateTime> dateAcceptation = JsonNullable.<OffsetDateTime>undefined();
+  private OffsetDateTime dateAcceptation;
 
   public SuiviInvitation etat(EtatEnum etat) {
     this.etat = etat;
@@ -97,7 +90,7 @@ public class SuiviInvitation {
   }
 
   public SuiviInvitation dateOuverture(OffsetDateTime dateOuverture) {
-    this.dateOuverture = JsonNullable.of(dateOuverture);
+    this.dateOuverture = dateOuverture;
     return this;
   }
 
@@ -108,16 +101,16 @@ public class SuiviInvitation {
   @Valid 
   @Schema(name = "dateOuverture", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateOuverture")
-  public JsonNullable<OffsetDateTime> getDateOuverture() {
+  public OffsetDateTime getDateOuverture() {
     return dateOuverture;
   }
 
-  public void setDateOuverture(JsonNullable<OffsetDateTime> dateOuverture) {
+  public void setDateOuverture(OffsetDateTime dateOuverture) {
     this.dateOuverture = dateOuverture;
   }
 
   public SuiviInvitation dateAcceptation(OffsetDateTime dateAcceptation) {
-    this.dateAcceptation = JsonNullable.of(dateAcceptation);
+    this.dateAcceptation = dateAcceptation;
     return this;
   }
 
@@ -128,11 +121,11 @@ public class SuiviInvitation {
   @Valid 
   @Schema(name = "dateAcceptation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateAcceptation")
-  public JsonNullable<OffsetDateTime> getDateAcceptation() {
+  public OffsetDateTime getDateAcceptation() {
     return dateAcceptation;
   }
 
-  public void setDateAcceptation(JsonNullable<OffsetDateTime> dateAcceptation) {
+  public void setDateAcceptation(OffsetDateTime dateAcceptation) {
     this.dateAcceptation = dateAcceptation;
   }
 
@@ -146,24 +139,13 @@ public class SuiviInvitation {
     }
     SuiviInvitation suiviInvitation = (SuiviInvitation) o;
     return Objects.equals(this.etat, suiviInvitation.etat) &&
-        equalsNullable(this.dateOuverture, suiviInvitation.dateOuverture) &&
-        equalsNullable(this.dateAcceptation, suiviInvitation.dateAcceptation);
-  }
-
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
+        Objects.equals(this.dateOuverture, suiviInvitation.dateOuverture) &&
+        Objects.equals(this.dateAcceptation, suiviInvitation.dateAcceptation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(etat, hashCodeNullable(dateOuverture), hashCodeNullable(dateAcceptation));
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
+    return Objects.hash(etat, dateOuverture, dateAcceptation);
   }
 
   @Override

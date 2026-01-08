@@ -5,11 +5,10 @@ FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
 # Optimisation du cache des dépendances
-COPY pom.xml .
-#RUN mvn dependency:go-offline -B
-
+COPY backend/ms-config/pom.xml .
+RUN mvn dependency:go-offline -B -Dmaven.wagon.http.retryHandler.count=5 -Dmaven.wagon.httpconnectionManager.ttlSeconds=600
 # Copie des sources et build
-COPY src ./src
+COPY backend/ms-config/src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run
@@ -18,6 +17,9 @@ WORKDIR /app
 
 # Copier le JAR final
 COPY --from=build /app/target/*.jar app.jar
+
+# Copier les configurations
+COPY contracts ./contracts
 
 # Exposer le port
 EXPOSE 8888

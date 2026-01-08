@@ -7,7 +7,9 @@ services:
   # CONFIG SERVER
   ms-config:
     <<: *service-defaults
-    build: ./backend/ms-config
+    build:
+      context: .
+      dockerfile: backend/ms-config/Dockerfile
     container_name: ms-config
     ports:
       - "8888:8888"

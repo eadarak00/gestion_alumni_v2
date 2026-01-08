@@ -3,7 +3,17 @@ spring:
     name: ms-gateway
 
   config:
-    import: "configserver:http://ms-config:8888"   
+    import: "configserver:http://ms-config:8888"
+
+  cloud:
+    gateway:
+      routes:
+        - id: ms-invitation
+          uri: lb://MS-INVITATION
+          predicates:
+            - Path=/api/v1/invitations/**
+          filters:
+            - StripPrefix=1
 
 eureka:
   client:

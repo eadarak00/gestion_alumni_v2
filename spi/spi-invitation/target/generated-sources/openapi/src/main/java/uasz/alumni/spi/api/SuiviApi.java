@@ -32,21 +32,21 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:26:58.951985870Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-01T18:01:20.684089Z[Atlantic/Reykjavik]")
 @Validated
 @Tag(name = "Suivi", description = "Traçabilité des invitations")
 public interface SuiviApi {
 
     /**
-     * GET /suivi/{jeton} : Suivre l&#39;état d&#39;une invitation
+     * GET /suivi/{jeton} : Suivre l’état d’une invitation
      *
      * @param jeton  (required)
      * @return Informations de suivi (status code 200)
      *         or Jeton introuvable (status code 404)
      */
     @Operation(
-        operationId = "suiviJetonGet",
-        summary = "Suivre l'état d'une invitation",
+        operationId = "trackInvitationStatus",
+        summary = "Suivre l’état d’une invitation",
         tags = { "Suivi" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Informations de suivi", content = {
@@ -62,7 +62,7 @@ public interface SuiviApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    SuiviInvitation suiviJetonGet(
+    SuiviInvitation trackInvitationStatus(
         @Parameter(name = "jeton", description = "", required = true, in = ParameterIn.PATH) @PathVariable("jeton") String jeton
     );
 

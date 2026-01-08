@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: ms-config
+  profiles:
+    active: native
 
 springdoc:
   swagger-ui:
@@ -15,12 +17,8 @@ springdoc:
   cloud:
     config:
       server:
-        git:
-          uri: file:///app/contracts   # Dossier local des configurations
-          default-label: main                                        # branche par défaut
-          clone-on-start: true                                       # clone au démarrage
-          force-pull: true                                           # récupère les dernières modifs
-          timeout: 10
+        native:
+          search-locations: file:///app/contracts
 
 management:
   endpoints:

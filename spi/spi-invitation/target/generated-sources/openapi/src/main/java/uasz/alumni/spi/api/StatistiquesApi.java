@@ -32,38 +32,10 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:26:58.951985870Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-01T18:01:20.684089Z[Atlantic/Reykjavik]")
 @Validated
 @Tag(name = "Statistiques", description = "Statistiques globales et individuelles")
 public interface StatistiquesApi {
-
-    /**
-     * GET /statistiques/envoyeur/{idEnvoyeur} : Statistiques d’un créateur d’invitations
-     *
-     * @param idEnvoyeur  (required)
-     * @return Statistiques des invitations créées par cet utilisateur (status code 200)
-     */
-    @Operation(
-        operationId = "statistiquesEnvoyeurIdEnvoyeurGet",
-        summary = "Statistiques d’un créateur d’invitations",
-        tags = { "Statistiques" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Statistiques des invitations créées par cet utilisateur", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = StatistiquesInvitation.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/statistiques/envoyeur/{idEnvoyeur}",
-        produces = { "application/json" }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    
-    StatistiquesInvitation statistiquesEnvoyeurIdEnvoyeurGet(
-        @Parameter(name = "idEnvoyeur", description = "", required = true, in = ParameterIn.PATH) @PathVariable("idEnvoyeur") String idEnvoyeur
-    );
-
 
     /**
      * GET /statistiques/global : Statistiques globales
@@ -71,7 +43,7 @@ public interface StatistiquesApi {
      * @return Statistiques globales de toutes les invitations (status code 200)
      */
     @Operation(
-        operationId = "statistiquesGlobalGet",
+        operationId = "getGlobalStatistics",
         summary = "Statistiques globales",
         tags = { "Statistiques" },
         responses = {
@@ -87,8 +59,36 @@ public interface StatistiquesApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    StatistiquesInvitation statistiquesGlobalGet(
+    StatistiquesInvitation getGlobalStatistics(
         
+    );
+
+
+    /**
+     * GET /statistiques/envoyeur/{idEnvoyeur} : Statistiques d’un créateur d’invitations
+     *
+     * @param idEnvoyeur  (required)
+     * @return Statistiques des invitations créées par l’utilisateur (status code 200)
+     */
+    @Operation(
+        operationId = "getSenderStatistics",
+        summary = "Statistiques d’un créateur d’invitations",
+        tags = { "Statistiques" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Statistiques des invitations créées par l’utilisateur", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = StatistiquesInvitation.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/statistiques/envoyeur/{idEnvoyeur}",
+        produces = { "application/json" }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    
+    StatistiquesInvitation getSenderStatistics(
+        @Parameter(name = "idEnvoyeur", description = "", required = true, in = ParameterIn.PATH) @PathVariable("idEnvoyeur") String idEnvoyeur
     );
 
 }

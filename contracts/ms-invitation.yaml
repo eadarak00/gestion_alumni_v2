@@ -4,23 +4,22 @@ info:
   title: Microservice Invitation - API Contract
   version: 2.0.0
   description: >
-    Microservice de gestion des invitations Alumni.
-    Un utilisateur (Étudiant, Alumni ou Administrateur) peut générer un lien d’invitation unique.
-    Le service assure également la validation, le suivi complet du cycle de vie 
-    et la production de statistiques globales et individuelles.
+    Microservice de gestion des invitations Alumni. Un utilisateur (Étudiant, Alumni ou Administrateur) peut générer un lien d’invitation unique. Le service assure également la validation, le suivi complet du cycle de vie  et la production de statistiques globales et individuelles.
 
 servers:
-  - url: http://localhost:8083/api/v1
+- url: http://localhost:8083/api/v1
 
 tags:
-  - name: Invitations
-    description: Création et gestion des invitations
-  - name: Validation
-    description: Vérification et acceptation des invitations
-  - name: Suivi
-    description: Traçabilité des invitations
-  - name: Statistiques
-    description: Statistiques globales et individuelles
+- name: Invitations
+  description: Création et gestion des invitations
+- name: Validation
+  description: Vérification et acceptation des invitations
+- name: Suivi
+  description: Traçabilité des invitations
+- name: Statistiques
+  description: Statistiques globales et individuelles
+
+security: []
 
 paths:
 
@@ -30,12 +29,11 @@ paths:
 
   /invitations:
     post:
+      operationId: generateInvitation
       summary: Générer une invitation
-      tags: [Invitations]
+      tags: [ Invitations ]
       description: >
-        Génère automatiquement une invitation et retourne un lien unique
-        permettant à un futur Alumni de rejoindre la plateforme.
-        L’envoyeur ne fournit que son identifiant et son rôle.
+        Génère automatiquement une invitation et retourne un lien unique permettant à un futur Alumni de rejoindre la plateforme. L’envoyeur ne fournit que son identifiant et son rôle.
       requestBody:
         required: true
         content:
@@ -56,14 +54,16 @@ paths:
 
   /invitations/{idInvitation}:
     get:
+      operationId: getInvitationDetails
       summary: Obtenir les détails d’une invitation
-      tags: [Invitations]
+      tags: [ Invitations ]
       parameters:
-        - name: idInvitation
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: idInvitation
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
       responses:
         '200':
           description: Invitation trouvée
@@ -76,14 +76,15 @@ paths:
 
   /invitations/envoyeur/{idEnvoyeur}:
     get:
+      operationId: getInvitationsBySender
       summary: Invitations créées par un utilisateur
-      tags: [Invitations]
+      tags: [ Invitations ]
       parameters:
-        - name: idEnvoyeur
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: idEnvoyeur
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Liste des invitations
@@ -94,21 +95,21 @@ paths:
                 items:
                   $ref: '#/components/schemas/Invitation'
 
-
   # -------------------------------------------------------
   # VALIDATION D'INVITATION
   # -------------------------------------------------------
 
   /validation:
     get:
+      operationId: validateInvitation
       summary: Vérifier la validité d’une invitation
-      tags: [Validation]
+      tags: [ Validation ]
       parameters:
-        - name: jeton
-          in: query
-          required: true
-          schema:
-            type: string
+      - name: jeton
+        in: query
+        required: true
+        schema:
+          type: string
       description: >
         Vérifie si une invitation est valide, active, et non expirée.
       responses:
@@ -123,21 +124,21 @@ paths:
         '410':
           description: Invitation expirée
 
-
   # -------------------------------------------------------
   # SUIVI DU CYCLE DE VIE D'UNE INVITATION
   # -------------------------------------------------------
 
   /suivi/{jeton}:
     get:
+      operationId: trackInvitationStatus
       summary: Suivre l’état d’une invitation
-      tags: [Suivi]
+      tags: [ Suivi ]
       parameters:
-        - name: jeton
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: jeton
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Informations de suivi
@@ -148,15 +149,15 @@ paths:
         '404':
           description: Jeton introuvable
 
-
   # -------------------------------------------------------
   # STATISTIQUES
   # -------------------------------------------------------
 
   /statistiques/global:
     get:
+      operationId: getGlobalStatistics
       summary: Statistiques globales
-      tags: [Statistiques]
+      tags: [ Statistiques ]
       responses:
         '200':
           description: Statistiques globales de toutes les invitations
@@ -167,14 +168,15 @@ paths:
 
   /statistiques/envoyeur/{idEnvoyeur}:
     get:
+      operationId: getSenderStatistics
       summary: Statistiques d’un créateur d’invitations
-      tags: [Statistiques]
+      tags: [ Statistiques ]
       parameters:
-        - name: idEnvoyeur
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: idEnvoyeur
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Statistiques des invitations créées par l’utilisateur
@@ -182,7 +184,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StatistiquesInvitation'
-
 
 # -------------------------------------------------------
 # SCHEMAS
@@ -195,13 +196,13 @@ components:
     # Nouveau schéma simplifié
     DemandeCreationInvitation:
       type: object
-      required: [idEnvoyeur, roleEnvoyeur]
+      required: [ idEnvoyeur, roleEnvoyeur ]
       properties:
         idEnvoyeur:
           type: string
         roleEnvoyeur:
           type: string
-          enum: [ETUDIANT, ALUMNI, ADMIN]
+          enum: [ ETUDIANT, ALUMNI, ADMIN ]
 
     Invitation:
       type: object
@@ -221,11 +222,9 @@ components:
         etat:
           type: string
           enum:
-            - EN_ATTENTE_PARTAGE
-            - OUVERTE
-            - INSCRIPTION_INITIEE
-            - ACCEPTEE
-            - EXPIREE
+          - EN_ATTENTE
+          - ACCEPTEE
+          - EXPIREE
         dateCreation:
           type: string
           format: date-time
@@ -235,7 +234,6 @@ components:
         dateAcceptation:
           type: string
           format: date-time
-          nullable: true
 
     ReponseValidationInvitation:
       type: object
@@ -251,17 +249,15 @@ components:
         etat:
           type: string
           enum:
-            - EN_ATTENTE
-            - ACCEPTEE
-            - EXPIREE
+          - EN_ATTENTE
+          - ACCEPTEE
+          - EXPIREE
         dateOuverture:
           type: string
           format: date-time
-          nullable: true
         dateAcceptation:
           type: string
           format: date-time
-          nullable: true
 
     StatistiquesInvitation:
       type: object

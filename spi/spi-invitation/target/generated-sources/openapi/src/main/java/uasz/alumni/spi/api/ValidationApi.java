@@ -32,30 +32,30 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:26:58.951985870Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-01T18:01:20.684089Z[Atlantic/Reykjavik]")
 @Validated
 @Tag(name = "Validation", description = "Vérification et acceptation des invitations")
 public interface ValidationApi {
 
     /**
-     * GET /validation : Vérifier la validité d&#39;une invitation
-     * Vérifie si une invitation est valide et non expirée. 
+     * GET /validation : Vérifier la validité d’une invitation
+     * Vérifie si une invitation est valide, active, et non expirée. 
      *
      * @param jeton  (required)
      * @return Invitation valide (status code 200)
-     *         or Jeton introuvable (status code 404)
+     *         or Jeton invalide ou introuvable (status code 404)
      *         or Invitation expirée (status code 410)
      */
     @Operation(
-        operationId = "validationGet",
-        summary = "Vérifier la validité d'une invitation",
-        description = "Vérifie si une invitation est valide et non expirée. ",
+        operationId = "validateInvitation",
+        summary = "Vérifier la validité d’une invitation",
+        description = "Vérifie si une invitation est valide, active, et non expirée. ",
         tags = { "Validation" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Invitation valide", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ReponseValidationInvitation.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Jeton introuvable"),
+            @ApiResponse(responseCode = "404", description = "Jeton invalide ou introuvable"),
             @ApiResponse(responseCode = "410", description = "Invitation expirée")
         }
     )
@@ -66,7 +66,7 @@ public interface ValidationApi {
     )
     @ResponseStatus(HttpStatus.OK)
     
-    ReponseValidationInvitation validationGet(
+    ReponseValidationInvitation validateInvitation(
         @NotNull @Parameter(name = "jeton", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "jeton", required = true) String jeton
     );
 

@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
  * StatistiquesInvitation
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:26:58.951985870Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-01T18:01:20.684089Z[Atlantic/Reykjavik]")
 public class StatistiquesInvitation {
 
   private Integer totalInvitations;
@@ -102,11 +102,11 @@ public class StatistiquesInvitation {
   }
 
   /**
-   * Pourcentage d'invitations acceptées
+   * Get tauxConversion
    * @return tauxConversion
   */
   
-  @Schema(name = "tauxConversion", description = "Pourcentage d'invitations acceptées", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "tauxConversion", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("tauxConversion")
   public Float getTauxConversion() {
     return tauxConversion;

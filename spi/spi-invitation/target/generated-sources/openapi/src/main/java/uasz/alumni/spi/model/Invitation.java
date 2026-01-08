@@ -6,10 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.format.annotation.DateTimeFormat;
-import java.util.NoSuchElementException;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
@@ -24,7 +21,7 @@ import jakarta.annotation.Generated;
  * Invitation
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-13T14:26:58.951985870Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-01T18:01:20.684089Z[Atlantic/Reykjavik]")
 public class Invitation {
 
   private Long id;
@@ -41,11 +38,7 @@ public class Invitation {
    * Gets or Sets etat
    */
   public enum EtatEnum {
-    EN_ATTENTE_PARTAGE("EN_ATTENTE_PARTAGE"),
-    
-    OUVERTE("OUVERTE"),
-    
-    INSCRIPTION_INITIEE("INSCRIPTION_INITIEE"),
+    EN_ATTENTE("EN_ATTENTE"),
     
     ACCEPTEE("ACCEPTEE"),
     
@@ -87,7 +80,7 @@ public class Invitation {
   private OffsetDateTime dateExpiration;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private JsonNullable<OffsetDateTime> dateAcceptation = JsonNullable.<OffsetDateTime>undefined();
+  private OffsetDateTime dateAcceptation;
 
   public Invitation id(Long id) {
     this.id = id;
@@ -179,7 +172,7 @@ public class Invitation {
    * @return urlInvitation
   */
   
-  @Schema(name = "urlInvitation", example = "https://alumni.com/invitation/valider?jeton=ABC123", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "urlInvitation", example = "https://alumni.com/invitation/valider?jeton=XYZ123", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("urlInvitation")
   public String getUrlInvitation() {
     return urlInvitation;
@@ -250,7 +243,7 @@ public class Invitation {
   }
 
   public Invitation dateAcceptation(OffsetDateTime dateAcceptation) {
-    this.dateAcceptation = JsonNullable.of(dateAcceptation);
+    this.dateAcceptation = dateAcceptation;
     return this;
   }
 
@@ -261,11 +254,11 @@ public class Invitation {
   @Valid 
   @Schema(name = "dateAcceptation", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("dateAcceptation")
-  public JsonNullable<OffsetDateTime> getDateAcceptation() {
+  public OffsetDateTime getDateAcceptation() {
     return dateAcceptation;
   }
 
-  public void setDateAcceptation(JsonNullable<OffsetDateTime> dateAcceptation) {
+  public void setDateAcceptation(OffsetDateTime dateAcceptation) {
     this.dateAcceptation = dateAcceptation;
   }
 
@@ -286,23 +279,12 @@ public class Invitation {
         Objects.equals(this.etat, invitation.etat) &&
         Objects.equals(this.dateCreation, invitation.dateCreation) &&
         Objects.equals(this.dateExpiration, invitation.dateExpiration) &&
-        equalsNullable(this.dateAcceptation, invitation.dateAcceptation);
-  }
-
-  private static <T> boolean equalsNullable(JsonNullable<T> a, JsonNullable<T> b) {
-    return a == b || (a != null && b != null && a.isPresent() && b.isPresent() && Objects.deepEquals(a.get(), b.get()));
+        Objects.equals(this.dateAcceptation, invitation.dateAcceptation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, idEnvoyeur, roleEnvoyeur, jeton, urlInvitation, etat, dateCreation, dateExpiration, hashCodeNullable(dateAcceptation));
-  }
-
-  private static <T> int hashCodeNullable(JsonNullable<T> a) {
-    if (a == null) {
-      return 1;
-    }
-    return a.isPresent() ? Arrays.deepHashCode(new Object[]{a.get()}) : 31;
+    return Objects.hash(id, idEnvoyeur, roleEnvoyeur, jeton, urlInvitation, etat, dateCreation, dateExpiration, dateAcceptation);
   }
 
   @Override
