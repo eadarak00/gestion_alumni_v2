@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-16T20:10:41.247958539Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T15:53:56.307850800Z[Atlantic/Reykjavik]")
 @Validated
 @Tag(name = "Authentification", description = "Endpoints pour l'authentification et la gestion des sessions")
 public interface AuthApi {
