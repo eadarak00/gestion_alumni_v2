@@ -1,0 +1,96 @@
+package uasz.alumni.ms_cv_v2.controller;
+
+import lombok.RequiredArgsConstructor;
+import uasz.alumni.ms_cv_v2.dtos.CvRequestDTO;
+import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
+import uasz.alumni.ms_cv_v2.services.CvService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api-ms-cv2/cvs")
+@RequiredArgsConstructor
+public class CvController {
+
+    private final CvService cvService;
+
+    /* ================= Utils ================= */
+
+    private Long getUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (Long) auth.getDetails();
+    }
+
+    /* ================= CREATE ================= */
+
+    @PreAuthorize("hasRole('ETUDIANT')")
+    @PostMapping
+    public ResponseEntity<CvResponseDTO> createCv(@RequestBody CvRequestDTO dto) {
+
+        Long userId = getUserId();
+
+        CvResponseDTO response = cvService.createCv(dto, userId);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    /* ================= UPDATE ================= */
+    @PreAuthorize("hasRole('ETUDIANT')")
+    @PutMapping("/{id}")
+    public ResponseEntity<CvResponseDTO> updateCv(
+            @PathVariable Long id,
+            @RequestBody CvRequestDTO dto) {
+
+        Long userId = getUserId();
+
+        CvResponseDTO response = cvService.updateCv(id, dto, userId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /* ================= READ ================= */
+
+    @PreAuthorize("hasRole('ETUDIANT')")
+
+    @GetMapping("/me")
+    public ResponseEntity<List<CvResponseDTO>> getMyCvs() {
+
+        Long userId = getUserId();
+
+        return ResponseEntity.ok(cvService.getMyCvs(userId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CvResponseDTO> getCvById(@PathVariable Long id) {
+
+        Long userId = getUserId();
+
+        return ResponseEntity.ok(cvService.getCvById(id, userId));
+    }
+
+    /* ================= DELETE ================= */
+    @PreAuthorize("hasRole('ETUDIANT')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCv(@PathVariable Long id) {
+
+        Long userId = getUserId();
+
+        cvService.deleteCv(id, userId);
+
+        return ResponseEntity.noContent().build();
+    }
+}
