@@ -1,0 +1,8 @@
+server:
+  port: 8072   # ou autre si ms-user utilise déjà 8080
+
+spring:
+  application:
+    name: ms-cv-v2
+  config:
+    import: "configserver:http://ms-config:8888"
