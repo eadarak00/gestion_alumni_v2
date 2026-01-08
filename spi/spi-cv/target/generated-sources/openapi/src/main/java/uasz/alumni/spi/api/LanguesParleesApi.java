@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T15:13:02.520999772Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T15:53:54.746111Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Langues Parlées", description = "Gestion des langues parlées")
 public interface LanguesParleesApi {
