@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * CodeValidationRequestDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T11:35:27.661530512Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T13:19:32.537208427Z[Africa/Dakar]")
 public class CodeValidationRequestDTO {
 
   private String email;

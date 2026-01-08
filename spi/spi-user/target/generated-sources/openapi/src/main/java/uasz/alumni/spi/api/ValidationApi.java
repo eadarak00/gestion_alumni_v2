@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T11:35:27.661530512Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T13:19:32.537208427Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Validation", description = "Endpoints pour la validation des codes par email")
 public interface ValidationApi {

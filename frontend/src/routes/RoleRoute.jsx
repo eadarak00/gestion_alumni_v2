@@ -27,5 +27,3 @@ export const RoleRoute = ({ allowedRole, Layout }) => {
     </Layout>
   );
 };
-
-

@@ -24,8 +24,6 @@ const menuItems = [
   { icon: MessageCircle, label: 'Mentorat', path: '/mentorship' },
   { icon: Calendar, label: 'Événements', path: '/events' },
   { icon: Settings, label: 'Paramètres', path: '/settings' }
-  // { icon: Settings, label: 'Paramètres', path: '/etudiant/settings' }
-
 ];
 
 export const EtudiantLayout = ({ children }) => {
