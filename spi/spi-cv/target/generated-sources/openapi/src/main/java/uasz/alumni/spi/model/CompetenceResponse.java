@@ -23,7 +23,7 @@ import jakarta.annotation.Generated;
  * CompetenceResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T20:15:24.930473964Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-05T02:02:10.601143888Z[Africa/Dakar]")
 public class CompetenceResponse {
 
   private Integer id;

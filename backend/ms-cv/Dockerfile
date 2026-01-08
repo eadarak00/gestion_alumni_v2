@@ -17,7 +17,7 @@ WORKDIR /app/backend/ms-cv
 
 # Optimisation du cache des dépendances pour ms-cv
 COPY backend/ms-cv/pom.xml .
-RUN mvn dependency:go-offline -B
+#RUN mvn dependency:go-offline -B
 
 # Copie des sources et build
 COPY backend/ms-cv/src ./src
