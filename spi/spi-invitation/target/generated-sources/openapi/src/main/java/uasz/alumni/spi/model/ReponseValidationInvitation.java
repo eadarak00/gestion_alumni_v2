@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * ReponseValidationInvitation
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-11T09:56:03.264140400Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T09:53:06.039638400Z[Etc/UTC]")
 public class ReponseValidationInvitation {
 
   private Boolean valide;

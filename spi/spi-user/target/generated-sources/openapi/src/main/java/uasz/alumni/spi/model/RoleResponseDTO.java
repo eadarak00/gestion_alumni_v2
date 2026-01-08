@@ -19,7 +19,7 @@ import jakarta.annotation.Generated;
  */
 
 @Schema(name = "RoleResponseDTO", description = "DTO de réponse pour les données d'un rôle")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-11T09:56:07.154792300Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T09:53:11.934279900Z[Etc/UTC]")
 public class RoleResponseDTO {
 
   private Long id;

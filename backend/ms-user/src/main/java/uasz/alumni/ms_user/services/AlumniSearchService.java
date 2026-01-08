@@ -119,8 +119,7 @@ public class AlumniSearchService {
     /**
      * T3.1.3 : Recherche simple avec filtres
      */
-    public List<AlumniSearchResultDTO> searchAlumni(String q, String filiere, String niveau,
-                                                     String entreprise, String ville) {
+    public List<AlumniSearchResultDTO> searchAlumni(String q, String filiere, String niveau,                          String entreprise, String ville) {
         List<Query> mustQueries = new ArrayList<>();
 
         if (q != null && !q.isBlank()) {

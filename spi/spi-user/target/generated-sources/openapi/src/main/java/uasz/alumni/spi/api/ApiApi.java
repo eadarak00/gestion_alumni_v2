@@ -52,7 +52,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-11T09:56:07.154792300Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-07T09:53:11.934279900Z[Etc/UTC]")
 @Validated
 @Tag(name = "Recherche Alumni", description = "Endpoints pour la recherche et l'indexation des profils alumni")
 public interface ApiApi {
