@@ -2,6 +2,7 @@ import React from 'react';
 import InscriptionEtudiant from '../fonctionnalites/etudiant/pages/InscriptionEtudiant';
 import ConnexionEtudiant from '../fonctionnalites/etudiant/pages/ConnexionEtudiant';
 import ConditionsUtilisation from '../fonctionnalites/etudiant/pages/ConditionsUtilisation';
+import PageMessagerie from '../fonctionnalites/messagerie/PageMessagerie';
 
 const RoutesApp = () => {
   const pathname = globalThis.location.pathname;
@@ -15,7 +16,10 @@ const RoutesApp = () => {
   if (pathname === '/ConditionsUtilisation') {
     return <ConditionsUtilisation />;
   }
- 
+  if (pathname === '/messagerie') {
+    return <PageMessagerie />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center">
