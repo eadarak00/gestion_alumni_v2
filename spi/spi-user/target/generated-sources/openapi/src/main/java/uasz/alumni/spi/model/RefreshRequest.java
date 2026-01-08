@@ -18,11 +18,7 @@ import jakarta.annotation.Generated;
  * RefreshRequest
  */
 
-<<<<<<< Updated upstream
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-12-14T13:56:15.185012708Z[Africa/Dakar]")
-=======
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-05T21:01:52.688704211Z[Africa/Dakar]")
->>>>>>> Stashed changes
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T11:35:27.661530512Z[Africa/Dakar]")
 public class RefreshRequest {
 
   private String refreshToken;
