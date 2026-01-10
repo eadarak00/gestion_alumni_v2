@@ -1,6 +1,8 @@
 package uasz.alumni.ms_cv_v2.controller;
 
 import lombok.RequiredArgsConstructor;
+import uasz.alumni.ms_cv_v2.dtos.TemplateRequestDTO;
+import uasz.alumni.ms_cv_v2.dtos.TemplateResponseDTO;
 import uasz.alumni.ms_cv_v2.entities.Template;
 import uasz.alumni.ms_cv_v2.security.JwtService;
 import uasz.alumni.ms_cv_v2.services.TemplateService;
@@ -21,13 +23,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api-ms-cv2/v1/templates")
 @RequiredArgsConstructor
 public class TemplateController {
 
     private final TemplateService templateService;
-    private final JwtService jwtService;
 
     private Long getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -37,70 +40,84 @@ public class TemplateController {
         return null;
     }
 
-    private String getUsername() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getDetails() instanceof String username) {
-            return username;
-        }
-        return auth != null ? auth.getName() : null;
-    }
-
     /**
-     * Créer un template pour l'utilisateur courant
+     * Créer un template avec ses sections
      */
     @PostMapping
-    public ResponseEntity<Template> createTemplate(@RequestBody Template template) {
+    public ResponseEntity<TemplateResponseDTO> createTemplate(
+            @Valid @RequestBody TemplateRequestDTO templateRequest) {
+        
         Long userId = getUserId();
-        Template created = templateService.createTemplate(template, userId);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        Template created = templateService.createTemplate(templateRequest, userId);
+        TemplateResponseDTO response = templateService.convertToResponseDTO(created);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     /**
-     * Modifier un template existant (uniquement si owner ou global)
+     * Modifier un template avec ses sections
      */
-    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}")
-    public ResponseEntity<Template> updateTemplate(
+    public ResponseEntity<TemplateResponseDTO> updateTemplate(
             @PathVariable("id") Long templateId,
-            @RequestBody Template template) {
+            @Valid @RequestBody TemplateRequestDTO templateRequest) {
+        
         Long userId = getUserId();
-        Template updated = templateService.updateTemplate(templateId, template, userId);
-        return ResponseEntity.ok(updated);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        Template updated = templateService.updateTemplate(templateId, templateRequest, userId);
+        TemplateResponseDTO response = templateService.convertToResponseDTO(updated);
+        return ResponseEntity.ok(response);
     }
 
     /**
-     * Récupérer tous les templates accessibles par l'utilisateur
-     */
-    /**
-     * Récupérer tous les templates accessibles par l'utilisateur
+     * Récupérer tous les templates avec leurs sections
      */
     @GetMapping
-    public ResponseEntity<List<Template>> getAllTemplates() {
+    public ResponseEntity<List<TemplateResponseDTO>> getAllTemplates() {
         Long userId = getUserId();
-        List<Template> templates = templateService.getAllTemplates(userId);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        List<TemplateResponseDTO> templates = templateService.getAllTemplatesWithSections(userId);
         return ResponseEntity.ok(templates);
     }
 
     /**
-     * Récupérer un template par id
+     * Récupérer un template par id avec ses sections
      */
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
-    public ResponseEntity<Template> getTemplateById(
+    public ResponseEntity<TemplateResponseDTO> getTemplateById(
             @PathVariable("id") Long templateId) {
+        
         Long userId = getUserId();
-        Template template = templateService.getTemplateById(templateId, userId);
-        return ResponseEntity.ok(template);
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        Template template = templateService.getTemplateByIdWithSections(templateId, userId);
+        TemplateResponseDTO response = templateService.convertToResponseDTO(template);
+        return ResponseEntity.ok(response);
     }
 
     /**
      * Supprimer un template (uniquement si owner)
      */
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTemplate(
             @PathVariable("id") Long templateId) {
+        
         Long userId = getUserId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
         templateService.deleteTemplate(templateId, userId);
         return ResponseEntity.noContent().build();
     }

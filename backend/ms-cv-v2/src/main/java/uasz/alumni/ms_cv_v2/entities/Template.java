@@ -2,7 +2,6 @@ package uasz.alumni.ms_cv_v2.entities;
 
 import java.util.List;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 
@@ -26,7 +25,8 @@ public class Template extends BaseEntity {
 
     private String nom; // nom du template
 
-    private boolean isGlobal; // template partagé ou privé
+    @Builder.Default
+    private Boolean isGlobal = false; // template partagé ou privé
 
     @jakarta.persistence.Column(name = "user_id")
     private Long userId; // de ms-user

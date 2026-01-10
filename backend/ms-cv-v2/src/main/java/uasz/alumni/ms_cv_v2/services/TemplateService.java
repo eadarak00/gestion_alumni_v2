@@ -1,12 +1,20 @@
 package uasz.alumni.ms_cv_v2.services;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import uasz.alumni.ms_cv_v2.dtos.SectionRequestDTO;
+import uasz.alumni.ms_cv_v2.dtos.SectionResponseDTO;
+import uasz.alumni.ms_cv_v2.dtos.TemplateRequestDTO;
+import uasz.alumni.ms_cv_v2.dtos.TemplateResponseDTO;
 import uasz.alumni.ms_cv_v2.entities.Template;
+import uasz.alumni.ms_cv_v2.entities.TemplateSection;
 import uasz.alumni.ms_cv_v2.repository.TemplateRepository;
 
 @Service
@@ -17,47 +25,182 @@ public class TemplateService {
     private final TemplateRepository templateRepository;
 
     /**
-     * Créer un template pour un utilisateur donné
+     * Créer un template avec ses sections
      */
-    public Template createTemplate(Template template, Long userId) {
-        template.setUserId(userId); // on stocke juste l'id du user
+    public Template createTemplate(TemplateRequestDTO templateDTO, Long userId) {
+        // Créer le template
+        Template template = Template.builder()
+                .nom(templateDTO.getNom())
+                .isGlobal(templateDTO.getIsGlobal() != null ? templateDTO.getIsGlobal() : false)
+                .userId(userId)
+                .sections(new ArrayList<>())
+                .build();
+        
+        // Créer et ajouter les sections
+        if (templateDTO.getSections() != null && !templateDTO.getSections().isEmpty()) {
+            for (SectionRequestDTO sectionDTO : templateDTO.getSections()) {
+                TemplateSection section = TemplateSection.builder()
+                        .template(template)
+                        .type(sectionDTO.getType())
+                        .htmlContent(sectionDTO.getHtmlContent())
+                        .ordre(sectionDTO.getOrdre())
+                        .build();
+                
+                template.getSections().add(section);
+            }
+        }
+        
+        // Une seule sauvegarde (cascade fonctionnera)
         return templateRepository.save(template);
     }
 
     /**
-     * Modifier un template (uniquement si c'est le owner ou template global)
+     * Récupérer un template par id (sans vérification de droits)
      */
-    public Template updateTemplate(Long templateId, Template template, Long userId) {
-        Template existing = getTemplateById(templateId, userId);
-        existing.setNom(template.getNom());
-        existing.setGlobal(template.isGlobal());
-        existing.getSections().clear();
-        if (template.getSections() != null) {
-            template.getSections().forEach(s -> s.setTemplate(existing));
-            existing.getSections().addAll(template.getSections());
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Template getTemplateById(Long templateId) {
+        return templateRepository.findById(templateId)
+                .orElseThrow(() -> new RuntimeException("Template non trouvé"));
+    }
+
+    /**
+     * Récupérer un template par id avec vérification des droits
+     */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Template getTemplateById(Long templateId, Long userId) {
+        Template template = getTemplateByIdWithSections(templateId);
+        
+        // Vérifier les droits d'accès
+        if (!template.getIsGlobal() && !template.getUserId().equals(userId)) {
+            throw new RuntimeException("Non autorisé: vous n'avez pas accès à ce template");
         }
+        
+        return template;
+    }
+
+    /**
+     * Récupérer un template par id avec ses sections (sans vérification de droits)
+     */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Template getTemplateByIdWithSections(Long templateId) {
+        return templateRepository.findByIdWithSections(templateId)
+                .orElseThrow(() -> new RuntimeException("Template non trouvé"));
+    }
+
+    /**
+     * Récupérer un template par id avec ses sections et vérification des droits
+     */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Template getTemplateByIdWithSections(Long templateId, Long userId) {
+        Template template = getTemplateByIdWithSections(templateId);
+        
+        // Vérifier les droits d'accès
+        if (!template.getIsGlobal() && !template.getUserId().equals(userId)) {
+            throw new RuntimeException("Non autorisé: vous n'avez pas accès à ce template");
+        }
+        
+        return template;
+    }
+
+    /**
+     * Modifier un template avec ses sections
+     */
+    public Template updateTemplate(Long templateId, TemplateRequestDTO templateDTO, Long userId) {
+        // Récupérer le template existant avec ses sections
+        Template existing = getTemplateByIdWithSections(templateId);
+        
+        // Vérifier les permissions
+        if (!existing.getIsGlobal() && !existing.getUserId().equals(userId)) {
+            throw new RuntimeException("Non autorisé");
+        }
+        
+        // Mettre à jour les propriétés de base
+        existing.setNom(templateDTO.getNom());
+        if (templateDTO.getIsGlobal() != null) {
+            existing.setIsGlobal(templateDTO.getIsGlobal());
+        }
+        
+        // Mettre à jour les sections (orphanRemoval = true supprimera les anciennes)
+        if (templateDTO.getSections() != null) {
+            // Supprimer toutes les sections existantes
+            existing.getSections().clear();
+            
+            // Ajouter les nouvelles sections
+            for (SectionRequestDTO sectionDTO : templateDTO.getSections()) {
+                TemplateSection section = TemplateSection.builder()
+                        .template(existing)
+                        .type(sectionDTO.getType())
+                        .htmlContent(sectionDTO.getHtmlContent())
+                        .ordre(sectionDTO.getOrdre())
+                        .build();
+                
+                existing.getSections().add(section);
+            }
+        }
+        
         return templateRepository.save(existing);
     }
 
     /**
-     * Lister tous les templates accessibles par l'utilisateur
+     * Convertir Template en TemplateResponseDTO
      */
-    public List<Template> getAllTemplates(Long userId) {
-        return templateRepository.findByIsGlobalTrueOrUserId(userId);
+    public TemplateResponseDTO convertToResponseDTO(Template template) {
+        if (template == null) {
+            return null;
+        }
+        
+        TemplateResponseDTO responseDTO = TemplateResponseDTO.builder()
+                .id(template.getId())
+                .nom(template.getNom())
+                .isGlobal(template.getIsGlobal())
+                .userId(template.getUserId())
+                .createdAt(template.getCreatedAt())
+                .updatedAt(template.getUpdatedAt())
+                .sections(new ArrayList<>())
+                .build();
+        
+        // Convertir les sections
+        if (template.getSections() != null && !template.getSections().isEmpty()) {
+            // Trier les sections par ordre
+            List<TemplateSection> sortedSections = template.getSections().stream()
+                    .sorted(Comparator.comparingInt(TemplateSection::getOrdre))
+                    .collect(Collectors.toList());
+            
+            for (TemplateSection section : sortedSections) {
+                SectionResponseDTO sectionDTO = SectionResponseDTO.builder()
+                        .id(section.getId())
+                        .type(section.getType())
+                        .htmlContent(section.getHtmlContent())
+                        .ordre(section.getOrdre())
+                        .createdAt(section.getCreatedAt())
+                        .updatedAt(section.getUpdatedAt())
+                        .build();
+                
+                responseDTO.getSections().add(sectionDTO);
+            }
+        }
+        
+        return responseDTO;
     }
 
     /**
-     * Récupérer un template par id si accessible par l'utilisateur
+     * Récupérer un template sous forme de DTO avec vérification des droits
      */
-    public Template getTemplateById(Long templateId, Long userId) {
-        Template template = templateRepository.findById(templateId)
-                .orElseThrow(() -> new RuntimeException("Template not found"));
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public TemplateResponseDTO getTemplateDTOById(Long templateId, Long userId) {
+        Template template = getTemplateByIdWithSections(templateId, userId);
+        return convertToResponseDTO(template);
+    }
 
-        if (!template.isGlobal() && !template.getUserId().equals(userId)) {
-            throw new RuntimeException("Unauthorized");
-        }
-
-        return template;
+    /**
+     * Lister tous les templates avec leurs sections
+     */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<TemplateResponseDTO> getAllTemplatesWithSections(Long userId) {
+        List<Template> templates = templateRepository.findByIsGlobalTrueOrUserIdWithSections(userId);
+        return templates.stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -65,11 +208,36 @@ public class TemplateService {
      */
     public void deleteTemplate(Long templateId, Long userId) {
         Template template = getTemplateById(templateId, userId);
-
+        
+        // Vérifier que l'utilisateur est le propriétaire
         if (!template.getUserId().equals(userId)) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Non autorisé: seuls les propriétaires peuvent supprimer leur template");
         }
-
+        
         templateRepository.delete(template);
+    }
+
+    /**
+     * Lister tous les templates (basique, sans sections)
+     */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<Template> getAllTemplates(Long userId) {
+        return templateRepository.findByIsGlobalTrueOrUserId(userId);
+    }
+
+    /**
+     * Récupérer les templates globaux
+     */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<Template> getGlobalTemplates() {
+        return templateRepository.findByIsGlobalTrue();
+    }
+
+    /**
+     * Récupérer les templates d'un utilisateur spécifique
+     */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<Template> getUserTemplates(Long userId) {
+        return templateRepository.findByUserId(userId);
     }
 }

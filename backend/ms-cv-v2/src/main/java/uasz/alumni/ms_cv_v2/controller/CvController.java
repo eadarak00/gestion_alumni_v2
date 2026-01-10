@@ -34,9 +34,11 @@ public class CvController {
 
     private Long getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (Long) auth.getDetails();
+        if (auth != null && auth.getPrincipal() instanceof Long userId) {
+            return userId;
+        }
+        return null;
     }
-
     /* ================= CREATE ================= */
 
     @PreAuthorize("hasRole('ETUDIANT')")
