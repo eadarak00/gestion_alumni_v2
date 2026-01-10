@@ -1,135 +1,119 @@
 package uasz.alumni.ms_cv_v2.services;
 
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfWriter;
-import lombok.extern.slf4j.Slf4j;
-import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
-import uasz.alumni.ms_cv_v2.dtos.ExperienceResponseDTO;
-import uasz.alumni.ms_cv_v2.dtos.FormationResponseDTO;
-import uasz.alumni.ms_cv_v2.dtos.InteretResponseDTO;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
+import uasz.alumni.ms_cv_v2.entities.Template;
+import uasz.alumni.ms_cv_v2.repository.TemplateRepository;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.StringJoiner;
+import java.util.function.Function;
 
 @Service
-@Slf4j
-public class CvPdfService{
+@RequiredArgsConstructor
+public class CvPdfService {
 
-    public ByteArrayOutputStream generatePdf(CvResponseDTO cv) {
+    private final TemplateRepository templateRepository;
 
-        Document document = new Document(PageSize.A4, 36, 36, 36, 36);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    /**
+     * Génère le PDF du CV à partir du template choisi
+     */
+    public byte[] generatePdf(CvResponseDTO cv) throws Exception {
 
-        try {
-            PdfWriter.getInstance(document, baos);
-            document.open();
+        Template template = templateRepository.findById(cv.getTemplateId())
+                .orElseThrow(() -> new RuntimeException("Template introuvable"));
 
-            // ================= HEADER =================
-            Font titleFont = new Font(Font.HELVETICA, 20, Font.BOLD);
-            Font sectionFont = new Font(Font.HELVETICA, 14, Font.BOLD);
-            Font normalFont = new Font(Font.HELVETICA, 12, Font.NORMAL);
+        // Assembler toutes les sections
+        StringBuilder htmlBuilder = new StringBuilder();
+        template.getSections().forEach(section -> {
+            String content = section.getHtmlContent();
+            content = replacePlaceholders(content, cv);
+            htmlBuilder.append(content);
+        });
 
-            // Nom + Titre Profil
-            Paragraph header = new Paragraph(cv.getTitreProfil(), titleFont);
-            header.setAlignment(Element.ALIGN_CENTER);
-            document.add(header);
+        // Ajouter une enveloppe HTML avec CSS global
+        String finalHtml = wrapHtml(htmlBuilder.toString());
 
-            // Coordonnées
-            Paragraph coord = new Paragraph(
-                    String.format("%s | %s | %s", cv.getEmail(), cv.getTelephone(), cv.getAdresse()),
-                    normalFont);
-            coord.setAlignment(Element.ALIGN_CENTER);
-            coord.setSpacingAfter(20);
-            document.add(coord);
-
-            // ================= RESUME =================
-            if (cv.getResumeProfil() != null) {
-                Paragraph resume = new Paragraph("Résumé", sectionFont);
-                resume.setSpacingBefore(10);
-                document.add(resume);
-
-                Paragraph resumeText = new Paragraph(cv.getResumeProfil(), normalFont);
-                resumeText.setSpacingAfter(10);
-                document.add(resumeText);
-            }
-
-            // ================= FORMATIONS =================
-            if (!cv.getFormations().isEmpty()) {
-                Paragraph section = new Paragraph("Formations", sectionFont);
-                section.setSpacingBefore(10);
-                document.add(section);
-
-                for (FormationResponseDTO f : cv.getFormations()) {
-                    Paragraph p = new Paragraph(
-                            String.format("%s, %s (%s - %s)", f.getDiplome(), f.getEtablissement(), f.getAnneeDebut(), f.getAnneeFin()),
-                            normalFont);
-                    p.setSpacingAfter(5);
-                    document.add(p);
-                }
-            }
-
-            // ================= EXPERIENCES =================
-            if (!cv.getExperiences().isEmpty()) {
-                Paragraph section = new Paragraph("Expériences", sectionFont);
-                section.setSpacingBefore(10);
-                document.add(section);
-
-                for (ExperienceResponseDTO e : cv.getExperiences()) {
-                    Paragraph p = new Paragraph(
-                            String.format("%s, %s (%s - %s)\n%s", e.getPoste(), e.getEntreprise(), e.getDateDebut(), e.getDateFin(), e.getDescription()),
-                            normalFont);
-                    p.setSpacingAfter(5);
-                    document.add(p);
-                }
-            }
-
-            // ================= COMPETENCES =================
-            if (!cv.getCompetences().isEmpty()) {
-                Paragraph section = new Paragraph("Compétences", sectionFont);
-                section.setSpacingBefore(10);
-                document.add(section);
-
-                String competences = cv.getCompetences().stream()
-                        .map(c -> c.getNom() + " (" + c.getNiveau() + ")")
-                        .reduce((a, b) -> a + ", " + b)
-                        .orElse("");
-                document.add(new Paragraph(competences, normalFont));
-            }
-
-            // ================= LANGUES =================
-            if (!cv.getLangues().isEmpty()) {
-                Paragraph section = new Paragraph("Langues", sectionFont);
-                section.setSpacingBefore(10);
-                document.add(section);
-
-                String langues = cv.getLangues().stream()
-                        .map(l -> l.getNom() + " (" + l.getNiveau() + ")")
-                        .reduce((a, b) -> a + ", " + b)
-                        .orElse("");
-                document.add(new Paragraph(langues, normalFont));
-            }
-
-            // ================= INTERETS =================
-            if (!cv.getInterets().isEmpty()) {
-                Paragraph section = new Paragraph("Centres d'intérêt", sectionFont);
-                section.setSpacingBefore(10);
-                document.add(section);
-
-                String interets = cv.getInterets().stream()
-                        .map(InteretResponseDTO::getLibelle)
-                        .reduce((a, b) -> a + ", " + b)
-                        .orElse("");
-                document.add(new Paragraph(interets, normalFont));
-            }
-
-            document.close();
-
-        } catch (DocumentException e) {
-            log.error("Erreur génération PDF", e);
+        // Convertir HTML -> PDF avec Flying Saucer
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            ITextRenderer renderer = new ITextRenderer();
+            renderer.setDocumentFromString(finalHtml);
+            renderer.layout();
+            renderer.createPDF(os);
+            return os.toByteArray();
         }
+    }
 
-        return baos;
+    /**
+     * Remplace les placeholders du template par les valeurs du CV
+     */
+    private String replacePlaceholders(String html, CvResponseDTO cv) {
+        html = html.replace("${cv.titreProfil}", safe(cv.getTitreProfil()));
+        html = html.replace("${cv.email}", safe(cv.getEmail()));
+        html = html.replace("${cv.telephone}", safe(cv.getTelephone()));
+        html = html.replace("${cv.adresse}", safe(cv.getAdresse()));
+        html = html.replace("${cv.resumeProfil}", safe(cv.getResumeProfil()));
+
+        html = html.replace("${cv.formations}", toHtmlList(cv.getFormations(), f ->
+                safe(f.getDiplome()) + " - " + safe(f.getEtablissement()) + " (" +
+                safe(f.getAnneeDebut()) + " - " + safe(f.getAnneeFin()) + ")"
+        ));
+
+        html = html.replace("${cv.experiences}", toHtmlList(cv.getExperiences(), e ->
+                safe(e.getPoste()) + " - " + safe(e.getEntreprise()) + " (" +
+                safe(e.getDateDebut()) + " - " + safe(e.getDateFin()) + ")<p>" +
+                safe(e.getDescription()) + "</p>"
+        ));
+
+        html = html.replace("${cv.competences}", toHtmlList(cv.getCompetences(),
+                c -> safe(c.getNom()) + " (" + safe(c.getNiveau()) + ")"
+        ));
+
+        html = html.replace("${cv.langues}", toHtmlList(cv.getLangues(),
+                l -> safe(l.getNom()) + " (" + safe(l.getNiveau()) + ")"
+        ));
+
+        html = html.replace("${cv.interets}", toHtmlList(cv.getInterets(),
+                i -> safe(i.getLibelle())
+        ));
+
+        return html;
+    }
+
+    /**
+     * Transforme une liste d'objets en <ul><li>...</li></ul>
+     */
+    private <T> String toHtmlList(List<T> items, Function<T, String> mapper) {
+        if (items == null || items.isEmpty()) return "<ul></ul>";
+        StringJoiner sj = new StringJoiner("", "<ul>", "</ul>");
+        items.forEach(item -> sj.add("<li>" + mapper.apply(item) + "</li>"));
+        return sj.toString();
+    }
+
+    /**
+     * Sécurise une valeur null
+     */
+    private String safe(String value) {
+        return value == null ? "" : value;
+    }
+
+    /**
+     * Enveloppe HTML avec CSS global pour le PDF
+     */
+    private String wrapHtml(String bodyContent) {
+        return "<html><head>"
+                + "<style>"
+                + "body {font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.4;}"
+                + "h1, h2, h3 {color: #333; margin-bottom: 4px;}"
+                + "ul {margin: 0; padding-left: 20px;}"
+                + "li {margin-bottom: 4px;}"
+                + "p {margin: 0;}"
+                + "</style>"
+                + "</head><body>"
+                + bodyContent
+                + "</body></html>";
     }
 }

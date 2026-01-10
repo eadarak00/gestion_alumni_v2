@@ -155,7 +155,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: db_cv2
-      MYSQL_USER: cvuser
+      MYSQL_USER: cvuser2
       MYSQL_PASSWORD: passer123
     ports:
       - "3309:3306"
@@ -172,12 +172,13 @@ services:
       - --interactive-timeout=28800
 
   # MS-CV API
-  ms-cv2:
+  ms-cv-v2:
     <<: *service-defaults
     build:
       context: .
       dockerfile: backend/ms-cv-v2/Dockerfile
-    container_name: ms-cv2
+    container_name: ms-cv-v2
+    hostname: ms-cv-v2
     ports:
       - "8072:8072"
     depends_on:

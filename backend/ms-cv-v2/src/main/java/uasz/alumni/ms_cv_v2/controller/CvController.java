@@ -20,11 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api-ms-cv2/cvs")
+@RequestMapping("/api-ms-cv2/v1/cvs")
 @RequiredArgsConstructor
 public class CvController {
 
@@ -98,18 +97,18 @@ public class CvController {
     }
 
     @GetMapping("/{id}/pdf")
-    public ResponseEntity<byte[]> downloadCvPdf(@PathVariable Long id) {
+    public ResponseEntity<byte[]> downloadCvPdf(@PathVariable Long id) throws Exception {
 
         Long userId = getUserId();
 
         CvResponseDTO cv = cvService.getCvById(id, userId);
 
-        ByteArrayOutputStream baos = cvPdfService.generatePdf(cv);
+        byte[] pdfBytes = cvPdfService.generatePdf(cv);
 
         return ResponseEntity.ok()
                 .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() + ".pdf")
                 .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
-                .body(baos.toByteArray());
+                .body(pdfBytes);
     }
 
 }

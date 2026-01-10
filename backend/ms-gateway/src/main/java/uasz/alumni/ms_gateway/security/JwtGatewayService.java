@@ -1,4 +1,4 @@
-package uasz.alumni.ms_cv_v2.security;
+package uasz.alumni.ms_gateway.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -9,13 +9,12 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 
 @Service
-public class JwtService {
+public class JwtGatewayService {
 
-    @Value("${jwt.secret}") // Même secret que dans ms-user
-    private String secret;
+    @Value("${jwt.secret}")
+    private String secret; // le même secret que ms-user
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
@@ -32,29 +31,6 @@ public class JwtService {
 
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
-    }
-
-    public Long extractUserId(String token) {
-        Claims claims = extractAllClaims(token);
-        Object uid = claims.get("uid");
-        if (uid == null)
-            return null;
-        if (uid instanceof Integer)
-            return ((Integer) uid).longValue();
-        if (uid instanceof Long)
-            return (Long) uid;
-        return Long.valueOf(uid.toString());
-    }
-
-    public List<String> extractRoles(String token) {
-        Claims claims = extractAllClaims(token);
-        Object roles = claims.get("roles");
-        if (roles instanceof List<?> list) {
-            return list.stream()
-                    .map(Object::toString)
-                    .toList();
-        }
-        return List.of();
     }
 
     public boolean isTokenValid(String token) {
