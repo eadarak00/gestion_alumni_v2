@@ -25,46 +25,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    // @Override
-    // protected void doFilterInternal(HttpServletRequest req,
-    //         HttpServletResponse res,
-    //         FilterChain chain) throws ServletException, IOException {
-
-    //     String authHeader = req.getHeader(HttpHeaders.AUTHORIZATION);
-
-    //     // Le gateway a déjà validé le token, donc ici on peut juste extraire les infos
-    //     if (authHeader != null && authHeader.startsWith("Bearer ")) {
-    //         String token = authHeader.substring(7);
-
-    //         try {
-    //             if (jwtService.isTokenValid(token)) {
-    //                 String username = jwtService.extractUsername(token);
-    //                 Long userId = jwtService.extractUserId(token);
-    //                 List<String> roles = jwtService.extractRoles(token);
-
-    //                 var authorities = roles.stream()
-    //                         .map(SimpleGrantedAuthority::new)
-    //                         .toList();
-
-    //                 // Créer l'authentication avec userId comme principal
-    //                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userId, null,
-    //                         authorities);
-
-    //                 // Stocker username dans details si nécessaire
-    //                 auth.setDetails(username);
-
-    //                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-    //                 SecurityContextHolder.getContext().setAuthentication(auth);
-    //             }
-    //         } catch (Exception e) {
-    //             // Log l'erreur mais continue (le gateway a déjà validé)
-    //             logger.warn("Erreur lors du parsing du JWT dans ms-cv-v2: " + e.getMessage());
-    //         }
-    //     }
-
-    //     chain.doFilter(req, res);
-    // }
-
     @Override
     protected void doFilterInternal(HttpServletRequest req,
             HttpServletResponse res,
