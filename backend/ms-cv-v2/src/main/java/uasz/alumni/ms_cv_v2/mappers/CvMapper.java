@@ -30,6 +30,8 @@ public class CvMapper {
                 .titreProfil(dto.getTitreProfil())
                 .telephone(dto.getTelephone())
                 .email(dto.getEmail())
+                .prenom(dto.getPrenom())
+                .nom(dto.getNom())
                 .adresse(dto.getAdresse())
                 .resumeProfil(dto.getResumeProfil())
                 .build();
@@ -105,6 +107,8 @@ public class CvMapper {
                 .titreProfil(cv.getTitreProfil())
                 .telephone(cv.getTelephone())
                 .email(cv.getEmail())
+                .prenom(cv.getPrenom())
+                .nom(cv.getNom())
                 .adresse(cv.getAdresse())
                 .resumeProfil(cv.getResumeProfil())
                 .createdAt(cv.getCreatedAt())

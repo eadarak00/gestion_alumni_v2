@@ -22,7 +22,8 @@ import lombok.Setter;
 public class Cv extends BaseEntity {
 
     @Column(nullable = false)
-    private Long userId; // depuis JWT
+    private Long userId;
+    
 
     @ManyToOne
     private Template template;
@@ -31,6 +32,8 @@ public class Cv extends BaseEntity {
 
     private String telephone;
     private String email;
+    private String prenom;
+    private String nom;
     private String adresse;
 
     @Column(length = 1000)

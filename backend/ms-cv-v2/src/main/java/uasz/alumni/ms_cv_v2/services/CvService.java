@@ -39,24 +39,12 @@ public class CvService {
 
                 Template template = templateRepository.findById(dto.getTemplateId())
                                 .orElseThrow(() -> new EntityNotFoundException("Template introuvable"));
-                
-                
-                log.info("ID DU USER A MAPPER EST ", userId);
-                Cv cv = CvMapper.toEntity(dto, template, userId);
 
-                log.info("APRES CREATION ID USER EST ", cv.getUserId());
+                Cv cv = CvMapper.toEntity(dto, template, userId);
 
                 Cv saved = cvRepository.save(cv);
 
-                // Récupération info utilisateur depuis ms-user
-                UtilisateurResponseDto user = userClient.getUtilisateur(userId);
-
                 CvResponseDTO cvDto = CvMapper.toResponse(saved);
-
-                // Ajout info utilisateur
-                cvDto.setPrenom(user.getPrenom());
-                cvDto.setNom(user.getNom());
-                cvDto.setEmail(user.getEmail());
 
                 return cvDto;
         }

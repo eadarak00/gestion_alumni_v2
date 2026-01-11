@@ -14,6 +14,8 @@ public class CvRequestDTO {
     private String titreProfil;
     private String telephone;
     private String email;
+    private String nom;
+    private String prenom;
     private String adresse;
     private String resumeProfil;
 
