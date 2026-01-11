@@ -99,6 +99,7 @@ public class CvMapper {
 
         return CvResponseDTO.builder()
                 .id(cv.getId())
+                .userId(cv.getUserId())
                 .templateId(cv.getTemplate().getId())
                 .templateNom(cv.getTemplate().getNom())
                 .titreProfil(cv.getTitreProfil())

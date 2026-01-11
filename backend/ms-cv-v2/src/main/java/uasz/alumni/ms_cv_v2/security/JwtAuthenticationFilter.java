@@ -16,7 +16,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -25,58 +27,122 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest req,
-            HttpServletResponse res,
-            FilterChain chain) throws ServletException, IOException {
+    // @Override
+    // protected void doFilterInternal(HttpServletRequest req,
+    //         HttpServletResponse res,
+    //         FilterChain chain) throws ServletException, IOException {
 
-        log.info("=== DEBUT JwtAuthenticationFilter ===");
-        log.info("URL: {}", req.getRequestURL());
-        log.info("Method: {}", req.getMethod());
+    //     log.info("=== DEBUT JwtAuthenticationFilter ===");
+    //     log.info("URL: {}", req.getRequestURL());
+    //     log.info("Method: {}", req.getMethod());
 
-        String authHeader = req.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info("Authorization Header: {}", authHeader);
+    //     String authHeader = req.getHeader(HttpHeaders.AUTHORIZATION);
+    //     log.info("Authorization Header: {}", authHeader);
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            log.info("Token reçu (premiers 20 chars): {}...", token.substring(0, Math.min(20, token.length())));
+    //     if (authHeader != null && authHeader.startsWith("Bearer ")) {
+    //         String token = authHeader.substring(7);
+    //         log.info("Token reçu (premiers 20 chars): {}...", token.substring(0, Math.min(20, token.length())));
 
-            try {
-                if (jwtService.isTokenValid(token)) {
-                    log.info("Token valide");
-                    String username = jwtService.extractUsername(token);
-                    Long userId = jwtService.extractUserId(token);
-                    List<String> roles = jwtService.extractRoles(token);
+    //         try {
+    //             if (jwtService.isTokenValid(token)) {
+    //                 log.info("Token valide");
+    //                 String username = jwtService.extractUsername(token);
+    //                 Long userId = jwtService.extractUserId(token);
+    //                 List<String> roles = jwtService.extractRoles(token);
 
-                    log.info("Username extrait: {}", username);
-                    log.info("User ID extrait: {}", userId);
-                    log.info("Roles extraits: {}", roles);
+    //                 log.info("Username extrait: {}", username);
+    //                 log.info("User ID extrait: {}", userId);
+    //                 log.info("Roles extraits: {}", roles);
 
-                    var authorities = roles.stream()
-                            .map(SimpleGrantedAuthority::new)
-                            .toList();
+    //                 var authorities = roles.stream()
+    //                         .map(SimpleGrantedAuthority::new)
+    //                         .toList();
 
-                    UsernamePasswordAuthenticationToken auth = 
-                        new UsernamePasswordAuthenticationToken(userId, null, authorities);
+    //                 UsernamePasswordAuthenticationToken auth = 
+    //                     new UsernamePasswordAuthenticationToken(userId, null, authorities);
 
-                    // Stocker username dans details
-                    auth.setDetails(username);
+    //                 // Stocker username dans details
+    //                 auth.setDetails(username);
 
-                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-                    SecurityContextHolder.getContext().setAuthentication(auth);
+    //                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+    //                 SecurityContextHolder.getContext().setAuthentication(auth);
                     
-                    log.info("Authentication établie pour userId: {}", userId);
-                } else {
-                    log.warn("Token invalide");
-                }
-            } catch (Exception e) {
-                log.error("Erreur lors du parsing du JWT: ", e);
-            }
-        } else {
-            log.warn("Pas de token Bearer dans le header");
-        }
+    //                 log.info("Authentication établie pour userId: {}", userId);
+    //             } else {
+    //                 log.warn("Token invalide");
+    //             }
+    //         } catch (Exception e) {
+    //             log.error("Erreur lors du parsing du JWT: ", e);
+    //         }
+    //     } else {
+    //         log.warn("Pas de token Bearer dans le header");
+    //     }
 
-        log.info("=== FIN JwtAuthenticationFilter ===");
-        chain.doFilter(req, res);
+    //     log.info("=== FIN JwtAuthenticationFilter ===");
+    //     chain.doFilter(req, res);
+    // }
+
+    @Override
+protected void doFilterInternal(HttpServletRequest req,
+        HttpServletResponse res,
+        FilterChain chain) throws ServletException, IOException {
+
+    log.info("=== DEBUT JwtAuthenticationFilter ===");
+    log.info("URL: {}", req.getRequestURL());
+    log.info("Method: {}", req.getMethod());
+
+    String authHeader = req.getHeader(HttpHeaders.AUTHORIZATION);
+    log.info("Authorization Header: {}", authHeader);
+
+    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        String token = authHeader.substring(7);
+        log.info("Token reçu (premiers 20 chars): {}...", token.substring(0, Math.min(20, token.length())));
+
+        try {
+            if (jwtService.isTokenValid(token)) {
+                log.info("Token valide");
+                String username = jwtService.extractUsername(token);
+                Long userId = jwtService.extractUserId(token);
+                List<String> roles = jwtService.extractRoles(token);
+
+                log.info("Username extrait: {}", username);
+                log.info("User ID extrait: {}", userId);
+                log.info("Roles extraits: {}", roles);
+
+                var authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
+                // Créer une Map pour stocker toutes les informations
+                Map<String, Object> details = new HashMap<>();
+                details.put("username", username);
+                details.put("userId", userId);
+                details.put("token", token);
+                details.put("webDetails", new WebAuthenticationDetailsSource().buildDetails(req));
+
+                UsernamePasswordAuthenticationToken auth = 
+                    new UsernamePasswordAuthenticationToken(userId, null, authorities);
+                
+                // Stocker TOUTES les infos dans details
+                auth.setDetails(details);
+                
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                
+                log.info("Authentication établie pour userId: {}", userId);
+                log.info("Principal: {}", auth.getPrincipal());
+                log.info("Principal type: {}", auth.getPrincipal().getClass().getName());
+                log.info("Details: {}", auth.getDetails());
+            } else {
+                log.warn("Token invalide");
+            }
+        } catch (Exception e) {
+            log.error("Erreur lors du parsing du JWT: ", e);
+        }
+    } else {
+        log.warn("Pas de token Bearer dans le header");
     }
+
+    log.info("=== FIN JwtAuthenticationFilter ===");
+    chain.doFilter(req, res);
+}
 }

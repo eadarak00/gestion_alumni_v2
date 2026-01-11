@@ -32,13 +32,34 @@ public class CvController {
 
     /* ================= Utils ================= */
 
+    // private Long getUserId() {
+    //     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    //     if (auth != null && auth.getPrincipal() instanceof Long userId) {
+    //         return userId;
+    //     }
+    //     return null;
+    // }
+
     private Long getUserId() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.getPrincipal() instanceof Long userId) {
-            return userId;
-        }
-        return null;
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    
+    // Log de debug
+    System.out.println("=== DEBUG getUserId() ===");
+    System.out.println("Authentication: " + auth);
+    if (auth != null) {
+        System.out.println("Principal: " + auth.getPrincipal());
+        System.out.println("Principal type: " + 
+            (auth.getPrincipal() != null ? auth.getPrincipal().getClass().getName() : "null"));
+        System.out.println("Principal is Long? " + (auth.getPrincipal() instanceof Long));
+        System.out.println("Details: " + auth.getDetails());
     }
+    System.out.println("=== FIN DEBUG ===");
+    
+    if (auth != null && auth.getPrincipal() instanceof Long userId) {
+        return userId;
+    }
+    return null;
+}
     /* ================= CREATE ================= */
 
     @PreAuthorize("hasRole('ETUDIANT')")

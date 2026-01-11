@@ -2,6 +2,7 @@ package uasz.alumni.ms_cv_v2.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import uasz.alumni.ms_cv_v2.dtos.CvRequestDTO;
 import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
 import uasz.alumni.ms_cv_v2.entities.Competence;
@@ -25,6 +26,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CvService {
 
         private final CvRepository cvRepository;
@@ -37,8 +39,12 @@ public class CvService {
 
                 Template template = templateRepository.findById(dto.getTemplateId())
                                 .orElseThrow(() -> new EntityNotFoundException("Template introuvable"));
-
+                
+                
+                log.info("ID DU USER A MAPPER EST ", userId);
                 Cv cv = CvMapper.toEntity(dto, template, userId);
+
+                log.info("APRES CREATION ID USER EST ", cv.getUserId());
 
                 Cv saved = cvRepository.save(cv);
 
