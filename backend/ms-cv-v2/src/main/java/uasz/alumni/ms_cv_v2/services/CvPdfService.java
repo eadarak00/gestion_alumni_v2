@@ -2,9 +2,11 @@ package uasz.alumni.ms_cv_v2.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
+// import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
 import uasz.alumni.ms_cv_v2.entities.Template;
 import uasz.alumni.ms_cv_v2.repository.TemplateRepository;
+import uasz.alumni.spi.model.CvResponseDTO;
+
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;

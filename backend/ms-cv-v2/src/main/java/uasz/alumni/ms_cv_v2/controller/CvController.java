@@ -1,85 +1,153 @@
 package uasz.alumni.ms_cv_v2.controller;
 
 import lombok.RequiredArgsConstructor;
-import uasz.alumni.ms_cv_v2.dtos.CvRequestDTO;
-import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
+import lombok.extern.slf4j.Slf4j;
+// import uasz.alumni.ms_cv_v2.dtos.CvRequestDTO;
+// import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
 import uasz.alumni.ms_cv_v2.services.CvPdfService;
 import uasz.alumni.ms_cv_v2.services.CvService;
+import uasz.alumni.spi.api.CvsApi;
+import uasz.alumni.spi.model.CvRequestDTO;
+import uasz.alumni.spi.model.CvResponseDTO;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api-ms-cv2/v1/cvs")
+@RequestMapping("/api-ms-cv2/v1")
 @RequiredArgsConstructor
-public class CvController {
+@Slf4j
+public class CvController implements CvsApi {
 
     private final CvService cvService;
     private final CvPdfService cvPdfService;
 
     /* ================= Utils ================= */
 
-    // private Long getUserId() {
-    //     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    //     if (auth != null && auth.getPrincipal() instanceof Long userId) {
-    //         return userId;
-    //     }
-    //     return null;
-    // }
-
     private Long getUserId() {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    
-    // Log de debug
-    System.out.println("=== DEBUG getUserId() ===");
-    System.out.println("Authentication: " + auth);
-    if (auth != null) {
-        System.out.println("Principal: " + auth.getPrincipal());
-        System.out.println("Principal type: " + 
-            (auth.getPrincipal() != null ? auth.getPrincipal().getClass().getName() : "null"));
-        System.out.println("Principal is Long? " + (auth.getPrincipal() instanceof Long));
-        System.out.println("Details: " + auth.getDetails());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // Log de debug
+        System.out.println("=== DEBUG getUserId() ===");
+        System.out.println("Authentication: " + auth);
+        if (auth != null) {
+            System.out.println("Principal: " + auth.getPrincipal());
+            System.out.println("Principal type: " +
+                    (auth.getPrincipal() != null ? auth.getPrincipal().getClass().getName() : "null"));
+            System.out.println("Principal is Long? " + (auth.getPrincipal() instanceof Long));
+            System.out.println("Details: " + auth.getDetails());
+        }
+        System.out.println("=== FIN DEBUG ===");
+
+        if (auth != null && auth.getPrincipal() instanceof Long userId) {
+            return userId;
+        }
+        return null;
     }
-    System.out.println("=== FIN DEBUG ===");
-    
-    if (auth != null && auth.getPrincipal() instanceof Long userId) {
-        return userId;
-    }
-    return null;
-}
     /* ================= CREATE ================= */
 
-    @PreAuthorize("hasRole('ETUDIANT')")
-    @PostMapping
-    public ResponseEntity<CvResponseDTO> createCv(@RequestBody CvRequestDTO dto) {
+    // @PreAuthorize("hasRole('ETUDIANT')")
+    // @PostMapping
+    // public ResponseEntity<CvResponseDTO> createCv(@RequestBody CvRequestDTO dto)
+    // {
 
+    // Long userId = getUserId();
+
+    // CvResponseDTO response = cvService.createCv(dto, userId);
+
+    // return new ResponseEntity<>(response, HttpStatus.CREATED);
+    // }
+
+    /* ================= UPDATE ================= */
+    // @PreAuthorize("hasRole('ETUDIANT')")
+    // @PutMapping("/{id}")
+    // public ResponseEntity<CvResponseDTO> updateCv(
+    // @PathVariable Long id,
+    // @RequestBody CvRequestDTO dto) {
+
+    // Long userId = getUserId();
+
+    // CvResponseDTO response = cvService.updateCv(id, dto, userId);
+
+    // return ResponseEntity.ok(response);
+    // }
+
+    // /* ================= READ ================= */
+
+    // @PreAuthorize("hasRole('ETUDIANT')")
+
+    // @GetMapping("/me")
+    // public ResponseEntity<List<CvResponseDTO>> getMyCvs() {
+
+    // Long userId = getUserId();
+
+    // return ResponseEntity.ok(cvService.getMyCvs(userId));
+    // }
+
+    // @GetMapping("/{id}")
+    // public ResponseEntity<CvResponseDTO> getCvById(@PathVariable Long id) {
+
+    // Long userId = getUserId();
+
+    // return ResponseEntity.ok(cvService.getCvById(id, userId));
+    // }
+
+    // /* ================= DELETE ================= */
+    // @PreAuthorize("hasRole('ETUDIANT')")
+    // @DeleteMapping("/{id}")
+    // public ResponseEntity<Void> deleteCv(@PathVariable Long id) {
+
+    // Long userId = getUserId();
+
+    // cvService.deleteCv(id, userId);
+
+    // return ResponseEntity.noContent().build();
+    // }
+
+    // @GetMapping("/{id}/pdf")
+    // public ResponseEntity<byte[]> downloadCvPdf(@PathVariable Long id) throws
+    // Exception {
+
+    // Long userId = getUserId();
+
+    // CvResponseDTO cv = cvService.getCvById(id, userId);
+
+    // byte[] pdfBytes = cvPdfService.generatePdf(cv);
+
+    // return ResponseEntity.ok()
+    // .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() +
+    // ".pdf")
+    // .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+    // .body(pdfBytes);
+    // }
+
+    @Override
+    @PreAuthorize("hasRole('ETUDIANT')")
+    public ResponseEntity<CvResponseDTO> createCv(
+            @Valid CvRequestDTO dto) {
         Long userId = getUserId();
 
         CvResponseDTO response = cvService.createCv(dto, userId);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+
     }
 
-    /* ================= UPDATE ================= */
     @PreAuthorize("hasRole('ETUDIANT')")
-    @PutMapping("/{id}")
-    public ResponseEntity<CvResponseDTO> updateCv(
-            @PathVariable Long id,
-            @RequestBody CvRequestDTO dto) {
-
+    @Override
+    public ResponseEntity<CvResponseDTO> updateCv(Long id,
+            @Valid CvRequestDTO dto) {
         Long userId = getUserId();
 
         CvResponseDTO response = cvService.updateCv(id, dto, userId);
@@ -87,51 +155,54 @@ public class CvController {
         return ResponseEntity.ok(response);
     }
 
-    /* ================= READ ================= */
-
     @PreAuthorize("hasRole('ETUDIANT')")
-
-    @GetMapping("/me")
-    public ResponseEntity<List<CvResponseDTO>> getMyCvs() {
-
-        Long userId = getUserId();
-
-        return ResponseEntity.ok(cvService.getMyCvs(userId));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<CvResponseDTO> getCvById(@PathVariable Long id) {
-
-        Long userId = getUserId();
-
-        return ResponseEntity.ok(cvService.getCvById(id, userId));
-    }
-
-    /* ================= DELETE ================= */
-    @PreAuthorize("hasRole('ETUDIANT')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCv(@PathVariable Long id) {
-
+    @Override
+    public ResponseEntity<Void> deleteCv(Long id) {
         Long userId = getUserId();
 
         cvService.deleteCv(id, userId);
 
         return ResponseEntity.noContent().build();
+
     }
 
-    @GetMapping("/{id}/pdf")
-    public ResponseEntity<byte[]> downloadCvPdf(@PathVariable Long id) throws Exception {
 
+    @Override
+    public ResponseEntity<Resource> downloadCvPdf(Long id) {
         Long userId = getUserId();
 
-        CvResponseDTO cv = cvService.getCvById(id, userId);
+        try {
+            CvResponseDTO cv = cvService.getCvById(id, userId);
+            byte[] pdfBytes = cvPdfService.generatePdf(cv);
 
-        byte[] pdfBytes = cvPdfService.generatePdf(cv);
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() + ".pdf")
+                    .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                    .body(new ByteArrayResource(pdfBytes));
+        } catch (Exception e) {
+            // Log l'erreur
+            log.error("Erreur lors de la génération du PDF", e);
 
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() + ".pdf")
-                .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
-                .body(pdfBytes);
+            // Retourner une réponse d'erreur
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
+    @Override
+    public ResponseEntity<CvResponseDTO> getCvById(Long id) {
+        Long userId = getUserId();
+
+        return ResponseEntity.ok(cvService.getCvById(id, userId));
+
+    }
+
+    @PreAuthorize("hasRole('ETUDIANT')")
+    @Override
+    public ResponseEntity<List<CvResponseDTO>> getMyCvs() {
+        Long userId = getUserId();
+
+        return ResponseEntity.ok(cvService.getMyCvs(userId));
     }
 
 }

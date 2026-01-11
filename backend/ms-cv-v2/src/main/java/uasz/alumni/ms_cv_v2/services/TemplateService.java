@@ -1,5 +1,6 @@
 package uasz.alumni.ms_cv_v2.services;
 
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -9,13 +10,13 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import uasz.alumni.ms_cv_v2.dtos.SectionRequestDTO;
-import uasz.alumni.ms_cv_v2.dtos.SectionResponseDTO;
-import uasz.alumni.ms_cv_v2.dtos.TemplateRequestDTO;
-import uasz.alumni.ms_cv_v2.dtos.TemplateResponseDTO;
 import uasz.alumni.ms_cv_v2.entities.Template;
 import uasz.alumni.ms_cv_v2.entities.TemplateSection;
 import uasz.alumni.ms_cv_v2.repository.TemplateRepository;
+import uasz.alumni.spi.model.SectionRequestDTO;
+import uasz.alumni.spi.model.SectionResponseDTO;
+import uasz.alumni.spi.model.TemplateRequestDTO;
+import uasz.alumni.spi.model.TemplateResponseDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -144,44 +145,83 @@ public class TemplateService {
     /**
      * Convertir Template en TemplateResponseDTO
      */
-    public TemplateResponseDTO convertToResponseDTO(Template template) {
-        if (template == null) {
-            return null;
-        }
+    // public TemplateResponseDTO convertToResponseDTO(Template template) {
+    //     if (template == null) {
+    //         return null;
+    //     }
         
-        TemplateResponseDTO responseDTO = TemplateResponseDTO.builder()
-                .id(template.getId())
-                .nom(template.getNom())
-                .isGlobal(template.getIsGlobal())
-                .userId(template.getUserId())
-                .createdAt(template.getCreatedAt())
-                .updatedAt(template.getUpdatedAt())
-                .sections(new ArrayList<>())
-                .build();
+    //     TemplateResponseDTO responseDTO = TemplateResponseDTO.builder()
+    //             .id(template.getId())
+    //             .nom(template.getNom())
+    //             .isGlobal(template.getIsGlobal())
+    //             .userId(template.getUserId())
+    //             .createdAt(template.getCreatedAt())
+    //             .updatedAt(template.getUpdatedAt())
+    //             .sections(new ArrayList<>())
+    //             .build();
         
-        // Convertir les sections
-        if (template.getSections() != null && !template.getSections().isEmpty()) {
-            // Trier les sections par ordre
-            List<TemplateSection> sortedSections = template.getSections().stream()
-                    .sorted(Comparator.comparingInt(TemplateSection::getOrdre))
-                    .collect(Collectors.toList());
+    //     // Convertir les sections
+    //     if (template.getSections() != null && !template.getSections().isEmpty()) {
+    //         // Trier les sections par ordre
+    //         List<TemplateSection> sortedSections = template.getSections().stream()
+    //                 .sorted(Comparator.comparingInt(TemplateSection::getOrdre))
+    //                 .collect(Collectors.toList());
             
-            for (TemplateSection section : sortedSections) {
-                SectionResponseDTO sectionDTO = SectionResponseDTO.builder()
-                        .id(section.getId())
-                        .type(section.getType())
-                        .htmlContent(section.getHtmlContent())
-                        .ordre(section.getOrdre())
-                        .createdAt(section.getCreatedAt())
-                        .updatedAt(section.getUpdatedAt())
-                        .build();
+    //         for (TemplateSection section : sortedSections) {
+    //             SectionResponseDTO sectionDTO = SectionResponseDTO.builder()
+    //                     .id(section.getId())
+    //                     .type(section.getType())
+    //                     .htmlContent(section.getHtmlContent())
+    //                     .ordre(section.getOrdre())
+    //                     .createdAt(section.getCreatedAt())
+    //                     .updatedAt(section.getUpdatedAt())
+    //                     .build();
                 
-                responseDTO.getSections().add(sectionDTO);
-            }
-        }
+    //             responseDTO.getSections().add(sectionDTO);
+    //         }
+    //     }
         
-        return responseDTO;
+    //     return responseDTO;
+    // }
+
+    public TemplateResponseDTO convertToResponseDTO(Template template) {
+    if (template == null) {
+        return null;
     }
+    
+    TemplateResponseDTO responseDTO = new TemplateResponseDTO();
+    
+    responseDTO.setId(template.getId());
+    responseDTO.setNom(template.getNom());
+    responseDTO.setIsGlobal(template.getIsGlobal());
+    responseDTO.setUserId(template.getUserId());
+    responseDTO.setCreatedAt(template.getCreatedAt().atOffset(ZoneOffset.UTC));
+    responseDTO.setUpdatedAt(template.getUpdatedAt().atOffset(ZoneOffset.UTC));
+    responseDTO.setSections(new ArrayList<>());
+    
+    // Convertir les sections
+    if (template.getSections() != null && !template.getSections().isEmpty()) {
+        // Trier les sections par ordre
+        List<TemplateSection> sortedSections = template.getSections().stream()
+                .sorted(Comparator.comparingInt(TemplateSection::getOrdre))
+                .toList();
+        
+        for (TemplateSection section : sortedSections) {
+            SectionResponseDTO sectionDTO = new SectionResponseDTO();
+            
+            sectionDTO.setId(section.getId());
+            sectionDTO.setType(section.getType());
+            sectionDTO.setHtmlContent(section.getHtmlContent());
+            sectionDTO.setOrdre(section.getOrdre());
+            sectionDTO.setCreatedAt(section.getCreatedAt().atOffset(ZoneOffset.UTC));
+            sectionDTO.setUpdatedAt(section.getUpdatedAt().atOffset(ZoneOffset.UTC));
+            
+            responseDTO.getSections().add(sectionDTO);
+        }
+    }
+    
+    return responseDTO;
+}
 
     /**
      * Récupérer un template sous forme de DTO avec vérification des droits
