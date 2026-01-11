@@ -1,22 +1,37 @@
-# Build stage
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# backend/ms-cv-v2/Dockerfile
+
+# Stage 1: Build
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
-# Copy Maven wrapper and pom first for better caching
+# 1. Copier les contrats (nécessaire pour le SPI)
+COPY contracts /app/contracts
+
+# 2. Copier et builder le SPI CV
+COPY spi/spi-cv-v2 /app/spi/spi-cv-v2
+WORKDIR /app/spi/spi-cv-v2
+RUN mvn clean install -DskipTests
+
+# 3. Builder le microservice CV
+WORKDIR /app/backend/ms-cv-v2
+
+# Optimisation du cache des dépendances pour ms-cv
 COPY backend/ms-cv-v2/pom.xml .
+#RUN mvn dependency:go-offline -B
 
-# Download dependencies first (better layer caching)
-#RUN mvn dependency:go-offline -B || true
-
-# Copy source code
+# Copie des sources et build
 COPY backend/ms-cv-v2/src ./src
+RUN mvn clean package -DskipTests
 
-# Build the application
-RUN mvn clean package -DskipTests -B
-
-# Run stage
-FROM eclipse-temurin:17-jdk-alpine
+# Stage 2: Run
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+
+# Copier le JAR final
+COPY --from=build /app/backend/ms-cv-v2/target/*.jar app.jar
+
+# Exposer le port
 EXPOSE 8072
+
+# Lancer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
