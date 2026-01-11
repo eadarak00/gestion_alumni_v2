@@ -1,0 +1,535 @@
+openapi: 3.0.0
+info:
+  title: MS CV V2 API
+  version: 1.0.0
+  description: API for Managing CVs and Templates in MS CV V2
+
+servers:
+  - url: http://localhost:8072/api-ms-cv2/v1
+    description: Local server
+
+paths:
+  /cvs:
+    post:
+      summary: Create a new CV
+      operationId: createCv
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CvRequestDTO'
+      responses:
+        '201':
+          description: CV created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CvResponseDTO'
+        '401':
+          description: Unauthorized
+
+  /cvs/{id}:
+    get:
+      summary: Get CV by ID
+      operationId: getCvById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: CV found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CvResponseDTO'
+        '404':
+          description: CV not found
+
+    put:
+      summary: Update a CV
+      operationId: updateCv
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CvRequestDTO'
+      responses:
+        '200':
+          description: CV updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CvResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: CV not found
+
+    delete:
+      summary: Delete a CV
+      operationId: deleteCv
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: CV deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: CV not found
+
+  /cvs/me:
+    get:
+      summary: Get My CVs
+      operationId: getMyCvs
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of user's CVs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CvResponseDTO'
+        '401':
+          description: Unauthorized
+
+  /cvs/{id}/pdf:
+    get:
+      summary: Download CV as PDF
+      operationId: downloadCvPdf
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: PDF file
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: CV not found
+
+  /templates:
+    get:
+      summary: Get all templates
+      operationId: getAllTemplates
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemplateResponseDTO'
+        '401':
+          description: Unauthorized
+
+    post:
+      summary: Create a new template
+      operationId: createTemplate
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateRequestDTO'
+      responses:
+        '201':
+          description: Template created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateResponseDTO'
+        '401':
+          description: Unauthorized
+
+  /templates/{id}:
+    get:
+      summary: Get template by ID
+      operationId: getTemplateById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Template found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Template not found
+
+    put:
+      summary: Update a template
+      operationId: updateTemplate
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateRequestDTO'
+      responses:
+        '200':
+          description: Template updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Template not found
+
+    delete:
+      summary: Delete a template
+      operationId: deleteTemplate
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Template deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Template not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # --- CV DTOs ---
+    CvRequestDTO:
+      type: object
+      required:
+        - templateId
+      properties:
+        templateId:
+          type: integer
+          format: int64
+        titreProfil:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
+        nom:
+          type: string
+        prenom:
+          type: string
+        adresse:
+          type: string
+        resumeProfil:
+          type: string
+        formations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormationDTO'
+        experiences:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperienceDTO'
+        competences:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompetenceDTO'
+        langues:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangueDTO'
+        interets:
+          type: array
+          items:
+            $ref: '#/components/schemas/InteretDTO'
+
+    CvResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        prenom:
+          type: string
+        nom:
+          type: string
+        templateId:
+          type: integer
+          format: int64
+        templateNom:
+          type: string
+        titreProfil:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
+        adresse:
+          type: string
+        resumeProfil:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        formations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormationResponseDTO'
+        experiences:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperienceResponseDTO'
+        competences:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompetenceResponseDTO'
+        langues:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangueResponseDTO'
+        interets:
+          type: array
+          items:
+            $ref: '#/components/schemas/InteretResponseDTO'
+
+    # --- Nested DTOs ---
+    FormationDTO:
+      type: object
+      properties:
+        diplome:
+          type: string
+        etablissement:
+          type: string
+        ville:
+          type: string
+        anneeDebut:
+          type: string
+        anneeFin:
+          type: string
+
+    FormationResponseDTO:
+      type: object
+      properties:
+        diplome:
+          type: string
+        etablissement:
+          type: string
+        ville:
+          type: string
+        anneeDebut:
+          type: string
+        anneeFin:
+          type: string
+
+    ExperienceDTO:
+      type: object
+      properties:
+        poste:
+          type: string
+        entreprise:
+          type: string
+        ville:
+          type: string
+        dateDebut:
+          type: string
+        dateFin:
+          type: string
+        description:
+          type: string
+
+    ExperienceResponseDTO:
+      type: object
+      properties:
+        poste:
+          type: string
+        entreprise:
+          type: string
+        ville:
+          type: string
+        dateDebut:
+          type: string
+        dateFin:
+          type: string
+        description:
+          type: string
+
+    CompetenceDTO:
+      type: object
+      properties:
+        nom:
+          type: string
+        niveau:
+          type: string
+
+    CompetenceResponseDTO:
+      type: object
+      properties:
+        nom:
+          type: string
+        niveau:
+          type: string
+
+    LangueDTO:
+      type: object
+      properties:
+        nom:
+          type: string
+        niveau:
+          type: string
+
+    LangueResponseDTO:
+      type: object
+      properties:
+        nom:
+          type: string
+        niveau:
+          type: string
+
+    InteretDTO:
+      type: object
+      properties:
+        libelle:
+          type: string
+
+    InteretResponseDTO:
+      type: object
+      properties:
+        libelle:
+          type: string
+
+    # --- Template DTOs ---
+    TemplateRequestDTO:
+      type: object
+      properties:
+        nom:
+          type: string
+        isGlobal:
+          type: boolean
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/SectionRequestDTO'
+
+    TemplateResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nom:
+          type: string
+        isGlobal:
+          type: boolean
+        userId:
+          type: integer
+          format: int64
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/SectionResponseDTO'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    SectionRequestDTO:
+      type: object
+      properties:
+        type:
+          type: string
+        htmlContent:
+          type: string
+        ordre:
+          type: integer
+
+    SectionResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          type: string
+        htmlContent:
+          type: string
+        ordre:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
