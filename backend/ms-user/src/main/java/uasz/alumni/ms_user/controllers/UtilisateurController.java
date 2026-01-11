@@ -10,6 +10,9 @@ import uasz.alumni.ms_user.services.UtilisateurService;
 import uasz.alumni.spi.api.UtilisateursApi;
 import uasz.alumni.spi.model.GetAllUtilisateursFiltered200Response;
 import uasz.alumni.spi.model.UtilisateurResponseDTO;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/api/v1")
@@ -42,4 +45,24 @@ public class UtilisateurController implements UtilisateursApi {
     public ResponseEntity<Boolean> usernameExists(String username) {
         return ResponseEntity.ok(utilisateurService.usernameExists(username));
     }
+
+    // Recuper l'utilisateur par l'ID
+    // @GetMapping("/{id}")
+    // public ResponseEntity<UtilisateurResponseDTO> getUtilisateurById(Integer id) {
+    //     Integer idInt = id;
+    //     Long idLong = idInt.longValue();
+    //     System.out.println("\n\n" + id + "\n");
+    //     System.out.println("\n\n" + idInt + "\n");
+    //     System.out.println("\n\n" + idLong + "\n");
+
+    //     return ResponseEntity.ok(utilisateurService.getUtilisateurDtoById(idLong));
+    // }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UtilisateurResponseDTO> getUtilisateurById(@PathVariable Integer id) {
+        System.out.println("\n\n ID : " + id + "\n");
+        Long idLong = id.longValue();
+        return ResponseEntity.ok(utilisateurService.getUtilisateurDtoById(idLong));
+    }
+
 }

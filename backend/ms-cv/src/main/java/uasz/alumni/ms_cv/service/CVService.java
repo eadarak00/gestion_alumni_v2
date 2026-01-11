@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import uasz.alumni.ms_cv.client.UtilisateurClient;
 import uasz.alumni.ms_cv.dto.response.PageResponse;
 import uasz.alumni.ms_cv.exception.*;
 import uasz.alumni.ms_cv.model.*;
@@ -37,6 +38,7 @@ public class CVService {
     private final CompetenceRepository competenceRepository;
     private final LangueParleesRepository langueParleesRepository;
     private final CertificationRepository certificationRepository;
+    private final UtilisateurClient utilisateurClient;
     
     private final Logger logger = LoggerFactory.getLogger(CVService.class);
     
@@ -58,6 +60,16 @@ public class CVService {
             
             // Vérifier que l'utilisateur n'a pas déjà un CV (optionnel selon vos besoins)
             // verifierUniciteUtilisateur(request.getUtilisateurId(), null);
+
+            // Verifier le user existe dans ms user
+            var utilisateur = utilisateurClient.findUtilisateurById(request.getUtilisateurId());
+
+            if (utilisateur == null) {
+                logger.info("\n\nUtilisateur introuvable \n");
+                return null;
+            }
+
+            // request.setUtilisateurId(utilisateur.getId());
             
             // Créer le CV
             CV cv = mapToCV(request);
@@ -483,7 +495,8 @@ public class CVService {
                     .email(request.getEmail().trim().toLowerCase())
                     .adresse(request.getAdresse())
                     .utilisateurId(request.getUtilisateurId())
-                    .template(request.getTemplate() != null ? request.getTemplate() : TypeTemplate.MODERNE)
+                    // .template(request.getTemplate() != null ? request.getTemplate() : TypeTemplate.MODERNE) //Todo debugage
+                    .template(null)
                     .build();
         } catch (Exception e) {
             logger.error("\n\nErreur lors du mapping CVRequest vers CV: \n", e);

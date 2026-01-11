@@ -96,6 +96,16 @@ public class UtilisateurService {
     }
 
     /**
+     * Récupérer un utilisateur par ID 
+     */
+    public UtilisateurResponseDTO getUtilisateurDtoById(Long id) {
+        Utilisateur utilisateur = utilisateurRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Utilisateur introuvable avec l'id : " + id));
+
+        return utilisateurMapper.toDto(utilisateur);
+    }
+
+    /**
      * Récupération d’un utilisateur (entité) par email — uniquement actif/non
      * supprimé
      */
