@@ -495,8 +495,8 @@ public class CVService {
                     .email(request.getEmail().trim().toLowerCase())
                     .adresse(request.getAdresse())
                     .utilisateurId(request.getUtilisateurId())
-                    // .template(request.getTemplate() != null ? request.getTemplate() : TypeTemplate.MODERNE) //Todo debugage
-                    .template(null)
+                    .template(request.getTemplate() != null ? request.getTemplate() : TypeTemplate.MODERNE) //Todo debugage
+                    // .template(null)
                     .build();
         } catch (Exception e) {
             logger.error("\n\nErreur lors du mapping CVRequest vers CV: \n", e);
