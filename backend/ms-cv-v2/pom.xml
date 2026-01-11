@@ -137,6 +137,12 @@
 			<version>9.1.22</version>
 		</dependency>
 
+		<!-- SPI CONTRAT CV-V2 -->
+		<dependency>
+			<groupId>uasz.alumni.spi</groupId>
+			<artifactId>spi-cv-v2</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
