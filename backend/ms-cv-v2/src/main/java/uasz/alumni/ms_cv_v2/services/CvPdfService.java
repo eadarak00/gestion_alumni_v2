@@ -10,10 +10,8 @@ import uasz.alumni.ms_cv_v2.exceptions.CvGenerationException;
 import uasz.alumni.ms_cv_v2.repository.TemplateRepository;
 import uasz.alumni.spi.model.CvResponseDTO;
 import java.util.Comparator;
-import org.springframework.http.MediaType;
 import java.util.List;
 import java.util.function.Function;
-import java.util.StringJoiner;
 
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -140,26 +138,27 @@ public class CvPdfService {
     }
 
     private String wrapHtml(String bodyContent) {
-    // CORRECTION: Utiliser /> pour fermer la balise meta
-    return "<!DOCTYPE html>\n" +
-           "<html>\n" +
-           "<head>\n" +
-           "    <meta charset=\"UTF-8\" />\n" +  // <- ICI: ajouter />
-           "    <style>\n" +
-           "        body { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.4; margin: 20px; }\n" +
-           "        h1 { color: #2c3e50; font-size: 18pt; margin-bottom: 10px; }\n" +
-           "        h2 { color: #34495e; font-size: 14pt; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; }\n" +
-           "        h3 { color: #7f8c8d; font-size: 12pt; margin-bottom: 6px; }\n" +
-           "        ul { margin: 5px 0; padding-left: 20px; }\n" +
-           "        li { margin-bottom: 4px; }\n" +
-           "        p { margin: 8px 0; }\n" +
-           "        .section { margin-bottom: 15px; }\n" +
-           "        .info-item { margin-bottom: 5px; }\n" +
-           "    </style>\n" +
-           "</head>\n" +
-           "<body>\n" +
-           bodyContent + "\n" +
-           "</body>\n" +
-           "</html>";
-}
+        // CORRECTION: Utiliser /> pour fermer la balise meta
+        return "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\" />\n" + // <- ICI: ajouter />
+                "    <style>\n" +
+                "        body { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.4; margin: 20px; }\n" +
+                "        h1 { color: #2c3e50; font-size: 18pt; margin-bottom: 10px; }\n" +
+                "        h2 { color: #34495e; font-size: 14pt; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; }\n"
+                +
+                "        h3 { color: #7f8c8d; font-size: 12pt; margin-bottom: 6px; }\n" +
+                "        ul { margin: 5px 0; padding-left: 20px; }\n" +
+                "        li { margin-bottom: 4px; }\n" +
+                "        p { margin: 8px 0; }\n" +
+                "        .section { margin-bottom: 15px; }\n" +
+                "        .info-item { margin-bottom: 5px; }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                bodyContent + "\n" +
+                "</body>\n" +
+                "</html>";
+    }
 }

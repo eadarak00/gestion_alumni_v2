@@ -57,82 +57,6 @@ public class CvController implements CvsApi {
         }
         return null;
     }
-    /* ================= CREATE ================= */
-
-    // @PreAuthorize("hasRole('ETUDIANT')")
-    // @PostMapping
-    // public ResponseEntity<CvResponseDTO> createCv(@RequestBody CvRequestDTO dto)
-    // {
-
-    // Long userId = getUserId();
-
-    // CvResponseDTO response = cvService.createCv(dto, userId);
-
-    // return new ResponseEntity<>(response, HttpStatus.CREATED);
-    // }
-
-    /* ================= UPDATE ================= */
-    // @PreAuthorize("hasRole('ETUDIANT')")
-    // @PutMapping("/{id}")
-    // public ResponseEntity<CvResponseDTO> updateCv(
-    // @PathVariable Long id,
-    // @RequestBody CvRequestDTO dto) {
-
-    // Long userId = getUserId();
-
-    // CvResponseDTO response = cvService.updateCv(id, dto, userId);
-
-    // return ResponseEntity.ok(response);
-    // }
-
-    // /* ================= READ ================= */
-
-    // @PreAuthorize("hasRole('ETUDIANT')")
-
-    // @GetMapping("/me")
-    // public ResponseEntity<List<CvResponseDTO>> getMyCvs() {
-
-    // Long userId = getUserId();
-
-    // return ResponseEntity.ok(cvService.getMyCvs(userId));
-    // }
-
-    // @GetMapping("/{id}")
-    // public ResponseEntity<CvResponseDTO> getCvById(@PathVariable Long id) {
-
-    // Long userId = getUserId();
-
-    // return ResponseEntity.ok(cvService.getCvById(id, userId));
-    // }
-
-    // /* ================= DELETE ================= */
-    // @PreAuthorize("hasRole('ETUDIANT')")
-    // @DeleteMapping("/{id}")
-    // public ResponseEntity<Void> deleteCv(@PathVariable Long id) {
-
-    // Long userId = getUserId();
-
-    // cvService.deleteCv(id, userId);
-
-    // return ResponseEntity.noContent().build();
-    // }
-
-    // @GetMapping("/{id}/pdf")
-    // public ResponseEntity<byte[]> downloadCvPdf(@PathVariable Long id) throws
-    // Exception {
-
-    // Long userId = getUserId();
-
-    // CvResponseDTO cv = cvService.getCvById(id, userId);
-
-    // byte[] pdfBytes = cvPdfService.generatePdf(cv);
-
-    // return ResponseEntity.ok()
-    // .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() +
-    // ".pdf")
-    // .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
-    // .body(pdfBytes);
-    // }
 
     @Override
     @PreAuthorize("hasRole('ETUDIANT')")
@@ -168,42 +92,40 @@ public class CvController implements CvsApi {
 
     }
 
-
     @Override
-public ResponseEntity<Resource> downloadCvPdf(Long id) {
-    Long userId = getUserId();
+    public ResponseEntity<Resource> downloadCvPdf(Long id) {
+        Long userId = getUserId();
 
-    try {
-        CvResponseDTO cv = cvService.getCvById(id, userId);
-        log.info("Téléchargement PDF demandé pour CV ID: {}", id);
-        
-        byte[] pdfBytes = cvPdfService.generatePdf(cv);
-        
-        if (pdfBytes == null || pdfBytes.length == 0) {
-            log.error("PDF généré vide pour CV ID: {}", id);
+        try {
+            CvResponseDTO cv = cvService.getCvById(id, userId);
+            log.info("Téléchargement PDF demandé pour CV ID: {}", id);
+
+            byte[] pdfBytes = cvPdfService.generatePdf(cv);
+
+            if (pdfBytes == null || pdfBytes.length == 0) {
+                log.error("PDF généré vide pour CV ID: {}", id);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(null);
+            }
+
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() + ".pdf")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .contentLength(pdfBytes.length)
+                    .body(new ByteArrayResource(pdfBytes));
+
+        } catch (CvGenerationException e) {
+            log.error("Erreur technique lors de la génération PDF pour CV ID: {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ByteArrayResource(
+                            ("Erreur technique: " + e.getMessage()).getBytes()));
+
+        } catch (Exception e) {
+            log.error("Erreur inattendue lors du téléchargement PDF pour CV ID: {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
         }
-
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() + ".pdf")
-                .contentType(MediaType.APPLICATION_PDF)
-                .contentLength(pdfBytes.length)
-                .body(new ByteArrayResource(pdfBytes));
-        
-    } catch (CvGenerationException e) {
-        log.error("Erreur technique lors de la génération PDF pour CV ID: {}", id, e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ByteArrayResource(
-                    ("Erreur technique: " + e.getMessage()).getBytes()
-                ));
-        
-    } catch (Exception e) {
-        log.error("Erreur inattendue lors du téléchargement PDF pour CV ID: {}", id, e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(null);
     }
-}
 
     @Override
     public ResponseEntity<CvResponseDTO> getCvById(Long id) {

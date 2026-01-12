@@ -1,9 +1,0 @@
-package uasz.alumni.ms_cv_v2.dtos;
-
-import lombok.Data;
-
-@Data
-public class CompetenceDTO {
-    private String nom;
-    private String niveau;
-}
