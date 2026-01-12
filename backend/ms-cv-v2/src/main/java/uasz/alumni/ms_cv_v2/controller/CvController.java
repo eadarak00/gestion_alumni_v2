@@ -2,6 +2,7 @@ package uasz.alumni.ms_cv_v2.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import uasz.alumni.ms_cv_v2.exceptions.CvGenerationException;
 // import uasz.alumni.ms_cv_v2.dtos.CvRequestDTO;
 // import uasz.alumni.ms_cv_v2.dtos.CvResponseDTO;
 import uasz.alumni.ms_cv_v2.services.CvPdfService;
@@ -13,6 +14,7 @@ import uasz.alumni.spi.model.CvResponseDTO;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -168,26 +170,40 @@ public class CvController implements CvsApi {
 
 
     @Override
-    public ResponseEntity<Resource> downloadCvPdf(Long id) {
-        Long userId = getUserId();
+public ResponseEntity<Resource> downloadCvPdf(Long id) {
+    Long userId = getUserId();
 
-        try {
-            CvResponseDTO cv = cvService.getCvById(id, userId);
-            byte[] pdfBytes = cvPdfService.generatePdf(cv);
-
-            return ResponseEntity.ok()
-                    .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() + ".pdf")
-                    .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
-                    .body(new ByteArrayResource(pdfBytes));
-        } catch (Exception e) {
-            // Log l'erreur
-            log.error("Erreur lors de la génération du PDF", e);
-
-            // Retourner une réponse d'erreur
+    try {
+        CvResponseDTO cv = cvService.getCvById(id, userId);
+        log.info("Téléchargement PDF demandé pour CV ID: {}", id);
+        
+        byte[] pdfBytes = cvPdfService.generatePdf(cv);
+        
+        if (pdfBytes == null || pdfBytes.length == 0) {
+            log.error("PDF généré vide pour CV ID: {}", id);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
         }
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=cv-" + cv.getId() + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(pdfBytes.length)
+                .body(new ByteArrayResource(pdfBytes));
+        
+    } catch (CvGenerationException e) {
+        log.error("Erreur technique lors de la génération PDF pour CV ID: {}", id, e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ByteArrayResource(
+                    ("Erreur technique: " + e.getMessage()).getBytes()
+                ));
+        
+    } catch (Exception e) {
+        log.error("Erreur inattendue lors du téléchargement PDF pour CV ID: {}", id, e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(null);
     }
+}
 
     @Override
     public ResponseEntity<CvResponseDTO> getCvById(Long id) {
