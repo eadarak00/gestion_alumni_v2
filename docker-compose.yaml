@@ -102,19 +102,65 @@ services:
       start_period: 40s
 
    # MS-CV Database
-  ms-cv-db:
+  # ms-cv-db:
+  #   <<: *service-defaults
+  #   image: mariadb:11
+  #   container_name: ms-cv-db
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: db_cv
+  #     MYSQL_USER: cvuser
+  #     MYSQL_PASSWORD: passer123
+  #   ports:
+  #     - "3309:3306"
+  #   volumes:
+  #     - ms-cv-db-data:/var/lib/mysql
+  #   healthcheck:
+  #     test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+  #     interval: 10s
+  #     timeout: 30s
+  #     retries: 20
+  #     start_period: 60s
+  #   command: 
+  #     - --wait-timeout=28800
+  #     - --interactive-timeout=28800
+
+  # # MS-CV API
+  # ms-cv:
+  #   <<: *service-defaults
+  #   build:
+  #     context: .
+  #     dockerfile: backend/ms-cv/Dockerfile
+  #   container_name: ms-cv
+  #   ports:
+  #     - "8082:8082"
+  #   depends_on:
+  #     ms-config:
+  #       condition: service_healthy
+  #     ms-discover:
+  #       condition: service_healthy
+  #     ms-cv-db:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081/actuator/health"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
+  #     start_period: 40s
+
+  ms-cv2-db:
     <<: *service-defaults
     image: mariadb:11
-    container_name: ms-cv-db
+    container_name: ms-cv2-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db_cv
-      MYSQL_USER: cvuser
+      MYSQL_DATABASE: db_cv2
+      MYSQL_USER: cvuser2
       MYSQL_PASSWORD: passer123
     ports:
       - "3309:3306"
     volumes:
-      - ms-cv-db-data:/var/lib/mysql
+      - ms-cv2-db-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
@@ -126,23 +172,24 @@ services:
       - --interactive-timeout=28800
 
   # MS-CV API
-  ms-cv:
+  ms-cv-v2:
     <<: *service-defaults
     build:
       context: .
-      dockerfile: backend/ms-cv/Dockerfile
-    container_name: ms-cv
+      dockerfile: backend/ms-cv-v2/Dockerfile
+    container_name: ms-cv-v2
+    hostname: ms-cv-v2
     ports:
-      - "8082:8082"
+      - "8072:8072"
     depends_on:
       ms-config:
         condition: service_healthy
       ms-discover:
         condition: service_healthy
-      ms-cv-db:
+      ms-cv2-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081/actuator/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8072/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -264,5 +311,5 @@ networks:
 
 volumes:
   ms-user-db-data:
-  ms-cv-db-data:
+  ms-cv2-db-data:
   # ms-invitation-db-data:

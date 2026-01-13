@@ -1,5 +1,7 @@
 package uasz.alumni.ms_user.services;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -75,5 +77,15 @@ public class EtudiantService {
 
         return etudiant;
     }
+
+    public EtudiantResponseDTO getEtudiantConnecte() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String email = authentication.getName();
+
+    Etudiant etu = etudiantRepository.findByEmail(email)
+            .orElseThrow(() -> new ResourceNotFoundException("Étudiant connecté introuvable"));
+    
+    return etudiantMapper.toResponse(etu);
+}
 
 }

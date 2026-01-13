@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T15:53:54.746111Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-10T11:14:25.743819712Z[Africa/Dakar]")
 @Validated
 @Tag(name = "Expériences", description = "Gestion des expériences professionnelles")
 public interface ExperiencesApi {

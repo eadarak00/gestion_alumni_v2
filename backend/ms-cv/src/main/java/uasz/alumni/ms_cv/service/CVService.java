@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import uasz.alumni.ms_cv.clients.dtos.EtudiantResponseDTO;
 import uasz.alumni.ms_cv.dto.response.PageResponse;
 import uasz.alumni.ms_cv.exception.*;
 import uasz.alumni.ms_cv.model.*;
@@ -494,28 +495,11 @@ public class CVService {
     /**
      * Mappe CV vers CVResponse
      */
-    private CVResponse mapToCVResponse(CV cv) {
+    private CVResponse mapToCVResponse(CV cv, EtudiantResponseDTO etu) {
         try {
             if (cv == null) {
                 throw new BadRequestException("Le CV ne peut pas être null");
             }
-            
-            // return CVResponse.builder()
-            //         .id(cv.getId())
-            //         .titre(cv.getTitre())
-            //         .resume(cv.getResume())
-            //         .photo(cv.getPhoto())
-            //         .linkedin(cv.getLinkedin())
-            //         .github(cv.getGithub())
-            //         .portfolio(cv.getPortfolio())
-            //         .telephone(cv.getTelephone())
-            //         .email(cv.getEmail())
-            //         .adresse(cv.getAdresse())
-            //         .utilisateurId(cv.getUtilisateurId())
-            //         .template(cv.getTemplate())
-            //         .dateCreation(cv.getDateCreation())
-            //         .dateDerniereModification(cv.getDateDerniereModification())
-            //         .build();
 
             CVResponse response = new CVResponse();
             response.setId(cv.getId());
@@ -528,7 +512,7 @@ public class CVService {
             response.setTelephone(cv.getTelephone());
             response.setEmail(cv.getEmail());
             response.setAdresse(cv.getAdresse());
-            response.setUtilisateurId(cv.getUtilisateurId());
+            response.setUtilisateurId(etu.getId());
             response.setTemplate(cv.getTemplate());
             response.setDateCreation(cv.getDateCreation());
             response.setDateDerniereModification(cv.getDateDerniereModification());

@@ -163,4 +163,11 @@ public class UtilisateurService {
         return utilisateurMapper.toAlumniDto(alumni);
     }
 
+    @Transactional(readOnly = true)
+    public UtilisateurResponseDTO getUtilisateurDto(Long id) {
+        Utilisateur utilisateur = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+        return utilisateurMapper.toDto(utilisateur);
+    }
+
 }
