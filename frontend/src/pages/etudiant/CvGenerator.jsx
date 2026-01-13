@@ -1,16 +1,48 @@
+// frontend/src/pages/etudiant/CvGenerator.jsx
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { Plus, Trash2, Download, User, GraduationCap, Briefcase, Code2, Languages, Heart, Save } from 'lucide-react';
+import {
+    Plus,
+    Trash2,
+    Download,
+    User,
+    GraduationCap,
+    Briefcase,
+    Code2,
+    Languages,
+    Heart,
+    Save,
+} from 'lucide-react';
 import CvTemplate from '../../components/etudiant/CvTemplate';
-import { cvService } from '../../services/msCV/cvService';
+import { useCvApi } from '../../hooks/useCvApi';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
+import { tokenManager } from '../../utils/tokenManager';
 
 export const CvGenerator = () => {
     const { user } = useAuth();
-    const { toast } = useToast();
+    const { showSuccess, showError, showInfo } = useToast();
+    const {
+        getMyCVs,
+        getCVById,
+        createCV,
+        updateCV,
+        downloadCVasPDF,
+        loading,
+        error,
+        setToken,
+    } = useCvApi();
+
     const [cvId, setCvId] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Initialiser le token d'authentification
+    useEffect(() => {
+        const token = tokenManager.getAccessToken();
+        if (token) {
+            setToken(token);
+        }
+    }, [setToken]);
 
     const [data, setData] = useState({
         templateId: 1,
@@ -21,8 +53,25 @@ export const CvGenerator = () => {
         telephone: '',
         adresse: '',
         resumeProfil: '',
-        formations: [{ diplome: '', etablissement: '', ville: '', anneeDebut: '', anneeFin: '' }],
-        experiences: [{ poste: '', entreprise: '', ville: '', dateDebut: '', dateFin: '', description: '' }],
+        formations: [
+            {
+                diplome: '',
+                etablissement: '',
+                ville: '',
+                anneeDebut: '',
+                anneeFin: '',
+            },
+        ],
+        experiences: [
+            {
+                poste: '',
+                entreprise: '',
+                ville: '',
+                dateDebut: '',
+                dateFin: '',
+                description: '',
+            },
+        ],
         competences: [{ nom: '', niveau: 'INTERMEDIAIRE' }],
         langues: [{ nom: 'FRANCAIS', niveau: 'DEBUTANT' }],
         interets: [{ libelle: '' }],
@@ -30,20 +79,26 @@ export const CvGenerator = () => {
         linkedin: '',
         github: '',
         portfolio: '',
-        photo: ''
+        photo: '',
     });
 
     /* CHARGEMENT DES DONNEES */
     const loadCv = useCallback(async () => {
         if (!user) return;
-        setLoading(true);
+        setIsLoading(true);
         try {
-            const cv = await cvService.getStudentCv();
-            if (cv) {
-                setCvId(cv.id);
-                const fullCv = await cvService.getFullCv(cv.id);
+            // Récupérer tous les CVs de l'utilisateur
+            const cvs = await getMyCVs();
 
-                setData(prev => ({
+            // Prendre le premier CV si disponible
+            if (cvs && cvs.length > 0) {
+                const firstCv = cvs[0];
+                setCvId(firstCv.id);
+
+                // Récupérer les détails complets du CV
+                const fullCv = await getCVById(firstCv.id);
+
+                setData((prev) => ({
                     ...prev,
                     templateId: fullCv.templateId || 1,
                     titreProfil: fullCv.titreProfil || '',
@@ -54,58 +109,63 @@ export const CvGenerator = () => {
                     adresse: fullCv.adresse || '',
                     resumeProfil: fullCv.resumeProfil || '',
 
-                    experiences: fullCv.experiences?.map(e => ({
-                        poste: e.poste || '',
-                        entreprise: e.entreprise || '',
-                        ville: e.ville || '',
-                        dateDebut: e.dateDebut || '',
-                        dateFin: e.dateFin || '',
-                        description: e.description || ''
-                    })) || [],
+                    experiences:
+                        fullCv.experiences?.map((e) => ({
+                            poste: e.poste || '',
+                            entreprise: e.entreprise || '',
+                            ville: e.ville || '',
+                            dateDebut: e.dateDebut || '',
+                            dateFin: e.dateFin || '',
+                            description: e.description || '',
+                        })) || [],
 
-                    formations: fullCv.formations?.map(f => ({
-                        diplome: f.diplome || '',
-                        etablissement: f.etablissement || '',
-                        ville: f.ville || '',
-                        anneeDebut: f.anneeDebut || '',
-                        anneeFin: f.anneeFin || ''
-                    })) || [],
+                    formations:
+                        fullCv.formations?.map((f) => ({
+                            diplome: f.diplome || '',
+                            etablissement: f.etablissement || '',
+                            ville: f.ville || '',
+                            anneeDebut: f.anneeDebut || '',
+                            anneeFin: f.anneeFin || '',
+                        })) || [],
 
-                    competences: fullCv.competences?.map(c => ({
-                        nom: c.nom || '',
-                        niveau: c.niveau || 'INTERMEDIAIRE'
-                    })) || [],
+                    competences:
+                        fullCv.competences?.map((c) => ({
+                            nom: c.nom || '',
+                            niveau: c.niveau || 'INTERMEDIAIRE',
+                        })) || [],
 
-                    langues: fullCv.langues?.map(l => ({
-                        nom: l.nom || '',
-                        niveau: l.niveau || 'DEBUTANT'
-                    })) || [],
+                    langues:
+                        fullCv.langues?.map((l) => ({
+                            nom: l.nom || '',
+                            niveau: l.niveau || 'DEBUTANT',
+                        })) || [],
 
-                    interets: fullCv.interets?.map(i => ({
-                        libelle: i.libelle || ''
-                    })) || []
+                    interets:
+                        fullCv.interets?.map((i) => ({
+                            libelle: i.libelle || '',
+                        })) || [],
                 }));
             } else {
-                setData(prev => ({
+                // Pas de CV existant, initialiser avec les données utilisateur
+                setData((prev) => ({
                     ...prev,
                     nom: user.nom || '',
                     prenom: user.prenom || '',
-                    email: user.email || ''
+                    email: user.email || '',
                 }));
             }
         } catch (error) {
-            console.error("Erreur chargement CV", error);
-            toast.error("Impossible de charger votre CV.");
+            console.error('Erreur chargement CV', error);
+            showError('Impossible de charger votre CV.');
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
-    }, [user, toast]);
+    }, [user, showError, getMyCVs, getCVById]);
 
     useEffect(() => {
         loadCv();
     }, [loadCv]);
 
-    /* SAUVEGARDE */
     /* HELPERS FORMATTAGE */
     const formatPhone = (phone) => {
         if (!phone) return '';
@@ -113,14 +173,17 @@ export const CvGenerator = () => {
         if (cleaned.startsWith('+221') && cleaned.length === 13) return cleaned;
         if (cleaned.startsWith('221') && cleaned.length === 12) return '+' + cleaned;
         if (cleaned.length === 9) return '+221' + cleaned;
-        return cleaned; // Retourne tel quel si format inconnu, le backend validera
+        return cleaned; // Retourne tel quel si format inconnu
     };
-
 
     /* SAUVEGARDE */
     const handleSave = async () => {
-        if (!user) return;
-        setLoading(true);
+        if (!user) {
+            showError('Veuillez vous connecter pour sauvegarder');
+            return;
+        }
+
+        setIsLoading(true);
         try {
             const payload = {
                 templateId: data.templateId || 1,
@@ -131,74 +194,111 @@ export const CvGenerator = () => {
                 telephone: formatPhone(data.telephone),
                 adresse: data.adresse,
                 resumeProfil: data.resumeProfil,
-                formations: data.formations.filter(f => f.diplome).map(f => ({
-                    diplome: f.diplome,
-                    etablissement: f.etablissement,
-                    ville: f.ville,
-                    anneeDebut: f.anneeDebut,
-                    anneeFin: f.anneeFin
-                })),
-                experiences: data.experiences.filter(e => e.poste).map(e => ({
-                    poste: e.poste,
-                    entreprise: e.entreprise,
-                    ville: e.ville,
-                    dateDebut: e.dateDebut,
-                    dateFin: e.dateFin,
-                    description: e.description
-                })),
-                competences: data.competences.filter(c => c.nom).map(c => ({
-                    nom: c.nom,
-                    niveau: c.niveau
-                })),
-                langues: data.langues.filter(l => l.nom).map(l => ({
-                    nom: l.nom,
-                    niveau: l.niveau
-                })),
-                interets: data.interets.filter(i => i.libelle).map(i => ({
-                    libelle: i.libelle
-                }))
+                formations: data.formations
+                    .filter((f) => f.diplome.trim())
+                    .map((f) => ({
+                        diplome: f.diplome,
+                        etablissement: f.etablissement,
+                        ville: f.ville,
+                        anneeDebut: f.anneeDebut,
+                        anneeFin: f.anneeFin,
+                    })),
+                experiences: data.experiences
+                    .filter((e) => e.poste.trim())
+                    .map((e) => ({
+                        poste: e.poste,
+                        entreprise: e.entreprise,
+                        ville: e.ville,
+                        dateDebut: e.dateDebut,
+                        dateFin: e.dateFin,
+                        description: e.description,
+                    })),
+                competences: data.competences
+                    .filter((c) => c.nom.trim())
+                    .map((c) => ({
+                        nom: c.nom,
+                        niveau: c.niveau,
+                    })),
+                langues: data.langues
+                    .filter((l) => l.nom.trim())
+                    .map((l) => ({
+                        nom: l.nom,
+                        niveau: l.niveau,
+                    })),
+                interets: data.interets
+                    .filter((i) => i.libelle.trim())
+                    .map((i) => ({
+                        libelle: i.libelle,
+                    })),
             };
 
             if (cvId) {
-                await cvService.updateCv(cvId, payload);
+                await updateCV(cvId, payload, {
+                    onSuccess: () => {
+                        showSuccess('CV mis à jour avec succès !');
+                    },
+                    onError: (error) => {
+                        showError(`Erreur mise à jour: ${error.message}`);
+                    },
+                });
             } else {
-                const newCv = await cvService.createCv(payload);
-                setCvId(newCv.id);
+                const newCv = await createCV(payload, {
+                    onSuccess: (cv) => {
+                        setCvId(cv.id);
+                        showSuccess('CV créé avec succès !');
+                    },
+                    onError: (error) => {
+                        showError(`Erreur création: ${error.message}`);
+                    },
+                });
             }
-
-            toast.success("CV sauvegardé avec succès !");
-            loadCv(); // Recharger pour avoir les nouveaux IDs/Données propres
- 
         } catch (error) {
-            console.error("Erreur sauvegarde CV:", error);
-
-            // Gestion différenciée selon le type d'erreur
-            let msg = "Erreur lors de la sauvegarde.";
-
-            if (error.response) {
-                // Le serveur a répondu avec un code d'erreur (4xx, 5xx)
-                msg = error.response.data?.message || `Erreur serveur (${error.response.status})`;
-            } else if (error.request) {
-                // La requête a été envoyée mais pas de réponse reçue
-                msg = "Impossible de contacter le serveur. Vérifiez que le backend est démarré.";
-            } else {
-                // Erreur lors de la configuration de la requête
-                msg = error.message || "Erreur inconnue";
-            }
-
-            toast.error(msg);
+            console.error('Erreur sauvegarde CV:', error);
+            showError('Erreur lors de la sauvegarde.');
         } finally {
-            setLoading(false);
+            setIsLoading(false);
+        }
+    };
+
+    /* TÉLÉCHARGEMENT PDF */
+    const handleDownloadPDF = async () => {
+        if (!cvId) {
+            showError('Veuillez d\'abord sauvegarder votre CV');
+            return;
+        }
+
+        try {
+            const blob = await downloadCVasPDF(cvId, {
+                onSuccess: () => {
+                    showSuccess('PDF généré avec succès !');
+                },
+                onError: (error) => {
+                    showError(`Erreur génération PDF: ${error.message}`);
+                },
+            });
+
+            if (blob) {
+                const fileName = `CV_${data.nom}_${data.prenom}.pdf`;
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }
+        } catch (error) {
+            console.error('Erreur téléchargement PDF:', error);
+            showError('Erreur lors du téléchargement du PDF');
         }
     };
 
     const componentRef = useRef(null);
-
-    // CORRECTION ICI : Utiliser content au lieu de contentRef
     const reactToPrintFn = useReactToPrint({
-        contentRef: componentRef,  // ← contentRef pour v3
+        contentRef: componentRef,
         documentTitle: `CV_${data.nom}_${data.prenom}`,
-        onAfterPrint: () => toast.success("Le document a été généré."),
+        onAfterPrint: () => showSuccess('Le document a été généré.'),
     });
 
     const handlePrint = () => {
@@ -217,11 +317,24 @@ export const CvGenerator = () => {
 
     const addItem = (section) => {
         const templates = {
-            formations: { diplome: '', etablissement: '', ville: '', anneeDebut: '', anneeFin: '' },
+            formations: {
+                diplome: '',
+                etablissement: '',
+                ville: '',
+                anneeDebut: '',
+                anneeFin: '',
+            },
             competences: { nom: '', niveau: 'INTERMEDIAIRE' },
-            experiences: { poste: '', entreprise: '', ville: '', dateDebut: '', dateFin: '', description: '' },
+            experiences: {
+                poste: '',
+                entreprise: '',
+                ville: '',
+                dateDebut: '',
+                dateFin: '',
+                description: '',
+            },
             interets: { libelle: '' },
-            langues: { nom: '', niveau: 'DEBUTANT' }
+            langues: { nom: '', niveau: 'DEBUTANT' },
         };
         setData({ ...data, [section]: [...data[section], templates[section]] });
     };
@@ -234,6 +347,15 @@ export const CvGenerator = () => {
         });
     };
 
+    if (isLoading && !data.nom) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                <span className="ml-4 text-gray-600">Chargement de votre CV...</span>
+            </div>
+        );
+    }
+
     return (
         <div className="py-12 px-4 max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -243,31 +365,47 @@ export const CvGenerator = () => {
                 <p className="text-lg mt-3 text-gray-600">
                     Saisis tes informations à gauche, ton CV se met à jour à droite.
                 </p>
-                <button
-                    onClick={() => {
-                        if (!componentRef.current) {
-                            toast.error("L'aperçu du CV n'est pas encore prêt.");
-                            return;
-                        }
-                        toast.info("Génération du document en cours...");
-                        setTimeout(() => {
-                            handlePrint();
-                        }, 500);
-                    }}
-                    className="mt-4 inline-flex items-center px-6 py-2 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700"
-                >
-                    <Download className="w-4 h-4 mr-2" />
-                    Télécharger en PDF
-                </button>
-                <button
-                    onClick={handleSave}
-                    disabled={loading}
-                    className="mt-4 ml-4 inline-flex items-center px-6 py-2 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 disabled:opacity-50"
-                >
-                    <Save className="w-4 h-4 mr-2" />
-                    {loading ? 'Sauvegarde...' : 'Sauvegarder'}
-                </button>
+                <div className="flex justify-center gap-4 mt-6">
+                    <button
+                        onClick={() => {
+                            if (!componentRef.current) {
+                                showError("L'aperçu du CV n'est pas encore prêt.");
+                                return;
+                            }
+                            showInfo('Génération du document en cours...');
+                            setTimeout(() => {
+                                handlePrint();
+                            }, 500);
+                        }}
+                        className="inline-flex items-center px-6 py-2 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors"
+                    >
+                        <Download className="w-4 h-4 mr-2" />
+                        Imprimer / Exporter
+                    </button>
+                    <button
+                        onClick={handleDownloadPDF}
+                        disabled={!cvId || isLoading}
+                        className="inline-flex items-center px-6 py-2 rounded-full bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50"
+                    >
+                        <Download className="w-4 h-4 mr-2" />
+                        Télécharger PDF
+                    </button>
+                    <button
+                        onClick={handleSave}
+                        disabled={isLoading}
+                        className="inline-flex items-center px-6 py-2 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+                    >
+                        <Save className="w-4 h-4 mr-2" />
+                        {isLoading ? 'Sauvegarde...' : 'Sauvegarder'}
+                    </button>
+                </div>
             </div>
+
+            {error && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-red-700">{error.message}</p>
+                </div>
+            )}
 
             <div className="grid lg:grid-cols-2 gap-10 items-start">
                 {/* FORMULAIRE */}
@@ -383,7 +521,12 @@ export const CvGenerator = () => {
                                     placeholder="Établissement (ex: Université Assane Seck)"
                                     value={f.etablissement}
                                     onChange={(e) =>
-                                        updateArrayField('formations', i, 'etablissement', e.target.value)
+                                        updateArrayField(
+                                            'formations',
+                                            i,
+                                            'etablissement',
+                                            e.target.value
+                                        )
                                     }
                                 />
                                 <input
@@ -400,7 +543,12 @@ export const CvGenerator = () => {
                                         placeholder="Année début (ex: 2022)"
                                         value={f.anneeDebut}
                                         onChange={(e) =>
-                                            updateArrayField('formations', i, 'anneeDebut', e.target.value)
+                                            updateArrayField(
+                                                'formations',
+                                                i,
+                                                'anneeDebut',
+                                                e.target.value
+                                            )
                                         }
                                     />
                                     <input
@@ -408,7 +556,12 @@ export const CvGenerator = () => {
                                         placeholder="Année fin (ou Présent)"
                                         value={f.anneeFin}
                                         onChange={(e) =>
-                                            updateArrayField('formations', i, 'anneeFin', e.target.value)
+                                            updateArrayField(
+                                                'formations',
+                                                i,
+                                                'anneeFin',
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </div>
@@ -430,13 +583,18 @@ export const CvGenerator = () => {
                             Compétences
                         </h2>
                         {data.competences.map((c, i) => (
-                            <div key={i} className="flex flex-col mb-4 border-b pb-4 last:border-0 hover:bg-gray-50 transition-colors p-2 rounded">
+                            <div
+                                key={i}
+                                className="flex flex-col mb-4 border-b pb-4 last:border-0 hover:bg-gray-50 transition-colors p-2 rounded"
+                            >
                                 <div className="flex items-center mb-2">
                                     <input
                                         className="p-2 border rounded w-full"
                                         placeholder="Compétence (ex: React, Spring Boot...)"
                                         value={c.nom}
-                                        onChange={(e) => updateArrayField('competences', i, 'nom', e.target.value)}
+                                        onChange={(e) =>
+                                            updateArrayField('competences', i, 'nom', e.target.value)
+                                        }
                                     />
                                     {data.competences.length > 1 && (
                                         <button
@@ -451,7 +609,14 @@ export const CvGenerator = () => {
                                 <select
                                     className="p-2 border rounded text-sm bg-white"
                                     value={c.niveau}
-                                    onChange={(e) => updateArrayField('competences', i, 'niveau', e.target.value)}
+                                    onChange={(e) =>
+                                        updateArrayField(
+                                            'competences',
+                                            i,
+                                            'niveau',
+                                            e.target.value
+                                        )
+                                    }
                                 >
                                     <option value="DEBUTANT">Débutant</option>
                                     <option value="INTERMEDIAIRE">Intermédiaire</option>
@@ -502,7 +667,12 @@ export const CvGenerator = () => {
                                     placeholder="Entreprise / Organisation"
                                     value={e.entreprise}
                                     onChange={(ev) =>
-                                        updateArrayField('experiences', i, 'entreprise', ev.target.value)
+                                        updateArrayField(
+                                            'experiences',
+                                            i,
+                                            'entreprise',
+                                            ev.target.value
+                                        )
                                     }
                                 />
                                 <input
@@ -519,7 +689,12 @@ export const CvGenerator = () => {
                                         placeholder="Date début"
                                         value={e.dateDebut}
                                         onChange={(ev) =>
-                                            updateArrayField('experiences', i, 'dateDebut', ev.target.value)
+                                            updateArrayField(
+                                                'experiences',
+                                                i,
+                                                'dateDebut',
+                                                ev.target.value
+                                            )
                                         }
                                     />
                                     <input
@@ -527,7 +702,12 @@ export const CvGenerator = () => {
                                         placeholder="Date fin (ou Présent)"
                                         value={e.dateFin}
                                         onChange={(ev) =>
-                                            updateArrayField('experiences', i, 'dateFin', ev.target.value)
+                                            updateArrayField(
+                                                'experiences',
+                                                i,
+                                                'dateFin',
+                                                ev.target.value
+                                            )
                                         }
                                     />
                                 </div>
@@ -536,7 +716,14 @@ export const CvGenerator = () => {
                                     rows="3"
                                     placeholder="Description des missions et réalisations..."
                                     value={e.description}
-                                    onChange={(ev) => updateArrayField('experiences', i, 'description', ev.target.value)}
+                                    onChange={(ev) =>
+                                        updateArrayField(
+                                            'experiences',
+                                            i,
+                                            'description',
+                                            ev.target.value
+                                        )
+                                    }
                                 />
                             </div>
                         ))}
@@ -645,8 +832,18 @@ export const CvGenerator = () => {
                 </div>
 
                 {/* PREVIEW CV */}
-                <div ref={componentRef} className="bg-gray-100 p-4 rounded-2xl shadow-inner">
-                    <CvTemplate data={data} />
+                <div className="sticky top-4">
+                    <div className="bg-gray-100 p-4 rounded-2xl shadow-inner">
+                        <div ref={componentRef}>
+                            <CvTemplate data={data} onDownload={handleDownloadPDF} />
+                        </div>
+                    </div>
+                    {cvId && (
+                        <div className="mt-4 text-sm text-gray-600">
+                            <p>CV ID: {cvId}</p>
+                            <p className="text-xs">Sauvegardé automatiquement</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
