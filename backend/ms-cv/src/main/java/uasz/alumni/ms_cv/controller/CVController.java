@@ -15,7 +15,8 @@ import uasz.alumni.spi.model.PageResponseCVResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("api-cv/v1/cvs")
+@CrossOrigin("*")
+@RequestMapping("/api-cv/v1/cvs")
 @RequiredArgsConstructor
 public class CVController implements CvsApi {
 

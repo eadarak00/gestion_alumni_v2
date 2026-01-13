@@ -13,7 +13,8 @@ import uasz.alumni.spi.model.ExperienceResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/api/experiences")
+@CrossOrigin("*")
+@RequestMapping("/api-cv/v1/experiences")
 @RequiredArgsConstructor
 public class ExperienceController implements ExperiencesApi {
 

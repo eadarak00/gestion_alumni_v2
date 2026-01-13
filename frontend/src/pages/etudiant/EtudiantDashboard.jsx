@@ -1,5 +1,6 @@
 import { useAuth } from '../../hooks/useAuth';
 
+
 export const EtudiantDashboard = () => {
   const { user, isAlumni, isEtudiant } = useAuth();
 

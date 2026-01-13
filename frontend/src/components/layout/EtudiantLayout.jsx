@@ -16,14 +16,14 @@ import {
 import { Header } from './Header';
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: User, label: 'Mon Profil', path: '/profile' },
-  { icon: BookOpen, label: 'Mes Études', path: '/studies' },
-  { icon: FileText, label: 'Mon CV', path: '/cv' },
-  { icon: Users, label: 'Alumni à Découvrir', path: '/discover-alumni' },
-  { icon: MessageCircle, label: 'Mentorat', path: '/mentorship' },
-  { icon: Calendar, label: 'Événements', path: '/events' },
-  { icon: Settings, label: 'Paramètres', path: '/settings' }
+  { icon: LayoutDashboard, label: 'Dashboard', path: '/etudiant/dashboard' },
+  { icon: User, label: 'Mon Profil', path: '/etudiant/profile' },
+  { icon: BookOpen, label: 'Mes Études', path: '/etudiant/studies' },
+  { icon: FileText, label: 'Mon CV', path: '/etudiant/cv-generator' },
+  { icon: Users, label: 'Alumni à Découvrir', path: '/etudiant/discover-alumni' },
+  { icon: MessageCircle, label: 'Mentorat', path: '/etudiant/mentorship' },
+  { icon: Calendar, label: 'Événements', path: '/etudiant/events' },
+  { icon: Settings, label: 'Paramètres', path: '/etudiant/settings' }
 ];
 
 export const EtudiantLayout = ({ children }) => {
@@ -33,9 +33,8 @@ export const EtudiantLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex bg-gray-50">
       <aside
-        className={`${
-          collapsed ? 'w-20' : 'w-64'
-        } bg-gradient-to-b from-blue-900 to-green-800 text-white flex flex-col transition-all duration-300 fixed h-full z-40`}
+        className={`${collapsed ? 'w-20' : 'w-64'
+          } bg-gradient-to-b from-blue-900 to-green-800 text-white flex flex-col transition-all duration-300 fixed h-full z-40`}
       >
         <div className="p-6 flex items-center justify-between border-b border-blue-700">
           {!collapsed && (
@@ -61,11 +60,10 @@ export const EtudiantLayout = ({ children }) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                  isActive
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${isActive
                     ? 'bg-green-500 text-white'
                     : 'text-blue-100 hover:bg-blue-700'
-                }`}
+                  }`}
                 title={collapsed ? item.label : ''}
               >
                 <Icon className={`h-5 w-5 flex-shrink-0 ${isActive ? 'text-white' : ''}`} />

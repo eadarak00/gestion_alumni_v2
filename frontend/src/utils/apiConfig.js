@@ -5,6 +5,9 @@ import { Configuration } from "../api-ms-user/js-client";
 export const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "http://localhost:8088/api-users/v1";
 
+export const API_CV_URL =
+  process.env.REACT_APP_API_CV_URL || "http://localhost:8088/api-ms-cv2/v1";
+
 /**
  * Axios instance utilisée par le client OpenAPI typescript-axios
  */
@@ -53,5 +56,11 @@ export const msUserConfiguration = new Configuration({
   accessToken: async () =>
     currentToken || localStorage.getItem("accessToken") || "",
 });
+
+export const msCvConfiguration = {
+  basePath: API_CV_URL,
+  accessToken: async () =>
+    currentToken || localStorage.getItem("accessToken") || "",
+};
 
 export default apiClient;

@@ -12,6 +12,7 @@ import { RoleRoute } from "./RoleRoute";
 
 import { AlumniLayout } from "../components/layout/AlumniLayout";
 import { EtudiantLayout } from "../components/layout/EtudiantLayout";
+import { CvGenerator } from "../pages/etudiant/CvGenerator";
 
 export const AppRoutes = () => {
   return (
@@ -34,6 +35,7 @@ export const AppRoutes = () => {
         <Route path="/etudiant/dashboard" element={<EtudiantDashboard />} />
         <Route path="/etudiant/profile" element={<div>Profile Étudiant</div>} />
         <Route path="/etudiant/discover-alumni" element={<div>Discover Alumni</div>} />
+        <Route path="/etudiant/cv-generator" element={<CvGenerator />} />
       </Route>
 
       {/* ROOT / FALLBACK */}
