@@ -12,6 +12,9 @@ import { RoleRoute } from "./RoleRoute";
 
 import { AlumniLayout } from "../components/layout/AlumniLayout";
 import { EtudiantLayout } from "../components/layout/EtudiantLayout";
+import EtudiantTemplates from "../pages/etudiant/EtudiantTemplates";
+import CreateTemplate from "../components/templates_components/CreateTemplate";
+import TemplatePreview from "../pages/etudiant/TemplatePreview";
 
 export const AppRoutes = () => {
   return (
@@ -34,6 +37,10 @@ export const AppRoutes = () => {
         <Route path="/etudiant/dashboard" element={<EtudiantDashboard />} />
         <Route path="/etudiant/profile" element={<div>Profile Étudiant</div>} />
         <Route path="/etudiant/discover-alumni" element={<div>Discover Alumni</div>} />
+        <Route path="/templates" element={<EtudiantTemplates />} />
+        <Route path="/templates/creation" element={<CreateTemplate />} />
+         <Route path="/templates/:id/preview" element={<TemplatePreview />} />
+
       </Route>
 
       {/* ROOT / FALLBACK */}

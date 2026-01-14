@@ -10,7 +10,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  FileText
+  FileText,
+  Grid
 
 } from 'lucide-react';
 import { Header } from './Header';
@@ -23,7 +24,8 @@ const menuItems = [
   { icon: Users, label: 'Alumni à Découvrir', path: '/discover-alumni' },
   { icon: MessageCircle, label: 'Mentorat', path: '/mentorship' },
   { icon: Calendar, label: 'Événements', path: '/events' },
-  { icon: Settings, label: 'Paramètres', path: '/settings' }
+  { icon: Settings, label: 'Paramètres', path: '/settings' },
+  { icon: Grid, label: 'Templates', path: '/templates' } 
 ];
 
 export const EtudiantLayout = ({ children }) => {
