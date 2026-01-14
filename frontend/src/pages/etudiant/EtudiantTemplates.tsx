@@ -181,7 +181,7 @@ const EtudiantTemplates = () => {
 
                     <button
                       onClick={() =>
-                        navigate(`/cv/create?templateId=${template.id}`)
+                        navigate(`/templates/${template.id}/create-cv`)
                       }
                       className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded"
                     >

@@ -15,6 +15,7 @@ import { EtudiantLayout } from "../components/layout/EtudiantLayout";
 import EtudiantTemplates from "../pages/etudiant/EtudiantTemplates";
 import CreateTemplate from "../components/templates_components/CreateTemplate";
 import TemplatePreview from "../pages/etudiant/TemplatePreview";
+import CvCreationPage from "../pages/etudiant/CvCreationPage";
 
 export const AppRoutes = () => {
   return (
@@ -33,14 +34,23 @@ export const AppRoutes = () => {
       </Route>
 
       {/* ZONE ETUDIANT (protégée + layout Étudiant) */}
-      <Route element={<RoleRoute allowedRole="ETUDIANT" Layout={EtudiantLayout} />}>
+      <Route
+        element={<RoleRoute allowedRole="ETUDIANT" Layout={EtudiantLayout} />}
+      >
         <Route path="/etudiant/dashboard" element={<EtudiantDashboard />} />
         <Route path="/etudiant/profile" element={<div>Profile Étudiant</div>} />
-        <Route path="/etudiant/discover-alumni" element={<div>Discover Alumni</div>} />
+        <Route
+          path="/etudiant/discover-alumni"
+          element={<div>Discover Alumni</div>}
+        />
         <Route path="/templates" element={<EtudiantTemplates />} />
         <Route path="/templates/creation" element={<CreateTemplate />} />
-         <Route path="/templates/:id/preview" element={<TemplatePreview />} />
-
+        <Route path="/templates/:id/preview" element={<TemplatePreview />} />
+        <Route path="/cv/create" element={<CvCreationPage />} />
+        <Route
+          path="/templates/:templateId/create-cv"
+          element={<CvCreationPage />}
+        />
       </Route>
 
       {/* ROOT / FALLBACK */}
