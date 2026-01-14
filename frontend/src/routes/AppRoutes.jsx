@@ -35,6 +35,7 @@ import EtudiantTemplates from "../pages/etudiant/EtudiantTemplates";
 import CreateTemplate from "../components/templates_components/CreateTemplate";
 import TemplatePreview from "../pages/etudiant/TemplatePreview";
 import CvCreationPage from "../pages/etudiant/CvCreationPage";
+import MesCvs from "../pages/etudiant/MesCvs";
 
 export const AppRoutes = () => {
   return (
@@ -90,7 +91,7 @@ export const AppRoutes = () => {
         <Route path="/etudiant/settings" element={<Parametres />} />
         {/* Routes sans préfixe pour compatibilité avec le menu Étudiant */}
         <Route path="/dashboard" element={<EtudiantDashboard />} />
-        <Route path="/cv" element={<MonCV />} />
+        <Route path="/cv" element={<MesCvs />} />
         <Route path="/discover-alumni" element={<DiscoverAlumni />} />
         <Route path="/mentorship" element={<Mentorat />} />
         <Route path="/events" element={<Evenements />} />
