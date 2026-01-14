@@ -9,6 +9,10 @@ import {
   GraduationCap,
   CheckCircle,
   ArrowRight,
+  Briefcase,
+  Building2,
+  BookOpen,
+  Hash,
 } from "lucide-react";
 import { AuthLayout } from "../../components/layout/AuthLayout";
 import { Input } from "../../components/common/Input";
@@ -16,6 +20,7 @@ import { Button } from "../../components/common/Button";
 import { useToast } from "../../hooks/useToast";
 import { authService } from "../../services/msUser/authService";
 import { validationService } from "../../services/msUser/validationService";
+import userService from "../../services/msUser/userService";
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
@@ -35,11 +40,29 @@ export const RegisterPage = () => {
     role: "",
   });
 
+  // Champs de profil spécifiques
+  const [profileData, setProfileData] = useState({
+    // Étudiant
+    numeroEtudiant: "",
+    filiere: "",
+    niveau: "",
+    // Alumni
+    profession: "",
+    entreprise: "",
+  });
+
   const [validationCode, setValidationCode] = useState("");
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleProfileChange = (e) => {
+    setProfileData({
+      ...profileData,
       [e.target.name]: e.target.value,
     });
   };
@@ -194,15 +217,14 @@ export const RegisterPage = () => {
       }
 
       if (isSuccess) {
-        console.log("✅ [UI] Validation réussie", { email: formData.email });
+        console.log("✅ [UI] Validation réussie - passage à l'étape de complétion de profil", { email: formData.email });
 
         showSuccess(
-          "Compte activé avec succès! Vous pouvez maintenant vous connecter."
+          "Compte activé! Complétez maintenant votre profil."
         );
 
-        setTimeout(() => {
-          navigate("/login");
-        }, 1500);
+        // Passer à l'étape 3 : complétion de profil
+        setStep(3);
       } else {
         console.warn("⚠️ [UI] Validation: réponse inattendue", result);
         showError(`Réponse inattendue: ${result}`);
@@ -230,6 +252,85 @@ export const RegisterPage = () => {
     }
   };
 
+  // Étape 3 : Complétion de profil avec auto-login
+  const handleProfileCompletion = async (e) => {
+    e.preventDefault();
+
+    console.log("🎯 [UI] Début complétion de profil", {
+      role: formData.role,
+      email: formData.email,
+    });
+
+    // Validation des champs selon le rôle
+    if (formData.role === "ETUDIANT") {
+      if (!profileData.numeroEtudiant || !profileData.filiere || !profileData.niveau) {
+        showError("Veuillez remplir tous les champs du profil étudiant");
+        return;
+      }
+    } else if (formData.role === "ALUMNI") {
+      if (!profileData.profession || !profileData.entreprise) {
+        showError("Veuillez remplir tous les champs du profil alumni");
+        return;
+      }
+    }
+
+    setLoading(true);
+
+    try {
+      // 1. Auto-login silencieux
+      console.log("🔐 [UI] Auto-login pour complétion de profil...");
+      const loginResponse = await authService.login(formData.email, formData.motDePasse);
+      
+      if (!loginResponse?.accessToken) {
+        throw new Error("Échec de l'authentification automatique");
+      }
+      console.log("✅ [UI] Auto-login réussi");
+
+      // 2. Appeler l'API de complétion de profil
+      console.log("📝 [UI] Appel API complétion de profil...");
+      if (formData.role === "ETUDIANT") {
+        await userService.completeEtudiantProfile({
+          numeroEtudiant: profileData.numeroEtudiant,
+          filiere: profileData.filiere,
+          niveau: profileData.niveau,
+        });
+      } else if (formData.role === "ALUMNI") {
+        await userService.completeAlumniProfile({
+          profession: profileData.profession,
+          entreprise: profileData.entreprise,
+        });
+      }
+      console.log("✅ [UI] Profil complété avec succès");
+
+      // 3. Déconnexion
+      console.log("🚪 [UI] Déconnexion après complétion...");
+      await authService.logout(loginResponse.refreshToken);
+      console.log("✅ [UI] Déconnexion réussie");
+
+      showSuccess(
+        "Profil complété avec succès! Vous pouvez maintenant vous connecter."
+      );
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    } catch (error) {
+      console.error("❌ [UI] Erreur complétion profil:", error);
+      
+      let errorMessage = "Erreur lors de la complétion du profil";
+      
+      if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+
+      showError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleResendCode = async () => {
     console.log("🔁 [UI] Demande renvoi code validation", { email: formData.email });
 
@@ -247,6 +348,126 @@ export const RegisterPage = () => {
       setLoading(false);
     }
   };
+
+  // Étape 3 - Complétion de profil
+  if (step === 3) {
+    return (
+      <AuthLayout 
+        title="Complétez votre profil" 
+        subtitle={formData.role === "ALUMNI" ? "Informations professionnelles" : "Informations académiques"}
+      >
+        <div className="space-y-6">
+          <div className="text-center p-6 bg-emerald-50 rounded-xl border border-emerald-100">
+            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              {formData.role === "ALUMNI" ? (
+                <Briefcase className="w-8 h-8 text-emerald-600" />
+              ) : (
+                <GraduationCap className="w-8 h-8 text-emerald-600" />
+              )}
+            </div>
+            <p className="text-gray-700 mb-2">Dernière étape, {formData.prenom}!</p>
+            <p className="text-emerald-700 font-medium">
+              {formData.role === "ALUMNI" 
+                ? "Partagez vos informations professionnelles"
+                : "Renseignez vos informations académiques"
+              }
+            </p>
+          </div>
+
+          <form onSubmit={handleProfileCompletion} className="space-y-4">
+            {formData.role === "ETUDIANT" && (
+              <>
+                <Input
+                  label="Numéro étudiant"
+                  type="text"
+                  name="numeroEtudiant"
+                  value={profileData.numeroEtudiant}
+                  onChange={handleProfileChange}
+                  placeholder="Ex: 12345678"
+                  icon={Hash}
+                  required
+                />
+                <Input
+                  label="Filière"
+                  type="text"
+                  name="filiere"
+                  value={profileData.filiere}
+                  onChange={handleProfileChange}
+                  placeholder="Ex: Informatique"
+                  icon={BookOpen}
+                  required
+                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Niveau
+                  </label>
+                  <select
+                    name="niveau"
+                    value={profileData.niveau}
+                    onChange={handleProfileChange}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    required
+                  >
+                    <option value="">Sélectionnez votre niveau</option>
+                    <option value="LICENCE1">Licence 1</option>
+                    <option value="LICENCE2">Licence 2</option>
+                    <option value="LICENCE3">Licence 3</option>
+                    <option value="MASTER1">Master 1</option>
+                    <option value="MASTER2">Master 2</option>
+                    <option value="DOCTORAT">Doctorat</option>
+                  </select>
+                </div>
+              </>
+            )}
+
+            {formData.role === "ALUMNI" && (
+              <>
+                <Input
+                  label="Profession"
+                  type="text"
+                  name="profession"
+                  value={profileData.profession}
+                  onChange={handleProfileChange}
+                  placeholder="Ex: Ingénieur logiciel"
+                  icon={Briefcase}
+                  required
+                />
+                <Input
+                  label="Entreprise"
+                  type="text"
+                  name="entreprise"
+                  value={profileData.entreprise}
+                  onChange={handleProfileChange}
+                  placeholder="Ex: Sonatel"
+                  icon={Building2}
+                  required
+                />
+              </>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold py-3 px-4 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-md hover:shadow-lg mt-6"
+            >
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Finalisation en cours...
+                </span>
+              ) : (
+                <>
+                  <CheckCircle className="w-5 h-5" />
+                  Terminer l'inscription
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      </AuthLayout>
+    );
+  }
+
 
   // Étape 2 - Validation
   if (step === 2) {

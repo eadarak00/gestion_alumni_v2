@@ -1,13 +1,9 @@
 import axios from "axios";
 import { Configuration } from "../api-ms-user/js-client";
 
-
 export const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "http://localhost:8088/api-users/v1";
 
-/**
- * Axios instance utilisée par le client OpenAPI typescript-axios
- */
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: Number(process.env.REACT_APP_API_TIMEOUT || 60000),
@@ -17,12 +13,8 @@ const apiClient = axios.create({
   },
 });
 
-// Token en mémoire (optionnel mais utile)
 let currentToken = null;
 
-/**
- * Configure le token Bearer sur axios (utile pour toutes les requêtes)
- */
 export const setAuthToken = (token) => {
   currentToken = token || null;
 
@@ -33,9 +25,6 @@ export const setAuthToken = (token) => {
   }
 };
 
-/**
- * Charger le token au démarrage
- */
 export const loadAuthToken = () => {
   const token = localStorage.getItem("accessToken");
   if (token) setAuthToken(token);
@@ -43,15 +32,9 @@ export const loadAuthToken = () => {
 
 loadAuthToken();
 
-/**
- * Configuration OpenAPI (sert au client généré pour injecter Authorization)
- * setBearerAuthToObject() utilise configuration.accessToken
- */
 export const msUserConfiguration = new Configuration({
-  // basePath est optionnel si axios.baseURL est défini, mais on le met pour sécurité
   basePath: API_BASE_URL,
-  accessToken: async () =>
-    currentToken || localStorage.getItem("accessToken") || "",
+  accessToken: async () => currentToken || localStorage.getItem("accessToken") || "",
 });
 
 export default apiClient;

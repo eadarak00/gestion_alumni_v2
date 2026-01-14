@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  * FormationResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-08T15:13:02.520999772Z[Africa/Dakar]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-01-14T00:56:32.665681389Z[Africa/Dakar]")
 public class FormationResponse {
 
   private Integer id;

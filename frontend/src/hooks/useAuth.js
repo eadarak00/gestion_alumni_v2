@@ -8,16 +8,19 @@
 //     throw new Error('useAuth must be used within an AuthProvider');
 //   }
 
-//   // S'assurer que le contexte expose toutes ces valeurs clés
 //   const {
 //     user,
 //     isAuthenticated,
 //     userRole,
 //     isAlumni,
 //     isEtudiant,
+//     profileCompleted,
 //     login,
 //     logout,
 //     loading,
+//     updateUser,
+//     reloadUserFromApi,
+//     markProfileAsCompleted,
 //   } = context;
 
 //   return {
@@ -26,14 +29,18 @@
 //     userRole,
 //     isAlumni,
 //     isEtudiant,
+//     profileCompleted,
 //     login,
 //     logout,
 //     loading,
+//     updateUser,
+//     reloadUserFromApi,
+//     markProfileAsCompleted,
 //   };
 // };
 
 import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import { AuthContext } from '../contexts/AuthContext'; 
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

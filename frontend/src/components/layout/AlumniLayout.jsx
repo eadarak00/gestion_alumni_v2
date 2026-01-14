@@ -6,8 +6,6 @@ import {
   GraduationCap,
   Briefcase,
   Users,
-  Mail,
-  Settings,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
@@ -15,12 +13,9 @@ import { Header } from './Header';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: User, label: 'Mon Profil', path: '/profile' },
   { icon: GraduationCap, label: 'Parcours Académique', path: '/academic' },
   { icon: Briefcase, label: 'Expériences Pro', path: '/experience' },
   { icon: Users, label: 'Réseau Alumni', path: '/network' },
-  { icon: Mail, label: 'Invitations', path: '/invitations' },
-  { icon: Settings, label: 'Paramètres', path: '/settings' }
 ];
 
 export const AlumniLayout = ({ children }) => {

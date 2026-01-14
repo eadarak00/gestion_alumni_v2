@@ -15,7 +15,7 @@ import { Header } from './Header';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: FileText, label: 'Mon CV', path: '/cv' },
+  { icon: FileText, label: 'Creation CV', path: '/creationcv' },
   { icon: Users, label: 'Alumni à Découvrir', path: '/discover-alumni' },
   { icon: UserPlus, label: 'Mes amis', path: '/etudiant/friends' },
   { icon: MessageCircle, label: 'Mentorat', path: '/mentorship' },
@@ -88,9 +88,3 @@ export const EtudiantLayout = ({ children }) => {
     </div>
   );
 };
-
-
-
-
-
-
