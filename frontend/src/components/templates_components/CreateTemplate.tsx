@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, Layout, Briefcase, GraduationCap, User, FileText, Save, Eye, ArrowLeft } from "lucide-react";
+import templateService from "../../services/ms_cv_v2/template.service";
 
 // Types de templates prédéfinis
 const PREDEFINED_TEMPLATES = [
@@ -292,7 +293,7 @@ const CreateTemplate = () => {
     console.log("Template à créer:", payload);
     
     // Simuler l'appel API
-    // await templateService.createTemplate(payload);
+    await templateService.createTemplate(payload);
     
     alert("Template créé avec succès!");
     
